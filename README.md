@@ -1,58 +1,228 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# MVC (Model View Controller)
+## Model
+app/Models
+responsável por fazer queries, inserir dados no banco de dados e regras de negócio. Ainda precisa criar a tabela manualmente (djago > laravel)
+php artisan make:model [nome]
+php artisan make:model [nome] -m (cria o arquivo migração junto com o model)
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+### Migrações
+database/migrations
 
-## About Laravel
+git do banco de dados. Diz como criar as tabelas e como mudar os dados de uma versão para outra do banco de dados. up and down alterações da nova migração e como revertê-las. Precisam ser criadas e depois aplicadas. A aplicação é sequencial(uma em cima da outra) ou e tem dependências(só vai funcionar na ordem certa)
+php artisan make:migration [nome_tabela] (criar tabela)
+php artisan make:migration add_[coluna]_to_[tabela] (adicionar coluna na tabela)
+```php
+    public function up()
+    {
+        Schema::create('posts', function (Blueprint $table) {
+            // auto increment por padrão
+            $table->id();
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+            // J?FK (O Laravel já sabe que aponta pro id da tabela users)
+            // O "constrained()->cascadeOnDelete()" faz com que, se o user for apagado, o post vá junto.
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+            // Textos
+            $table->string('title', 100); // Varchar comum (limite de 100 caracteres)
+            $table->string('slug')->unique(); // Varchar que não pode repetir
+            $table->text('content'); // Texto longo (para o corpo do post)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+            // Números e Booleanos
+            $table->integer('views')->default(0); // Inteiro, começa em zero
+            $table->boolean('is_published')->default(false); // Verdadeiro ou Falso
 
-## Learning Laravel
+            // Datas
+            $table->timestamp('published_at')->nullable(); // Aceita valor nulo (vazio)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+            // Cria as colunas 'created_at' e 'updated_at' sozinhas.
+            // O Laravel preenche isso automaticamente
+            $table->timestamps();
+        });
+    }
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+### Relacionamentos(models também amam)
+Ao invés de lembrar dos joins você pode ensinar os relacionamentos dos models e depois acessar os dados mais direto
+relacionamentos são funções no model
 
-## Contributing
+#### Um para Um (1:1)
+Exemplo: Um usuário tem um perfil
+No Model User:
+```PHP
+public function profile()
+{
+    // "Eu, Usuário, tenho UM perfil"
+    return $this->hasOne(Profile::class);
+}
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```
+No Model Profile (A volta):
 
-## Code of Conduct
+```PHP
+public function user()
+{
+    // "Eu, Perfil, pertenço a UM usuário"
+    return $this->belongsTo(User::class);
+}
+```
+Como usar: $user->profile->cpf; (O Laravel faz a query sozinho).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+#### Um para Muitos (1:N)
 
-## Security Vulnerabilities
+Exemplo: Um User tem vários Posts.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+No Model User:
+```PHP
+public function posts()
+{
+    // "Eu, Usuário, tenho MUITOS posts"
+    return $this->hasMany(Post::class);
+}
+```
 
-## License
+No Model Post (A volta):
+```PHP
+public function user()
+{
+    // "Eu, Post, pertenço a UM usuário"
+    return $this->belongsTo(User::class);
+}
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Como usar:
+  - Pegar todos os posts do usuário: $user->posts;
+  - Criar um post já atrelado ao usuário: $user->posts()->create(['title' => 'Novo Post']);
+  - Pegar usuário que criou post: $post->user() (já faz a query pro model do user)
+
+#### Muitos para Muitos (N:M)
+Exemplo: Um Post tem várias Tags, e uma Tag pertence a vários Posts.
+Tem que criar a tabela associativa ainda ([nome tabela]_to_[nome da outra tabela])
+
+No Model Post:
+```PHP
+
+public function tags()
+{
+    // "Eu, Post, pertenço a MUITAS tags, e elas a mim"
+    return $this->belongsToMany(Tag::class);
+}
+```
+
+No Model Tag:
+```PHP
+public function posts()
+{
+    return $this->belongsToMany(Post::class);
+}
+```
+
+Como usar:
+  - Ligar uma tag a um post existente: $post->tags()->attach($tag_id);
+  - Desligar a tag do post: $post->tags()->detach($tag_id);
+
+## Controller(Ordem errada pq sim)
+app/Http/Controllers
+
+responsável por usar e instanciar os models, fazer os filtros, validações e formatações para passar para a view
+geralmente um controller é responsável por um model e controla todo o seu ciclo de vida(menos interagir com o banco de dados, obv)
+
+php artisan make:controller [nome]
+
+### Anatomia:
+Cada um desses itens é um método (public function nome_do_metodo()) dentro da classe do Controller.
+Normalmente retornan ou uma view(tela) ou redirect(processamento os dados) e mandam de volta para outro lugar
+  - index: página que mostra todos os itens
+  - create: mostra o formulário para a criação do item(só a tela)
+  - store: salva os dados do `create`
+  - show: mostra apenas um item detalhado
+  - edit: mostra o item para edição (só a tela)
+  - update: atualiza item com os dados do `edit`
+  - destroy: deletar
+
+php artisan make:controller [nome] -r (já criar todos esses métodos)
+
+### Invokable Controller:
+Um controller que não é atrelado a um model, basicamente uma função mas que é uma classe por algum motivo
+> funções são classes só pesquisar
+php artisan make:controller [nome] --invokable
+
+
+## View
+resources/views
+camada de apresentação, html tunado(.blade.php). Utiliza todas as tags html, mas adiciona for if e outros elementos do php direto no html(indicados pelo @)
+Pode definir componentes que serão importados por outras views
+
+```blade
+<h1>Bem-vindo, {{ $user->name }}</h1>
+
+@if(count($posts) > 0)
+    <p>Temos posts!</p>
+@else
+    <p>Nada por aqui.</p>
+@endif
+
+@foreach($posts as $post)
+    <li>{{ $post->title }}</li>
+@endforeach
+```
+
+# MDQI(Mais do que isso)
+
+## Artisan(seu amiguinho)
+é o arquivo php que é usado para criar as estruturas base das classes no laravel(pq dev é preguiçoso)
+nada demais, mas serve pra tudo
+
+## Composer
+pip do php, mas que na real é mais parecido com o npm
+composer require [nome do pacote]
+composer run dev (inicia o server de dev do laravel)
+
+## Vite
+builder de js e server de static para dev
+js: a linguagem de script que precisa de build e compilação
+
+## Route(Porteiro)
+routes/web.php
+
+traduz a url para o controller
+```php
+// Rota::verbo_http('/url', [NomeDoController::class, 'método_do_controller']);
+Route::get('/home', [HomeController::class, 'index']);
+Route::post('/posts', [PostController::class, 'store']);
+
+// Cria todas as rotas para os métodos do controller de uma vez
+Route::resource('posts', PostController::class);
+```
+
+## Middleware(Meio da onde?)
+algo que roda antes da requisição chegar no controller. Pode barrar, redirecionar ou adicionar informações extras
+pode ser adicionado a uma route em específico ou ser aplicado em várias ao mesmo tempo
+
+exemplos:
+  - `auth`: Só entra se estiver logado. Se não estiver, vai pro login.
+  - `guest`: Só entra se NÃO estiver logado (Visitante).
+
+```php
+// 1. Aplicando em UMA rota específica
+Route::get('/login', [AuthController::class, 'index'])->middleware('guest');
+
+// 2. Aplicando em um GRUPO de rotas
+Route::middleware('auth')->group(function () {
+
+    // Nenhuma dessas rotas será acessada sem login
+    Route::get('/dashboard', [DashboardController::class, 'index']);
+    Route::get('/perfil', [ProfileController::class, 'edit']);
+    Route::put('/perfil', [ProfileController::class, 'update']);
+
+    // Você pode até aninhar grupos com prefixos de URL
+    Route::prefix('admin')->group(function () {
+        Route::get('/usuarios', [AdminController::class, 'users']);
+    });
+});
+```
+
+## Policy
+Permissões dos controllers, define quem pode ou não acessar certas páginas ou modificar items. Não percisa de if feio no meio do controller
+
+## Request Form
+Validação de formulário em uma classe separado, não precisa de if feio no controller 2.0
