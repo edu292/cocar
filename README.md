@@ -1,16 +1,18 @@
 # MVC (Model View Controller)
 ## Model
-app/Models
-responsável por fazer queries, inserir dados no banco de dados e regras de negócio. Ainda precisa criar a tabela manualmente (djago > laravel)
+app/Models      
+responsável por fazer queries, inserir dados no banco de dados e regras de negócio.
+``` bash
 php artisan make:model [nome]
-php artisan make:model [nome] -m (cria o arquivo migração junto com o model)
+```
 
 ### Migrações
-database/migrations
+database/migrations       
 
-git do banco de dados. Diz como criar as tabelas e como mudar os dados de uma versão para outra do banco de dados. up and down alterações da nova migração e como revertê-las. Precisam ser criadas e depois aplicadas. A aplicação é sequencial(uma em cima da outra) ou e tem dependências(só vai funcionar na ordem certa)
-php artisan make:migration [nome_tabela] (criar tabela)
-php artisan make:migration add_[coluna]_to_[tabela] (adicionar coluna na tabela)
+git do banco de dados. Diz como criar as tabelas e como mudar os dados de uma versão para outra do banco de dados.
+  - up: alterações da nova migração
+  - down: como revertê-las.
+
 ```php
     public function up()
     {
@@ -40,9 +42,40 @@ php artisan make:migration add_[coluna]_to_[tabela] (adicionar coluna na tabela)
         });
     }
 ```
+```bash
+php artisan make:migration [nome_tabela] (criar tabela)
+php artisan make:migration add_[coluna]_to_[tabela] (adicionar coluna na tabela)
+php artisan make:model [nome] -m (cria o arquivo de migração junto com o model)
+```
+
+### Queries com laravel(sql com setinhas)
+```php
+// Traz TODOS os posts da tabela
+$posts = Post::all(); 
+
+// Busca o post com ID = 1
+$post = Post::find(1); 
+
+// Tenta achar o ID 1. Se não achar, não retorna null, ele já cospe um Erro 404 (Not Found) automático na tela. Lindo.
+$post = Post::findOrFail(1); 
+
+// Traz apenas o primeiro post que encontrar na tabela
+$post = Post::first();
+
+// Traz apenas o primeiro post que encontrar na tabela
+$post = Post::last();
+
+// Query mais complexa
+$posts = Post::where('is_published', true) // Filtro 1
+             ->where('views', '>', 100)    // Filtro 2
+             ->orderBy('created_at', 'desc') // Ordenação
+             ->take(5) // LIMIT 5
+             ->get(); // Executa a query e retorna os resultados
+```
+
 
 ### Relacionamentos(models também amam)
-Ao invés de lembrar dos joins você pode ensinar os relacionamentos dos models e depois acessar os dados mais direto
+Ao invés de lembrar dos joins você pode ensinar os relacionamentos aos models e depois acessar os dados direto       
 relacionamentos são funções no model
 
 #### Um para Um (1:1)
@@ -65,7 +98,9 @@ public function user()
     return $this->belongsTo(User::class);
 }
 ```
-Como usar: $user->profile->cpf; (O Laravel faz a query sozinho).
+Como usar: 
+  - $user->profile->cpf; (O Laravel faz a query sozinho).
+  - $profile->user->email;
 
 #### Um para Muitos (1:N)
 
@@ -95,7 +130,7 @@ Como usar:
   - Pegar usuário que criou post: $post->user() (já faz a query pro model do user)
 
 #### Muitos para Muitos (N:M)
-Exemplo: Um Post tem várias Tags, e uma Tag pertence a vários Posts.
+Exemplo: Um Post tem várias Tags, e uma Tag pertence a vários Posts.    
 Tem que criar a tabela associativa ainda ([nome tabela]_to_[nome da outra tabela])
 
 No Model Post:
@@ -121,12 +156,14 @@ Como usar:
   - Desligar a tag do post: $post->tags()->detach($tag_id);
 
 ## Controller(Ordem errada pq sim)
-app/Http/Controllers
+app/Http/Controllers     
 
 responsável por usar e instanciar os models, fazer os filtros, validações e formatações para passar para a view
 geralmente um controller é responsável por um model e controla todo o seu ciclo de vida(menos interagir com o banco de dados, obv)
 
+```bash
 php artisan make:controller [nome]
+```
 
 ### Anatomia:
 Cada um desses itens é um método (public function nome_do_metodo()) dentro da classe do Controller.
@@ -144,11 +181,12 @@ php artisan make:controller [nome] -r (já criar todos esses métodos)
 ### Invokable Controller:
 Um controller que não é atrelado a um model, basicamente uma função mas que é uma classe por algum motivo
 > funções são classes só pesquisar
+```bash
 php artisan make:controller [nome] --invokable
-
+```
 
 ## View
-resources/views
+resources/views     
 camada de apresentação, html tunado(.blade.php). Utiliza todas as tags html, mas adiciona for if e outros elementos do php direto no html(indicados pelo @)
 Pode definir componentes que serão importados por outras views
 
@@ -182,7 +220,7 @@ builder de js e server de static para dev
 js: a linguagem de script que precisa de build e compilação
 
 ## Route(Porteiro)
-routes/web.php
+routes/web.php    
 
 traduz a url para o controller
 ```php
@@ -222,6 +260,7 @@ Route::middleware('auth')->group(function () {
 ```
 
 ## Policy
+app/Policies    
 Permissões dos controllers, define quem pode ou não acessar certas páginas ou modificar items. Não percisa de if feio no meio do controller
 
 ## Request Form
