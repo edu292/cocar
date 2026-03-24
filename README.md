@@ -48,7 +48,28 @@ php artisan make:migration add_[coluna]_to_[tabela] (adicionar coluna na tabela)
 php artisan make:model [nome] -m (cria o arquivo de migração junto com o model)
 ```
 
-### Queries com laravel(sql com setinhas)
+### O que tem na classe models
+```php
+protected $fillable = []; //  Quais campos podem ser alterados ou preenchidos de uma vez (através de formulário)
+// exemplo
+Post::create([
+    'title' => 'Meu Post',
+    'content' => 'Conteúdo legal'
+]);
+
+protected $guarded = []; // Quais campos não pode ser preenchidos de uma vez (só através de código)
+// exemplo
+$post = new Post();
+$post->title = $request->title; // Você garante o que está entrando
+$post->content = $request->content;
+$post->save();
+
+protected $casts = [ // Converte os dados da coluna do banco de dados para o tipo certo no php(só usa se estiver errado)
+    'nome_coluna' => 'tipo'
+];
+```
+
+### Queries com laravel = sql com setinhas
 ```php
 // Traz TODOS os posts da tabela
 $posts = Post::all(); 
@@ -176,19 +197,23 @@ Normalmente retornan ou uma view(tela) ou redirect(processamento os dados) e man
   - update: atualiza item com os dados do `edit`
   - destroy: deletar
 
+```bash
 php artisan make:controller [nome] -r (já criar todos esses métodos)
+```
 
 ### Invokable Controller:
 Um controller que não é atrelado a um model, basicamente uma função mas que é uma classe por algum motivo
-> funções são classes só pesquisar
 ```bash
 php artisan make:controller [nome] --invokable
 ```
+> funções são classes só pesquisar
 
 ## View
 resources/views     
-camada de apresentação, html tunado(.blade.php). Utiliza todas as tags html, mas adiciona for if e outros elementos do php direto no html(indicados pelo @)
-Pode definir componentes que serão importados por outras views
+camada de apresentação, html tunado(.blade.php). Utiliza todas as tags html, mas adiciona for, if e outras funcionalidades do php direto no html(começam com @)      
+Pode definir componentes que serão importados por outras views     
+variáveis ficam entre {{}}
+tag html começando com x = componente
 
 ```blade
 <h1>Bem-vindo, {{ $user->name }}</h1>
@@ -207,16 +232,18 @@ Pode definir componentes que serão importados por outras views
 # MDQI(Mais do que isso)
 
 ## Artisan(seu amiguinho)
-é o arquivo php que é usado para criar as estruturas base das classes no laravel(pq dev é preguiçoso)
-nada demais, mas serve pra tudo
+Cria as estruturas base das classes no laravel(pq dev é preguiçoso). Nada demais, mas serve pra tudo
 
 ## Composer
-pip do php, mas que na real é mais parecido com o npm
+pip do php
+```bash
 composer require [nome do pacote]
+composer require -dev [nome do pacote] (dependência de desenvolvimento=não instala quando estiver num servidor de verdade)
 composer run dev (inicia o server de dev do laravel)
+```
 
 ## Vite
-builder de js e server de static para dev
+builder de js e server de static para dev       
 js: a linguagem de script que precisa de build e compilação
 
 ## Route(Porteiro)
@@ -261,7 +288,7 @@ Route::middleware('auth')->group(function () {
 
 ## Policy
 app/Policies    
-Permissões dos controllers, define quem pode ou não acessar certas páginas ou modificar items. Não percisa de if feio no meio do controller
+Permissões dos controllers, define quem pode ou não acessar certas páginas ou modificar items. Não precisa de if feio no meio do controller
 
 ## Request Form
 Validação de formulário em uma classe separado, não precisa de if feio no controller 2.0
