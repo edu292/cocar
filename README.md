@@ -1,17 +1,17 @@
 # MVC (Model View Controller)
 ## Model
-app/Models      
-responsável por fazer queries, inserir dados no banco de dados e regras de negócio.
+app/Models  
+Responsável por fazer queries, inserir dados no banco de dados e regras de negócio.  
 ``` bash
 php artisan make:model [nome]
 ```
 
 ### Migrações
-database/migrations       
+database/migrations  
 
 git do banco de dados. Diz como criar as tabelas e como mudar os dados de uma versão para outra do banco de dados.
   - up: alterações da nova migração
-  - down: como revertê-las.
+  - down: como revertê-las. (opcional)
 
 ```php
     public function up()
@@ -43,9 +43,9 @@ git do banco de dados. Diz como criar as tabelas e como mudar os dados de uma ve
     }
 ```
 ```bash
-php artisan make:migration [nome_tabela] (criar tabela)
-php artisan make:migration add_[coluna]_to_[tabela] (adicionar coluna na tabela)
-php artisan make:model [nome] -m (cria o arquivo de migração junto com o model)
+php artisan make:migration [nome_tabela]             # criar tabela
+php artisan make:migration add_[coluna]_to_[tabela]  # adicionar coluna na tabela
+php artisan make:model [nome] -m                     # cria o arquivo de migração junto com o model
 ```
 
 ### O que tem na classe models
@@ -72,18 +72,18 @@ protected $casts = [ // Converte os dados da coluna do banco de dados para o tip
 ### Queries com laravel = sql com setinhas
 ```php
 // Traz TODOS os posts da tabela
-$posts = Post::all(); 
+$posts = Post::all();
 
 // Busca o post com ID = 1
-$post = Post::find(1); 
+$post = Post::find(1);
 
 // Tenta achar o ID 1. Se não achar, não retorna null, ele já cospe um Erro 404 (Not Found) automático na tela. Lindo.
-$post = Post::findOrFail(1); 
+$post = Post::findOrFail(1);
 
 // Traz apenas o primeiro post que encontrar na tabela
 $post = Post::first();
 
-// Traz apenas o primeiro post que encontrar na tabela
+// Traz apenas o último post que encontrar na tabela
 $post = Post::last();
 
 // Query mais complexa
@@ -96,8 +96,8 @@ $posts = Post::where('is_published', true) // Filtro 1
 
 
 ### Relacionamentos(models também amam)
-Ao invés de lembrar dos joins você pode ensinar os relacionamentos aos models e depois acessar os dados direto       
-relacionamentos são funções no model
+Ao invés de lembrar dos joins você pode ensinar os relacionamentos aos models e depois acessar os dados direto  
+> relacionamentos são funções no model
 
 #### Um para Um (1:1)
 Exemplo: Um usuário tem um perfil
@@ -119,9 +119,9 @@ public function user()
     return $this->belongsTo(User::class);
 }
 ```
-Como usar: 
-  - $user->profile->cpf; (O Laravel faz a query sozinho).
-  - $profile->user->email;
+Como usar:
+  - `$user->profile->cpf`
+  - `$profile->user->email`
 
 #### Um para Muitos (1:N)
 
@@ -146,12 +146,12 @@ public function user()
 ```
 
 Como usar:
-  - Pegar todos os posts do usuário: $user->posts;
-  - Criar um post já atrelado ao usuário: $user->posts()->create(['title' => 'Novo Post']);
-  - Pegar usuário que criou post: $post->user() (já faz a query pro model do user)
+  - Pegar todos os posts do usuário: `$user->posts`
+  - Criar um post já atrelado ao usuário: `$user->posts()->create(['title' => 'Novo Post'])`
+  - Pegar usuário que criou post: `$post->user` (já faz a query pro model do user)
 
 #### Muitos para Muitos (N:M)
-Exemplo: Um Post tem várias Tags, e uma Tag pertence a vários Posts.    
+Exemplo: Um Post tem várias Tags, e uma Tag pertence a vários Posts.  
 Tem que criar a tabela associativa ainda ([nome tabela]_to_[nome da outra tabela])
 
 No Model Post:
@@ -173,14 +173,13 @@ public function posts()
 ```
 
 Como usar:
-  - Ligar uma tag a um post existente: $post->tags()->attach($tag_id);
-  - Desligar a tag do post: $post->tags()->detach($tag_id);
+  - Ligar uma tag a um post existente: `$post->tags()->attach($tag_id)`
+  - Desligar a tag do post: `$post->tags()->detach($tag_id)`
 
 ## Controller(Ordem errada pq sim)
-app/Http/Controllers     
+app/Http/Controllers  
 
-responsável por usar e instanciar os models, fazer os filtros, validações e formatações para passar para a view
-geralmente um controller é responsável por um model e controla todo o seu ciclo de vida(menos interagir com o banco de dados, obv)
+responsável por usar e instanciar os models, fazer os filtros, validações e formatações para passar para a view. Geralmente um controller é responsável por um model e controla todo o seu ciclo de vida(menos interagir com o banco de dados, obv)
 
 ```bash
 php artisan make:controller [nome]
@@ -198,7 +197,7 @@ Normalmente retornan ou uma view(tela) ou redirect(processamento os dados) e man
   - destroy: deletar
 
 ```bash
-php artisan make:controller [nome] -r (já criar todos esses métodos)
+php artisan make:controller [nome] -r #já cria todos esses métodos
 ```
 
 ### Invokable Controller:
@@ -209,11 +208,11 @@ php artisan make:controller [nome] --invokable
 > funções são classes só pesquisar
 
 ## View
-resources/views     
-camada de apresentação, html tunado(.blade.php). Utiliza todas as tags html, mas adiciona for, if e outras funcionalidades do php direto no html(começam com @)      
-Pode definir componentes que serão importados por outras views     
-variáveis ficam entre {{}}
-tag html começando com x = componente
+resources/views  
+Camada de apresentação, html tunado(`.blade.php`). Utiliza todas as tags html normais, mas tem variáveis, for, if e outras funcionalidades do php
+- variáveis ficam entre `{{ }}`
+- tag html começando com `<x-` = componente
+- começando com `@` = php
 
 ```blade
 <h1>Bem-vindo, {{ $user->name }}</h1>
@@ -229,6 +228,46 @@ tag html começando com x = componente
 @endforeach
 ```
 
+### Componentes
+resources/views/components  
+
+Blocos de html que se repetem podem ser separados em seus próprios arquivos e incluídos em outras views
+#### O componente
+resources/views/components/alert.blade.php
+```blade
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ $title ?? 'Meu App' }}</title>
+</head>
+<body>
+    <nav>
+        <a href="/">Home</a>
+        <a href="/posts">Posts</a>
+    </nav>
+
+    <main>
+        {{ $slot }} 
+    </main>
+
+    <footer>
+        <p>Copyright © {{ date('Y') }}</p>
+    </footer>
+</body>
+</html>
+```
+
+#### Uso
+```blade
+<x-layout title="Página Inicial">
+    
+    <h1>Bem-vindo, {{ $user->name }}</h1>
+    <p>Aqui estão as últimas novidades...</p>
+
+</x-layout>
+```
+
+
 # MDQI(Mais do que isso)
 
 ## Artisan(seu amiguinho)
@@ -238,16 +277,16 @@ Cria as estruturas base das classes no laravel(pq dev é preguiçoso). Nada dema
 pip do php
 ```bash
 composer require [nome do pacote]
-composer require -dev [nome do pacote] (dependência de desenvolvimento=não instala quando estiver num servidor de verdade)
-composer run dev (inicia o server de dev do laravel)
+composer require -dev [nome do pacote]  # dependência de desenvolvimento = não instala quando estiver num servidor de verdade
+composer run dev                        # inicia o server de dev do laravel
 ```
 
 ## Vite
-builder de js e server de static para dev       
-js: a linguagem de script que precisa de build e compilação
+builder de js e server de static para dev
+> js: a linguagem de script que precisa de build e compilação
 
 ## Route(Porteiro)
-routes/web.php    
+routes/web.php  
 
 traduz a url para o controller
 ```php
@@ -287,8 +326,9 @@ Route::middleware('auth')->group(function () {
 ```
 
 ## Policy
-app/Policies    
+app/Policies  
 Permissões dos controllers, define quem pode ou não acessar certas páginas ou modificar items. Não precisa de if feio no meio do controller
 
 ## Request Form
+app/  
 Validação de formulário em uma classe separado, não precisa de if feio no controller 2.0
