@@ -14,5 +14,6 @@ Route::get('/home', function () {
 Route::post('/home', function (){
     return 'botão excluir';
 });
+
 Route::get('/user/{id}', [UserController::class, 'show']);
 Route::post('/logout', [UserController::class, 'logout'])->name('logout');
