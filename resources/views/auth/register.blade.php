@@ -1,17 +1,19 @@
 <x-layout>
     <x-slot:title>Cadastro</x-slot:title>
     <x-slot:body>
-        <main class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden relative">
-            <div class="w-full h-2 flex">
-                <div class="w-1/3 h-full bg-brand-blue"></div>
-                <div class="w-1/3 h-full bg-brand-orange"></div>
-                <div class="w-1/3 h-full bg-brand-green"></div>
-            </div>
+        <div class="min-h-screen flex items-center justify-center p-4"">
+            <main class="bg-white w-full max-w-md rounded-2xl shadow-2xl overflow-hidden relative">
+                <div class="w-full h-2 flex">
+                    <div class="w-1/3 h-full bg-brand-blue"></div>
+                    <div class="w-1/3 h-full bg-brand-orange"></div>
+                    <div class="w-1/3 h-full bg-brand-green"></div>
+                </div>
 
-            <div class="p-8">
-                <div class="text-center mb-8">
-                    <div class="inline-flex items-center justify-center w-16 h-16 mb-4 relative">
-                        <img src="{{ asset('favicons/favicon.svg') }}">
+                <div class="p-8">
+                    <div class="text-center mb-8">
+                        <div class="inline-flex items-center justify-center w-16 h-16 mb-4 relative">
+                            <img src="{{ asset('favicons/favicon.svg') }}">
+                        </div>
                         <h1 class="text-3xl font-bold text-brand-blue tracking-tight">Junte-se à
                             <span class="text-brand-orange">Tribo</span>
                         </h1>
@@ -158,13 +160,15 @@
                             </a>
                         </p>
                     </div>
-
-                    <div class="w-full h-2 flex mt-auto">
-                        <div class="w-1/3 h-full bg-brand-blue"></div>
-                        <div class="w-1/3 h-full bg-brand-orange"></div>
-                        <div class="w-1/3 h-full bg-brand-green"></div>
-                    </div>
                 </div>
+        </div>
+
+        <div class="w-full h-2 flex mt-auto">
+            <div class="w-1/3 h-full bg-brand-blue"></div>
+            <div class="w-1/3 h-full bg-brand-orange"></div>
+            <div class="w-1/3 h-full bg-brand-green"></div>
+        </div>
         </main>
+        </div>
     </x-slot:body>
 </x-layout>
