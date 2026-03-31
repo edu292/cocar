@@ -17,10 +17,6 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    public static function logout()
-    {
-    }
-
     /**
      * Get the attributes that should be cast.
      *

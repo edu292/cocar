@@ -30,6 +30,10 @@ class CreateNewUser implements CreatesNewUsers
                 'email',
                 'max:255',
                 Rule::unique(User::class),
+                Rule::email()
+                    ->rfcCompliant()
+                    ->validateMxRecord()
+                    ->preventSpoofing(),
             ],
             'password' => $this->passwordRules(),
             'role' => ['required', 'string', 'in:passageiro,motorista,empresa'],
