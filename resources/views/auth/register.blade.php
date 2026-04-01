@@ -130,9 +130,8 @@
                     Faça login
                 </a>
 
+                <div class="brand-stripe brand-stripe--bottom"></div>
             </div>
-            <div class="brand-stripe brand-stripe--bottom"></div>
-        </div>
         </div>
     </x-slot:body>
 </x-layout>
