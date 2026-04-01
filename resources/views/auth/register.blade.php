@@ -1,7 +1,7 @@
 <x-layout>
     <x-slot:title>Cadastro</x-slot:title>
     <x-slot:body>
-        <div class="center-wrapper bg-grafismo"">
+        <div class="center-wrapper bg-grafismo">
             <div class="card card--auth">
                 <div class="brand-stripe brand-stripe--top"></div>
 
