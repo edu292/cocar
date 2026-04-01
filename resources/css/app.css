@@ -1,21 +1,276 @@
-@import "tailwindcss";
-
-@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../storage/framework/views/*.php';
-@source '../**/*.blade.php';
-@source '../**/*.js';
-
-@theme {
-    --font-sans:
-        "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
-        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-        "Noto Color Emoji";
+:root {
     --color-brand-blue: #365691;
     --color-brand-orange: #be602d;
     --color-brand-green: #7b9d78;
+    --color-text-muted: #777;
+    --color-alert-red: #c40404;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Inter", sans-serif;
+}
+
+button {
+    border: none;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 15px 5px;
+    border: none;
+    background-color: inherit;
+    outline: none;
+}
+
+input::placeholder {
+    opacity: 1;
+    color: var(--color-text-muted);
+}
+
+select:has(option:disabled:checked) {
+    color: var(--color-text-muted);
+}
+
+.center-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.content-wrapper {
+    display: flex;
+    min-height: 100svh;
+    height: 100%;
 }
 
 .bg-grafismo {
     background-color: #f4f4f5;
     background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 0L40 20L20 40L0 20L20 0z' fill='%23365691' fill-opacity='0.05' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.brand-stripe {
+    --margin: 30px;
+    position: absolute;
+    background: linear-gradient(
+        90deg,
+        var(--color-brand-blue) 0%,
+        var(--color-brand-blue) 33.33%,
+        var(--color-brand-orange) 33.33%,
+        var(--color-brand-orange) 66.66%,
+        var(--color-brand-green) 66.66%,
+        var(--color-brand-green) 100%
+    );
+    width: 100%;
+    height: 10px;
+}
+
+.brand-stripe--top {
+    border-top-right-radius: inherit;
+    border-top-left-radius: inherit;
+    top: 0;
+}
+
+.brand-stripe--bottom {
+    border-bottom-right-radius: inherit;
+    border-bottom-left-radius: inherit;
+    bottom: 0;
+}
+
+.card {
+    border-radius: 10px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    position: relative;
+    max-width: 800px;
+}
+
+.card--auth {
+    width: 500px;
+}
+
+.card__actions {
+    width: 100%;
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 10px;
+}
+
+.card__text {
+    text-align: center;
+    max-width: 500px;
+}
+
+.card__heading {
+    font-size: 2.5em;
+}
+
+.card__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0.8em 0;
+    text-align: center;
+}
+
+.card__subtitle {
+}
+.text-orange {
+    color: var(--color-brand-orange);
+}
+
+.text-green {
+    color: var(--color-brand-green);
+}
+
+.text-blue {
+    color: var(--color-brand-blue);
+}
+
+.logo {
+    width: 100px;
+    height: 100px;
+
+    img {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+.btn {
+    --background-color: white;
+    flex: 1;
+
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+    background-color: var(--background-color);
+    font-weight: bold;
+    font-size: 1.1em;
+    transition:
+        background-color 0.2s ease-in-out,
+        border-color 0.2s ease-in-out,
+        color 0.2s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn:hover {
+    background-color: color-mix(in srgb, var(--background-color), black 15%);
+}
+
+.btn--submit {
+    margin-top: 20px;
+}
+
+.btn--outline {
+    background-color: transparent;
+    border: 3px solid var(--background-color);
+    color: black;
+}
+
+.btn--outline:hover {
+    border-color: color-mix(in srgb, var(--background-color), black 15%);
+    color: white;
+}
+
+.btn--orange {
+    --background-color: var(--color-brand-orange);
+}
+
+.btn--green {
+    --background-color: var(--color-brand-green);
+}
+
+.btn--blue {
+    --background-color: var(--color-brand-blue);
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    &:has(.field__error) .field__input-wrapper {
+        border-color: var(--color-alert-red);
+    }
+}
+
+.field__input-wrapper {
+    outline: 1px solid var(--color-text-muted);
+    border-radius: 5px;
+
+    display: flex;
+    &:focus-within {
+        border-color: transparent;
+        outline: 2px solid var(--color-brand-green);
+    }
+    transition: outline 0.2s ease;
+}
+
+.field__error {
+    color: var(--color-alert-red);
+}
+
+.field__input-icon {
+    display: flex;
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    padding: 8px;
+    color: var(--color-text-muted);
+    svg {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.stripe-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px 0 10px 0;
+    color: var(--color-text-muted);
+}
+
+.stripe-container::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-text-muted);
+}
+
+.stripe-container span {
+    background-color: white;
+    z-index: 1;
+    padding: 0 0.5em;
 }
