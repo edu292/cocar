@@ -13,4 +13,5 @@ Route::middleware('auth')->group(function () {
     });
     Route::get('/perfil',[perfilController::class,'edit'])->name('perfil.edit');
     Route::put('/perfil',[perfilController::class,'update'])->name('perfil.update');
+    Route::delete('/perfil',[PerfilController::class, 'destroy']) -> name('perfil.destroy');
 });

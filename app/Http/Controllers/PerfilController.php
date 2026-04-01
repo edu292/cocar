@@ -30,7 +30,19 @@ class PerfilController extends Controller{
         $user->update($dados);
 
         return redirect() -> back() -> with('successo', 'Perfil atualizado com sucesso!');
+    }
+
+    function destroy(Request $request){
+        $user = Auth::user();
+        Auth::logout();
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/') -> with('successo', 'Perfil excluido com sucesso!');
 
     }
+
 
 }

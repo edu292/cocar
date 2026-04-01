@@ -82,7 +82,20 @@
                         </a>
                     </div>
                 </form>
+                <div class="stripe-container">
+                    <span>Zona de Perigo</span>
+                </div>
+                <form action="{{ route('perfil.destroy') }}" method="POST" onsubmit="return confirm('Tem certeza? Esta ação não pode ser desfeita!')">
+                    @csrf
+                    @method('DELETE')
 
+                    <button type="submit" class="btn" style="--background-color: var(--color-alert-red); width: 100%; margin-top: 10px;">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; margin-right: 8px;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                        </svg>
+                        Excluir Minha Conta
+                    </button>
+                </form>
                 <div class="brand-stripe brand-stripe--bottom"></div>
             </div>
         </div>
