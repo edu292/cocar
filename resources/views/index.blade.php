@@ -1,50 +1,35 @@
 <x-layout>
-    <x-slot:title>CoCar </x-slot:title>
+    <x-slot:title>CoCar</x-slot:title>
     <x-slot:body>
-        <div class="min-h-screen flex items-center justify-center p-4">
-            <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden relative text-center">
+        <div class="center-wrapper bg-grafismo">
+            <div class="card">
+                <div class="brand-stripe brand-stripe--top"></div>
 
-                <div class="w-full h-2 flex">
-                    <div class="w-1/3 h-full bg-brand-blue"></div>
-                    <div class="w-1/3 h-full bg-brand-orange"></div>
-                    <div class="w-1/3 h-full bg-brand-green"></div>
-                </div>
-
-                <div class="p-10">
-                    <div
-                        class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-brand-blue/10 mb-6 relative hover:scale-105 transition-transform duration-300">
-                        <img src="{{ asset('favicons/favicon.svg') }}" alt="Logo CoCar" class="w-10 h-10">
+                <header class="card__header">
+                    <div class="logo">
+                        <img src="{{ asset('favicons/favicon.svg') }}" alt="Logo CoCar">
                     </div>
 
-                    <h1 class="text-4xl font-extrabold text-brand-blue tracking-tight mb-4">
-                        Bem-vindo ao <span class="text-brand-orange">CoCar</span>
+                    <h1 class="card__heading text-blue">
+                        Bem-vindo à <span class="text-orange">CoCar</span>
                     </h1>
-                    <p class="text-gray-600 text-base leading-relaxed mb-10">
-                        A plataforma de caronas da sua tribo. Conecte-se com pessoas da sua instituição, compartilhe
-                        viagens, faça amigos e economize no dia a dia.
-                    </p>
+                </header>
+                <p class="card__text">
+                    A plataforma de caronas da sua tribo. Conecte-se com pessoas da sua instituição, compartilhe
+                    viagens, faça amigos e economize no dia a dia.
+                </p>
 
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <div class="card__actions">
+                    <a href="{{ route('login') }}" class="btn btn--blue btn--outline">
+                        Fazer Login
+                    </a>
 
-                        <a href="{{ route('login') }}"
-                            class="flex-1 flex justify-center items-center py-3 px-4 border-2 border-brand-blue rounded-lg shadow-sm text-sm font-bold text-brand-blue bg-white hover:bg-brand-blue hover:text-white transition-all duration-200 transform hover:-translate-y-0.5">
-                            Fazer Login
-                        </a>
-
-                        <a href="{{ route('register') }}"
-                            class="flex-1 flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-brand-orange hover:bg-opacity-90 transition-all duration-200 transform hover:-translate-y-0.5">
-                            Criar uma Conta
-                        </a>
-
-                    </div>
+                    <a href="{{ route('register') }}" class="btn btn--orange">
+                        Criar uma Conta
+                    </a>
                 </div>
 
-                <div class="w-full h-2 flex mt-auto">
-                    <div class="w-1/3 h-full bg-brand-blue"></div>
-                    <div class="w-1/3 h-full bg-brand-orange"></div>
-                    <div class="w-1/3 h-full bg-brand-green"></div>
-                </div>
-
+                <div class="brand-stripe brand-stripe--bottom"></div>
             </div>
         </div>
     </x-slot:body>
