@@ -2,28 +2,31 @@
 
 namespace App\Http\Middleware;
 
-use App\Enums\PapelUsuario;
+use App\Enums\TipoUsuario;
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class VerificarPapel
+class VerificarTipo
 {
+    /**
+     * @param  Closure(): void  $next
+     */
     public function handle(Request $request, Closure $next, string $papel): Response
     {
-        if (! Auth::check()) {
-            return redirect()->route('inicio');
-        }
+        $tipo = TipoUsuario::tryFrom($papel);
 
-        $papelNecessario = PapelUsuario::from($papel);
-
-        if (Auth::user()->papel !== $papelNecessario) {
+        if ($request->user()->papel !== $tipo) {
             return redirect()
                 ->route('home')
                 ->with('error', 'Acesso negado. Você não tem permissão para acessar esta área.');
         }
 
         return $next($request);
+    }
+
+    public static function com(TipoUsuario $tipo): string
+    {
+        return 'tipo:'.$tipo->value;
     }
 }

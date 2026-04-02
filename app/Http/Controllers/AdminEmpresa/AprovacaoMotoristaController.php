@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\AdminEmpresa;
 
-use App\Enums\PapelUsuario;
 use App\Enums\StatusUsuario;
+use App\Enums\TipoUsuario;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
@@ -17,7 +17,7 @@ class AprovacaoMotoristaController extends Controller
             abort(403, 'O usuário não faz parte da sua empresa.');
         }
 
-        if ($user->papel !== PapelUsuario::Motorista) {
+        if ($user->papel !== TipoUsuario::Motorista) {
             abort(400, 'O usuário não é um motorista.');
         }
 

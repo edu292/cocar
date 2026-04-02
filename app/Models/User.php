@@ -2,17 +2,15 @@
 
 namespace App\Models;
 
-use App\Enums\PapelUsuario;
-use App\Enums\StatusUsuario;
+use App\Enums\TipoUsuario;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['name', 'email', 'password', 'papel', 'status', 'empresa_id'])]
+#[Fillable(['name', 'email', 'password', 'tipo', 'empresa_id', 'cpf'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
@@ -23,17 +21,8 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
-            'papel' => PapelUsuario::class,
-            'status' => StatusUsuario::class,
+            'tipo' => TipoUsuario::class,
         ];
-    }
-
-    /**
-     * @return HasOne<Passageiro,User>
-     */
-    public function passageiro(): HasOne
-    {
-        return $this->hasOne(Passageiro::class);
     }
 
     /**

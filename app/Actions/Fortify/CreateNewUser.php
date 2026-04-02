@@ -2,8 +2,6 @@
 
 namespace App\Actions\Fortify;
 
-use App\Enums\PapelUsuario;
-use App\Enums\StatusUsuario;
 use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
@@ -24,17 +22,19 @@ class CreateNewUser implements CreatesNewUsers
     public function create(array $input): User
     {
         Validator::make($input, [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => 'required|string|max:255',
             'email' => [
                 'required',
                 'string',
                 'email',
                 'max:255',
-                Rule::unique(User::class),
-                Rule::email()->rfcCompliant()->preventSpoofing(),
+                'unique:users',
+                Rule::email()
+                    ->rfcCompliant()
+                    ->preventSpoofing(),
             ],
             'password' => $this->passwordRules(),
-            'papel' => ['required', 'string', 'in:motorista,passageiro'],
+            'cpf' => 'required|regex:/^[0-9]{11}$/|unique:users',
         ])->validate();
 
         $dominio = substr(strstr($input['email'], '@'), 1);
@@ -46,18 +46,11 @@ class CreateNewUser implements CreatesNewUsers
             ]);
         }
 
-        $papel = PapelUsuario::from($input['papel']);
-        $status = $papel === PapelUsuario::Motorista
-            ? StatusUsuario::PendenteAprovacao
-            : StatusUsuario::Ativo;
-
-        return User::create([
+        return $empresa->usuarios()->create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
-            'papel' => $papel,
-            'empresa_id' => $empresa->id,
-            'status' => $status,
+            'cpf' => $input['cpf'],
         ]);
     }
 }
