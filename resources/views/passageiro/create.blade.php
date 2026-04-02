@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:title>Criar Perfil do Passageiro - CoCar</x-slot:title>
+    <x-slot:title>Criar perfil do passageiro - CoCar</x-slot:title>
 
     <x-slot:body>
         <div class="passageiro-page bg-grafismo">

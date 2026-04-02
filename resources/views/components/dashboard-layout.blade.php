@@ -5,14 +5,14 @@
                 <header class="sidebar__header">
                     <div class="logo">
                         <img
-                            src="{{asset('favicons/favicon.svg')}}"
-                            alt="logo CoCar"
+                            src="{{ asset('favicons/favicon.svg') }}"
+                            alt="Logo CoCar"
                         />
                     </div>
                 </header>
                 <ul class="sidebar__list">
                     <li class="sidebar__list-item">
-                        <a href="" class="sidebar__link">
+                        <a href="{{ route('admin-empresa.painel') }}" class="sidebar__link">
                             <div class="sidebar__link-icon">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -26,13 +26,11 @@
                                     />
                                 </svg>
                             </div>
-                            <span class="sidebar__link-text"
-                                >Aprovações Pendentes</span
-                            >
+                            <span class="sidebar__link-text">Aprovações pendentes</span>
                         </a>
                     </li>
                     <li class="sidebar__list-item">
-                        <a href="" class="sidebar__link">
+                        <a href="{{ route('admin-empresa.painel') }}" class="sidebar__link">
                             <div class="sidebar__link-icon">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -46,17 +44,13 @@
                                     />
                                 </svg>
                             </div>
-                            <span class="sidebar__link-text"
-                                >Meus usuários</span
-                            >
+                            <span class="sidebar__link-text">Meus usuários</span>
                         </a>
                     </li>
                     <li class="sidebar__list-item">
-                        <a href="" class="sidebar__link">
+                        <a href="{{ route('admin-empresa.painel') }}" class="sidebar__link">
                             <div class="sidebar__link-icon"></div>
-                            <span class="sidebar__link-text"
-                                >Meus Benefícios</span
-                            >
+                            <span class="sidebar__link-text">Meus benefícios</span>
                         </a>
                     </li>
                 </ul>

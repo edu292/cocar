@@ -12,9 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('company_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->string('role');
-            $table->string('status');
+            if (! Schema::hasColumn('users', 'empresa_id') && Schema::hasTable('empresas')) {
+                $table->foreignId('empresa_id')->nullable()->constrained('empresas')->nullOnDelete();
+            }
+
+            if (! Schema::hasColumn('users', 'papel') && ! Schema::hasColumn('users', 'role')) {
+                $table->string('papel')->nullable();
+            }
+
+            if (! Schema::hasColumn('users', 'status')) {
+                $table->string('status')->nullable();
+            }
         });
     }
 
@@ -24,7 +32,23 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            //
+            if (Schema::hasColumn('users', 'empresa_id')) {
+                $table->dropConstrainedForeignId('empresa_id');
+            }
+
+            $colunas = [];
+
+            if (Schema::hasColumn('users', 'papel')) {
+                $colunas[] = 'papel';
+            }
+
+            if (Schema::hasColumn('users', 'status')) {
+                $colunas[] = 'status';
+            }
+
+            if ($colunas !== []) {
+                $table->dropColumn($colunas);
+            }
         });
     }
 };

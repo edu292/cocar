@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 
 class PassageiroService
 {
-    public function atualizarPerfil(User $user, array $dados)
+    public function atualizarPerfil(User $user, array $dados): User
     {
         return DB::transaction(function () use ($user, $dados) {
             $user->update([

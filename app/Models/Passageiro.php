@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Passageiro extends Model
 {
@@ -11,15 +12,21 @@ class Passageiro extends Model
         'cpf',
     ];
 
-    public function user()
+    /**
+     * @return BelongsTo<User,$this>
+     */
+    public function usuario(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-/**   
- * public function empresa()
+    /**
+     * Alias para manter compatibilidade com código antigo.
+     *
+     * @return BelongsTo<User,$this>
+     */
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(Empresa::class, 'id_empresa');
+        return $this->usuario();
     }
-**/
 }

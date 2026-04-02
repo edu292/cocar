@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:title>Painel do Passageiro - CoCar</x-slot:title>
+    <x-slot:title>Painel do passageiro - CoCar</x-slot:title>
 
     <x-slot:content>
         <div class="passageiro-page bg-grafismo">

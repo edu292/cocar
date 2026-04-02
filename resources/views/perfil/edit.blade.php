@@ -1,7 +1,5 @@
 <x-layout>
-    <x-slot:title>
-        Editar Perfil - CoCar
-    </x-slot:title>
+    <x-slot:title>Editar perfil - CoCar</x-slot:title>
 
     <x-slot:body>
         <div class="center-wrapper bg-grafismo">
@@ -10,15 +8,15 @@
 
                 <header class="card__header">
                     <div class="logo">
-                        <img src="{{ asset('favicons/favicon.svg') }}" alt="CoCar Logo" />
+                        <img src="{{ asset('favicons/favicon.svg') }}" alt="Logo CoCar" />
                     </div>
-                    <h1 class="card__heading text-blue">Meu <span class="text-orange">Perfil</span></h1>
+                    <h1 class="card__heading text-blue">Meu <span class="text-orange">perfil</span></h1>
                     <p class="text-brand-green">Mantenha seus dados atualizados na tribo.</p>
                 </header>
 
-                @if(session('sucesso'))
+                @if (session('success'))
                     <div style="color: var(--color-brand-green); margin-bottom: 20px; font-weight: bold;">
-                        {{ session('sucesso') }}
+                        {{ session('success') }}
                     </div>
                 @endif
 
@@ -27,34 +25,29 @@
                     @method('PUT')
 
                     <div class="field">
-                        <label class="text-blue font-bold">Nome</label>
+                        <label class="text-blue font-bold" for="name">Nome</label>
                         <div class="field__input-wrapper">
-                            <div class="field__input-icon">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                            </div>
-                            <input type="text" name="name" value="{{ old('name', $user->name) }}" required>
+                            <input type="text" id="name" name="name" value="{{ old('name', $user->name) }}" required>
                         </div>
-                        @error('name') <span class="field__error">{{ $message }}</span> @enderror
+                        @error('name')
+                            <span class="field__error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="field">
-                        <label class="text-blue font-bold">E-mail</label>
+                        <label class="text-blue font-bold" for="email">E-mail</label>
                         <div class="field__input-wrapper">
-                            <div class="field__input-icon">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            </div>
-                            <input type="email" name="email" value="{{ old('email', $user->email) }}" required>
+                            <input type="email" id="email" name="email" value="{{ old('email', $user->email) }}" required>
                         </div>
-                        @error('email') <span class="field__error">{{ $message }}</span> @enderror
+                        @error('email')
+                            <span class="field__error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="field">
-                        <label class="text-blue font-bold">Tipo de Conta</label>
+                        <label class="text-blue font-bold">Tipo de conta</label>
                         <div class="field__input-wrapper" style="background-color: #f9f9f9; opacity: 0.7;">
-                            <div class="field__input-icon">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
-                            </div>
-                            <input type="text" value="{{ $user->role }}" disabled style="cursor: not-allowed;">
+                            <input type="text" value="{{ $user->papel->label() }}" disabled style="cursor: not-allowed;">
                         </div>
                     </div>
 
@@ -63,39 +56,40 @@
                     </div>
 
                     <div class="field">
-                        <label class="text-blue font-bold">Nova Senha</label>
+                        <label class="text-blue font-bold" for="password">Nova senha</label>
                         <div class="field__input-wrapper">
-                            <div class="field__input-icon">
-                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                            </div>
-                            <input type="password" name="password" placeholder="Deixe em branco para não alterar">
+                            <input type="password" id="password" name="password" placeholder="Deixe em branco para não alterar">
                         </div>
-                        @error('password') <span class="field__error">{{ $message }}</span> @enderror
+                        @error('password')
+                            <span class="field__error">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="card__actions">
                         <button type="submit" class="btn btn--blue">
-                            Salvar Alterações
+                            Salvar alterações
                         </button>
-                        <a href="{{ url('/home') }}" class="btn btn--outline btn--blue">
+                        <a href="{{ route('home') }}" class="btn btn--outline btn--blue">
                             Voltar
                         </a>
                     </div>
                 </form>
+
                 <div class="stripe-container">
-                    <span>Zona de Perigo</span>
+                    <span>Zona de perigo</span>
                 </div>
-                <form action="{{ route('perfil.destroy') }}" method="POST" onsubmit="return confirm('Tem certeza? Esta ação não pode ser desfeita!')">
+
+                <form action="{{ route('perfil.destroy') }}" method="POST"
+                    onsubmit="return confirm('Tem certeza? Esta ação não pode ser desfeita!')">
                     @csrf
                     @method('DELETE')
 
-                    <button type="submit" class="btn" style="--background-color: var(--color-alert-red); width: 100%; margin-top: 10px;">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width: 20px; margin-right: 8px;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                        </svg>
-                        Excluir Minha Conta
+                    <button type="submit" class="btn"
+                        style="--background-color: var(--color-alert-red); width: 100%; margin-top: 10px;">
+                        Excluir minha conta
                     </button>
                 </form>
+
                 <div class="brand-stripe brand-stripe--bottom"></div>
             </div>
         </div>

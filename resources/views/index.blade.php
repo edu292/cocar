@@ -14,6 +14,7 @@
                         Bem-vindo à <span class="text-orange">CoCar</span>
                     </h1>
                 </header>
+
                 <p class="card__text">
                     A plataforma de caronas da sua tribo. Conecte-se com pessoas da sua instituição, compartilhe
                     viagens, faça amigos e economize no dia a dia.
@@ -21,16 +22,16 @@
 
                 <div class="card__actions">
                     <a href="{{ route('login') }}" class="btn btn--blue btn--outline">
-                        Fazer Login
+                        Fazer login
                     </a>
 
                     <a href="{{ route('register') }}" class="btn btn--orange">
-                        Criar uma Conta
+                        Criar uma conta
                     </a>
                 </div>
 
-                <div class="stripe-container"><span>Quer adicionar a CoCar à sua empresa</span></div>
-                <a class="text-blue" href="{{ route('register-company') }}">Clique Aqui</a>
+                <div class="stripe-container"><span>Quer adicionar a CoCar à sua empresa?</span></div>
+                <a class="text-blue" href="{{ route('registrar-empresa') }}">Clique aqui</a>
 
                 <div class="brand-stripe brand-stripe--bottom"></div>
             </div>

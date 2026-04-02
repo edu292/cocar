@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('companies', function (Blueprint $table) {
-            $table->id();
-            $table->string('cnpj')->unique();
-            $table->string('name');
-            $table->string('email_domain')->unique()->nullable();
-            $table->timestamps();
-        });
+        if (! Schema::hasTable('empresas')) {
+            Schema::create('empresas', function (Blueprint $table) {
+                $table->id();
+                $table->string('cnpj')->unique();
+                $table->string('name');
+                $table->string('dominio_email')->unique()->nullable();
+                $table->timestamps();
+            });
+        }
     }
 
     /**
@@ -25,6 +27,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('company');
+        if (Schema::hasTable('empresas')) {
+            Schema::dropIfExists('empresas');
+        }
     }
 };

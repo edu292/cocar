@@ -2,9 +2,9 @@
 
 namespace App\Actions\Fortify;
 
-use App\Enums\UserRole;
-use App\Enums\UserStatus;
-use App\Models\Company;
+use App\Enums\PapelUsuario;
+use App\Enums\StatusUsuario;
+use App\Models\Empresa;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -17,8 +17,6 @@ class CreateNewUser implements CreatesNewUsers
     use PasswordValidationRules;
 
     /**
-     * Validate and create a newly registered user.
-     *
      * @param  array<string, string>  $input
      *
      * @throws ValidationException
@@ -33,37 +31,33 @@ class CreateNewUser implements CreatesNewUsers
                 'email',
                 'max:255',
                 Rule::unique(User::class),
-                Rule::email()
-                    ->rfcCompliant()
-                    ->preventSpoofing(),
+                Rule::email()->rfcCompliant()->preventSpoofing(),
             ],
             'password' => $this->passwordRules(),
-            'role' => ['required', 'string', 'in:driver,rider'],
+            'papel' => ['required', 'string', 'in:motorista,passageiro'],
         ])->validate();
 
-        $domain = substr(strstr($input['email'], '@'), 1);
-        $company = Company::where('email_domain', $domain)->first();
+        $dominio = substr(strstr($input['email'], '@'), 1);
+        $empresa = Empresa::where('dominio_email', $dominio)->first();
 
-        if (! $company) {
+        if (! $empresa) {
             throw ValidationException::withMessages([
-                'email' => ['O seu domínio de email não está cadastrado com nenhuma de nossas empresas parceiras.'],
+                'email' => ['O domínio do seu e-mail não está cadastrado em nenhuma empresa parceira.'],
             ]);
         }
 
-        $role = UserRole::from($input['role']);
-        if ($role == UserRole::Driver) {
-            $user = UserStatus::PendingApproval;
-        } else {
-            $user = UserStatus::Active;
-        }
+        $papel = PapelUsuario::from($input['papel']);
+        $status = $papel === PapelUsuario::Motorista
+            ? StatusUsuario::PendenteAprovacao
+            : StatusUsuario::Ativo;
 
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
-            'role' => $input['role'],
-            'company_id' => $company->id,
-            'status' => $user,
+            'papel' => $papel,
+            'empresa_id' => $empresa->id,
+            'status' => $status,
         ]);
     }
 }

@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:title>CoCar - Meu Perfil</x-slot:title>
+    <x-slot:title>CoCar - Meu perfil</x-slot:title>
 
     <x-slot:body>
         <div class="passageiro-page bg-grafismo">
@@ -40,13 +40,7 @@
                                 <div class="field">
                                     <label for="name">Nome completo</label>
                                     <div class="field__input-wrapper">
-                                        <input
-                                            type="text"
-                                            name="name"
-                                            id="name"
-                                            value="{{ old('name', $user->name) }}"
-                                            required
-                                        >
+                                        <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" required>
                                     </div>
                                 </div>
 
@@ -69,7 +63,7 @@
                             </div>
 
                             <div class="passageiro-profile__actions">
-                                <a href="{{ url('/home') }}" class="passageiro-profile__back-link">Voltar ao painel</a>
+                                <a href="{{ route('home') }}" class="passageiro-profile__back-link">Voltar ao painel</a>
                                 <button type="submit" class="btn btn--blue">Salvar alterações</button>
                             </div>
                         </form>
