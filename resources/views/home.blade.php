@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:title>Home</x-slot:title>
-    <x-slot:body>
+    <x-slot:content>
         <header
             class="w-full max-w-4xl bg-white rounded-2xl shadow-sm overflow-hidden mb-8 border border-gray-100 relative">
             <div class="brand-stripe brand-stripe--top"></div>
@@ -56,5 +56,5 @@
             </div>
             <div class="brand-stripe brand-stripe--bottom"></div>
         </main>
-    </x-slot:body>
+    </x-slot:content>
 </x-layout>

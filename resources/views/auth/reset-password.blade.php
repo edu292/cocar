@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:body>
+    <x-slot:content>
         <div class="center-wrapper">
             <div class="auth-container">
                 <h1>Reset Password</h1>
@@ -37,5 +37,5 @@
                 </form>
             </div>
         </div>
-    </x-slot:body>
+    </x-slot:content>
 </x-layout>

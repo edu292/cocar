@@ -1,7 +1,7 @@
 <x-layout>
     <x-slot:title>Painel do Passageiro - CoCar</x-slot:title>
 
-    <x-slot:body>
+    <x-slot:content>
         <div class="passageiro-page bg-grafismo">
             <div class="passageiro-shell">
                 <section class="passageiro-hero">
@@ -17,12 +17,8 @@
                     <a href="{{ route('passageiro.perfil') }}" class="passageiro-card">
                         <div class="passageiro-card__icon" aria-hidden="true">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="2"
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                                />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
                         <div class="passageiro-card__content">
@@ -35,5 +31,5 @@
                 </section>
             </div>
         </div>
-    </x-slot:body>
+    </x-slot:content>
 </x-layout>

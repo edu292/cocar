@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:title>CoCar</x-slot:title>
-    <x-slot:body>
+    <x-slot:content>
         <div class="center-wrapper bg-grafismo">
             <div class="card">
                 <div class="brand-stripe brand-stripe--top"></div>
@@ -29,8 +29,11 @@
                     </a>
                 </div>
 
+                <div class="stripe-container"><span>Quer adicionar a CoCar à sua empresa</span></div>
+                <a class="text-blue" href="{{ route('register-company') }}">Clique Aqui</a>
+
                 <div class="brand-stripe brand-stripe--bottom"></div>
             </div>
         </div>
-    </x-slot:body>
+    </x-slot:content>
 </x-layout>

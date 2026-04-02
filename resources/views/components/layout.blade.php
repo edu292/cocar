@@ -20,9 +20,14 @@
 </head>
 
 <body>
-    <main class="content-wrapper">
+    @if (isset($body))
         {{ $body }}
-    </main>
+    @else
+        <div class="content-wrapper">
+            {{ $content }}
+        </div>
+    @endif
 </body>
+
 
 </html>
