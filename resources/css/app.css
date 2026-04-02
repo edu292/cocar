@@ -64,6 +64,7 @@ select:has(option:disabled:checked) {
 .brand-stripe {
     --margin: 30px;
     position: absolute;
+    left: 0;
     background: linear-gradient(
         90deg,
         var(--color-brand-blue) 0%,
@@ -273,4 +274,247 @@ select:has(option:disabled:checked) {
     background-color: white;
     z-index: 1;
     padding: 0 0.5em;
+}
+
+.field__help {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+}
+
+.feedback {
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+}
+
+.feedback__list {
+    padding-left: 18px;
+    margin-top: 10px;
+}
+
+.feedback--error {
+    color: #991b1b;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.feedback--success {
+    color: #166534;
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+/* Área do passageiro com classes próprias para manter as views sem Tailwind. */
+.passageiro-page {
+    width: 100%;
+    min-height: 100svh;
+    padding: 48px 24px;
+    display: flex;
+    justify-content: center;
+}
+
+.passageiro-shell,
+.passageiro-form-card {
+    width: min(100%, 960px);
+}
+
+.passageiro-shell {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.passageiro-hero,
+.passageiro-card,
+.passageiro-form-card {
+    position: relative;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #dbe3ef;
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(54, 86, 145, 0.08);
+}
+
+.passageiro-hero {
+    padding: 42px;
+}
+
+.passageiro-hero__eyebrow,
+.passageiro-form-header__eyebrow {
+    color: var(--color-brand-orange);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+}
+
+.passageiro-hero__title,
+.passageiro-form-header__title {
+    color: var(--color-brand-blue);
+    font-size: clamp(2rem, 2.2vw, 2.8rem);
+    line-height: 1.1;
+    margin-bottom: 12px;
+}
+
+.passageiro-hero__text,
+.passageiro-form-header__text,
+.passageiro-card__text,
+.passageiro-profile__intro {
+    color: #526072;
+    line-height: 1.6;
+}
+
+.passageiro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+}
+
+.passageiro-card {
+    padding: 28px;
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.passageiro-card:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--color-brand-blue), white 55%);
+    box-shadow: 0 28px 50px rgba(54, 86, 145, 0.14);
+}
+
+.passageiro-card__icon {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 18px;
+    background: #e7eefb;
+    color: var(--color-brand-blue);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.passageiro-card__icon svg {
+    width: 28px;
+    height: 28px;
+}
+
+.passageiro-card__title,
+.passageiro-profile__title {
+    color: var(--color-brand-blue);
+    font-size: 1.3rem;
+    margin-bottom: 8px;
+}
+
+.passageiro-form-card {
+    padding: 40px;
+}
+
+.passageiro-form-card--compact {
+    width: min(100%, 720px);
+}
+
+.passageiro-form-header {
+    margin-bottom: 28px;
+}
+
+.passageiro-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.passageiro-profile {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+    gap: 24px;
+}
+
+.passageiro-profile__panel,
+.passageiro-profile__aside {
+    position: relative;
+    overflow: hidden;
+    background: white;
+    border: 1px solid #dbe3ef;
+    border-radius: 24px;
+    box-shadow: 0 24px 60px rgba(54, 86, 145, 0.08);
+    padding: 32px;
+}
+
+.passageiro-profile__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.passageiro-profile__group {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.passageiro-profile__actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.passageiro-profile__back-link {
+    color: var(--color-text-muted);
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.passageiro-profile__back-link:hover {
+    color: var(--color-brand-blue);
+}
+
+.passageiro-profile__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.passageiro-profile__meta-label {
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.passageiro-profile__meta-value {
+    color: var(--color-brand-blue);
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+@media (max-width: 768px) {
+    .passageiro-page {
+        padding: 24px 16px;
+    }
+
+    .passageiro-hero,
+    .passageiro-form-card,
+    .passageiro-profile__panel,
+    .passageiro-profile__aside {
+        padding: 24px;
+        border-radius: 20px;
+    }
+
+    .passageiro-profile {
+        grid-template-columns: 1fr;
+    }
+
+    .passageiro-profile__actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
@@ -29,4 +28,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function passageiro(){
+        return $this->hasOne(Passageiro::class);
+    }
+
+    public function motorista(){
+        return $this->hasOne(Motorista::class);
+    }
+
+
+    public function empresa(){
+        return $this->hasOne(Empresa::class);
+    }
 }
+
