@@ -68,12 +68,32 @@
                             <label for="administrador-email">E-mail do responsável</label>
                             <div class="field__input-wrapper">
                                 <input type="email" id="administrador-email" name="administrador-email"
-                                    value="{{ old('administrador-email') }}" placeholder="responsavel@empresa.com.br" required>
+                                    value="{{ old('administrador-email') }}" placeholder="responsavel@empresa.com.br"
+                                    required>
                             </div>
                             @error('administrador-email')
                                 <span class="field__error">{{ $message }}</span>
                             @enderror
                         </div>
+                        <div class="field">
+                            <label for="administrador-cpf">CPF Responsável</label>
+                            <div class="field__input-wrapper">
+                                <div class="field__input-icon">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                        viewBox="0 0 24 24">
+                                        <path fill="currentColor"
+                                            d="M22 3H2c-1.09.04-1.96.91-2 2v14c.04 1.09.91 1.96 2 2h20c1.09-.04 1.96-.91 2-2V5a2.074 2.074 0 0 0-2-2m0 16H2V5h20zm-8-2v-1.25c0-1.66-3.34-2.5-5-2.5s-5 .84-5 2.5V17zM9 7a2.5 2.5 0 0 0-2.5 2.5A2.5 2.5 0 0 0 9 12a2.5 2.5 0 0 0 2.5-2.5A2.5 2.5 0 0 0 9 7m5 0v1h6V7zm0 2v1h6V9zm0 2v1h4v-1z" />
+                                    </svg>
+                                </div>
+                                <input type="text" id="administrador-cpf" name="administrador-cpf"
+                                    value="{{ old('admininistrador-cpf') }}" placeholder="CPF Responsável" required>
+                            </div>
+                            @error('administrador-cpf')
+                                <span class="field__error">{{ $message }}</span>
+                            @enderror
+                        </div>
+
+
 
                         <div class="field">
                             <label for="password">Senha do responsável</label>

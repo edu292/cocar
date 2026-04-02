@@ -80,6 +80,7 @@
                                 placeholder="Repita a senha">
                         </div>
                     </div>
+<<<<<<< HEAD
 
                     <div class="field">
                         <label for="papel">Como você vai usar o CoCar?</label>
@@ -105,6 +106,8 @@
                         @enderror
                     </div>
 
+=======
+>>>>>>> 8d30759 (WIP: alteração fluxo de usuário e front aprovação de motoristas)
                     <button type="submit" class="btn btn--orange btn--submit">
                         Cadastrar
                     </button>

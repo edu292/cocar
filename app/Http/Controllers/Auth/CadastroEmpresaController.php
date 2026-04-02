@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Enums\PapelUsuario;
-use App\Enums\StatusUsuario;
+use App\Enums\TipoUsuario;
 use App\Http\Controllers\Controller;
 use App\Models\Empresa;
 use App\Models\User;
@@ -29,23 +28,22 @@ class CadastroEmpresaController extends Controller
             'dominio-email' => ['required', 'string', 'max:255', 'unique:empresas,dominio_email'],
             'administrador-nome' => ['required', 'string', 'max:255'],
             'administrador-email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
+            'administrador-cpf' => 'required|regex:/^[0-9]{11}$/',
             'password' => ['required', 'string', 'max:255', 'confirmed'],
         ]);
 
         $administrador = DB::transaction(function () use ($validated): User {
             $empresa = Empresa::create([
-                'name' => $validated['empresa-nome'],
+                'nome' => $validated['empresa-nome'],
                 'cnpj' => $validated['cnpj'],
                 'dominio_email' => $validated['dominio-email'],
             ]);
 
-            return User::create([
+            return $empresa->usuarios()->create([
                 'name' => $validated['administrador-nome'],
                 'email' => $validated['administrador-email'],
                 'password' => Hash::make($validated['password']),
-                'empresa_id' => $empresa->id,
-                'papel' => PapelUsuario::AdministradorEmpresa,
-                'status' => StatusUsuario::Ativo,
+                'tipo' => TipoUsuario::AdministradorEmpresa,
             ]);
         });
 

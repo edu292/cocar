@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\AdminEmpresa;
 
-use App\Enums\PapelUsuario;
-use App\Enums\StatusUsuario;
+use App\Enums\TipoUsuario;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,22 +13,17 @@ class PainelController extends Controller
     {
         $empresa = $request->user()->empresa;
 
-        $totalUsuarios = $empresa->usuarios()->count();
-        $totalMotoristas = $empresa->usuarios()
-            ->where('papel', PapelUsuario::Motorista)
-            ->where('status', StatusUsuario::Ativo)
-            ->count();
-
-        $totalMotoristasPendentes = $empresa->usuarios()
-            ->where('papel', PapelUsuario::Motorista)
-            ->where('status', StatusUsuario::PendenteAprovacao)
-            ->count();
+        $stats = $empresa->usuarios()
+            ->selectRaw('count(case when role != ? then 1 end) as nao_admins', [TipoUsuario::Funcionario])
+            ->selectRaw('count(case when role = ? and status = ? then 1 end) as motoristas_ativos', [TipoUsuario::Funcionario])
+            ->selectRaw('count(case when role = ? and status = ? then 1 end) as motoristas_pendentes', [TipoUsuario::Funcionario])
+            ->first();
 
         return view('admin-empresa.index', [
             'empresa' => $empresa,
-            'totalUsuarios' => $totalUsuarios,
-            'totalMotoristas' => $totalMotoristas,
-            'totalMotoristasPendentes' => $totalMotoristasPendentes,
+            'totalUsuarios' => $stats->nao_admins,
+            'totalMotoristasAtivos' => $stats->motoristas_ativos,
+            'totalMotoristasPendentes' => $stats->motoristas_pendentes,
         ]);
     }
 }
