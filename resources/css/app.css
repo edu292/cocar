@@ -131,8 +131,6 @@ select:has(option:disabled:checked) {
     text-align: center;
 }
 
-.card__subtitle {
-}
 .text-orange {
     color: var(--color-brand-orange);
 }
@@ -304,7 +302,6 @@ select:has(option:disabled:checked) {
     border: 1px solid #bbf7d0;
 }
 
-/* Área do passageiro com classes próprias para manter as views sem Tailwind. */
 .passageiro-page {
     width: 100%;
     min-height: 100svh;
@@ -517,4 +514,81 @@ select:has(option:disabled:checked) {
         flex-direction: column;
         align-items: stretch;
     }
+}
+
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.sidebar {
+    display: flex;
+    position: sticky;
+    top: 0;
+    height: 100dvh;
+    width: 250px;
+    padding: 5px 0;
+    flex-flow: column nowrap;
+    border-right: 1px solid var(--color-text-muted);
+}
+
+.sidebar__header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+    font-weight: 600;
+    gap: 1em;
+}
+
+.sidebar__brand-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.sidebar__brand {
+    width: min(90px, 8vw);
+}
+
+.sidebar__list {
+    flex: 1;
+    display: flex;
+    flex-flow: column nowrap;
+    list-style: none;
+    gap: 5px;
+    color: var(--color-text-muted);
+    overflow-x: hidden;
+}
+
+.sidebar__item {
+    display: flex;
+    padding: 0.85em;
+    border-radius: 0.5em;
+    align-items: center;
+    gap: 2px 1em;
+
+    &:hover {
+        background-color: var(--bg-card);
+    }
+
+    &.active {
+        .sidebar-item__icon {
+            color: var(--color-brand-green);
+        }
+
+        .sidebar-item__text {
+            color: var(--text-main);
+        }
+    }
+}
+
+.sidebar-item__text {
+    flex: 1;
+    font-size: clamp(0.78em, 2vw, 1em);
+    white-space: nowrap;
+}
+
+.sidebar-item__icon {
+    flex: 0 0 1.5em;
+    aspect-ratio: 1/1;
 }

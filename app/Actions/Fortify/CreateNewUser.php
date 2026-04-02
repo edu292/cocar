@@ -2,6 +2,9 @@
 
 namespace App\Actions\Fortify;
 
+use App\Enums\UserRole;
+use App\Enums\UserStatus;
+use App\Models\Company;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -32,19 +35,35 @@ class CreateNewUser implements CreatesNewUsers
                 Rule::unique(User::class),
                 Rule::email()
                     ->rfcCompliant()
-                    ->validateMxRecord()
                     ->preventSpoofing(),
             ],
             'password' => $this->passwordRules(),
-            'role' => ['required', 'string', 'in:passageiro,motorista,empresa'],
-            
+            'role' => ['required', 'string', 'in:driver,rider'],
         ])->validate();
+
+        $domain = substr(strstr($input['email'], '@'), 1);
+        $company = Company::where('email_domain', $domain)->first();
+
+        if (! $company) {
+            throw ValidationException::withMessages([
+                'email' => ['O seu domínio de email não está cadastrado com nenhuma de nossas empresas parceiras.'],
+            ]);
+        }
+
+        $role = UserRole::from($input['role']);
+        if ($role == UserRole::Driver) {
+            $user = UserStatus::PendingApproval;
+        } else {
+            $user = UserStatus::Active;
+        }
 
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'role' => $input['role'],
+            'company_id' => $company->id,
+            'status' => $user,
         ]);
     }
 }

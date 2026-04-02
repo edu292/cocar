@@ -1,6 +1,6 @@
 <x-layout>
     <x-slot:title>Login</x-slot:title>
-    <x-slot:body>
+    <x-slot:content>
         <div class="center-wrapper bg-grafismo">
             <div class="card card--auth">
                 <div class="brand-stripe brand-stripe--top">
@@ -77,5 +77,5 @@
                 <div class="brand-stripe brand-stripe--bottom"></div>
             </div>
         </div>
-    </x-slot:body>
+    </x-slot:content>
 </x-layout>
