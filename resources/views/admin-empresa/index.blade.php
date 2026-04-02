@@ -9,16 +9,11 @@
 
             <div class="stats-grid">
                 <div class="stats-grid__item">
-<<<<<<< HEAD:resources/views/admin-empresa/index.blade.php
                     <span class="stats-grid__value text-blue">{{ $totalUsuarios }}</span>
-                    <span class="stats-grid__label">Total de usuários</span>
-=======
-                    <span class="stats-grid__value text-blue">{{ $totalUsers }}</span>
                     <span class="stats-grid__label">Total de Usuários Cadastrados</span>
->>>>>>> 8d30759 (WIP: alteração fluxo de usuário e front aprovação de motoristas):resources/views/company-admin/index.blade.php
                 </div>
                 <div class="stats-grid__item">
-                    <span class="stats-grid__value text-green">{{ $totalMotoristas }}</span>
+                    <span class="stats-grid__value text-green">{{ $totalMotoristasAtivos }}</span>
                     <span class="stats-grid__label">Motoristas ativos</span>
                 </div>
                 <div class="stats-grid__item">
