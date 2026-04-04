@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\Fortify\DeleteUser;
 use App\Enums\TipoUsuario;
 use App\Http\Controllers\Admin\OrganizacaoController;
 use App\Http\Controllers\Admin\PainelController;
@@ -11,8 +12,6 @@ use App\Http\Controllers\PerfilMotoristaController;
 use App\Http\Middleware\VerificarTipo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
-use function Pest\Laravel\delete;
 
 Route::get('/', function () {
     return view('index');
@@ -40,5 +39,9 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
     Route::get('/home/', fn () => view('passageiro.home'))->name('home');
     Route::get('/home/motorista', [HomeMotoristaController::class, 'mostrar'])->name('motorista.home');
     Route::get('/perfil', fn () => view('usuario.perfil'))->name('usuario.perfil');
-    Route::delete('/deletar-conta', fn (Request $request) => DeleteUser.delete($request->user()))->name('usuario.deletar');
+    Route::delete('/deletar-conta', function (Request $request, DeleteUser $deleter) {
+        $deleter->delete($request->user());
+
+        return redirect('/')->with('status', 'Conta deletada com sucesso.');
+    })->name('usuario.deletar');
 });

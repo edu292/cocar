@@ -3,7 +3,7 @@
     <x-slot:content>
         <div class="card card--dashboard">
             <div class="card__header">
-                <h1 class="card__heading text-blue">Paínel Sistema</h1>
+                <h1 class="card__heading text-blue">Painel Sistema</h1>
                 <p class="card__text">Lucro Diário: 99999999999999</p>
             </div>
 

@@ -97,7 +97,7 @@
                 <form action="{{ route('usuario.deletar') }}" method="POST" class="action-form">
                     @method('DELETE')
                     @csrf
-                    <button type="button" class="btn btn--red">Excluir Permanentemente</button>
+                    <button type="submit" class="btn btn--red">Excluir Permanentemente</button>
                 </form>
             </section>
         </div>
