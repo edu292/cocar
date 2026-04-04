@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Empresa;
+use App\Models\Organizacao;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -17,7 +17,7 @@ it('cadastra uma empresa e depois permite cadastrar um passageiro do mesmo domin
         'password_confirmation' => 'Senha123!',
     ])->assertRedirect(route('admin-empresa.painel'));
 
-    $empresa = Empresa::query()->where('dominio_email', 'empresa-teste.com')->first();
+    $empresa = Organizacao::query()->where('dominio_email', 'empresa-teste.com')->first();
 
     expect($empresa)->not->toBeNull();
     expect(User::query()->where('email', 'admin@empresa-teste.com')->exists())->toBeTrue();

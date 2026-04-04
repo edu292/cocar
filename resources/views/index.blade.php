@@ -30,8 +30,8 @@
                     </a>
                 </div>
 
-                <div class="stripe-container"><span>Quer adicionar a CoCar à sua empresa?</span></div>
-                <a class="text-blue" href="{{ route('registrar-empresa') }}">Clique aqui</a>
+                <div class="stripe-container"><span>Quer adicionar a CoCar à sua organizacao?</span></div>
+                <a class="text-blue" href="{{ route('cadastro-organizacao') }}">Clique aqui</a>
 
                 <div class="brand-stripe brand-stripe--bottom"></div>
             </div>

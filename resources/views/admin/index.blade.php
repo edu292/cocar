@@ -3,8 +3,8 @@
     <x-slot:content>
         <div class="card card--dashboard">
             <div class="card__header">
-                <h1 class="card__heading text-blue">{{ $empresa->name }}</h1>
-                <p class="card__text">CNPJ: {{ $empresa->cnpj }}</p>
+                <h1 class="card__heading text-blue">{{ $organizacao->nome }}</h1>
+                <p class="card__text">CNPJ: {{ $organizacao->cnpj }}</p>
             </div>
 
             <div class="stats-grid">

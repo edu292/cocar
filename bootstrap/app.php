@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'tipo' => VerificarTipo::class,
         ]);
+        $middleware->redirectUsersTo(fn ($request) => $request->user()->homeUrl());
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

@@ -2,7 +2,8 @@
 
 namespace App\Actions\Fortify;
 
-use App\Models\Empresa;
+use App\Enums\TipoUsuario;
+use App\Models\Organizacao;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -38,19 +39,20 @@ class CreateNewUser implements CreatesNewUsers
         ])->validate();
 
         $dominio = substr(strstr($input['email'], '@'), 1);
-        $empresa = Empresa::where('dominio_email', $dominio)->first();
+        $organizacao = Organizacao::where('dominio_email', $dominio)->first();
 
-        if (! $empresa) {
+        if (! $organizacao) {
             throw ValidationException::withMessages([
-                'email' => ['O domínio do seu e-mail não está cadastrado em nenhuma empresa parceira.'],
+                'email' => ['O domínio do seu e-mail não está cadastrado em nenhuma organização parceira.'],
             ]);
         }
 
-        return $empresa->usuarios()->create([
+        return $organizacao->integrantes()->create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'cpf' => $input['cpf'],
+            'tipo' => TipoUsuario::Padrao,
         ]);
     }
 }

@@ -12,21 +12,22 @@ class VerificarTipo
     /**
      * @param  Closure(): void  $next
      */
-    public function handle(Request $request, Closure $next, string $papel): Response
+    public function handle(Request $request, Closure $next, string ...$tipos): Response
     {
-        $tipo = TipoUsuario::tryFrom($papel);
+        $tiposPermitidos = array_map(fn ($p) => TipoUsuario::tryFrom($p), $tipos);
 
-        if ($request->user()->papel !== $tipo) {
+        $user = $request->user();
+        if (! in_array($user->tipo, $tiposPermitidos, true)) {
             return redirect()
-                ->route('home')
+                ->route($user->homeUrl())
                 ->with('error', 'Acesso negado. Você não tem permissão para acessar esta área.');
         }
 
         return $next($request);
     }
 
-    public static function com(TipoUsuario $tipo): string
+    public static function sendo(TipoUsuario ...$tipos): string
     {
-        return 'tipo:'.$tipo->value;
+        return 'tipo:'.implode(',', array_map(fn ($t) => $t->value, $tipos));
     }
 }

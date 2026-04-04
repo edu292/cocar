@@ -1,9 +1,12 @@
 <?php
 
 use App\Enums\TipoUsuario;
-use App\Http\Controllers\AdminEmpresa\PainelController;
-use App\Http\Controllers\Auth\CadastroEmpresaController;
-use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\Admin\PainelController;
+use App\Http\Controllers\Admin\TriagemMotoristaController;
+use App\Http\Controllers\Admin\UsuarioController;
+use App\Http\Controllers\Auth\CadastroOrganizacaoController;
+use App\Http\Controllers\HomeMotoristaController;
+use App\Http\Controllers\PerfilMotoristaController;
 use App\Http\Middleware\VerificarTipo;
 use Illuminate\Support\Facades\Route;
 
@@ -12,16 +15,20 @@ Route::get('/', function () {
 })->name('index');
 
 Route::middleware('guest')->group(function () {
-    Route::get('/registrar/empresa', [CadastroEmpresaController::class, 'formulario'])->name('registrar-empresa');
-    Route::post('/registrar/empresa', [CadastroEmpresaController::class, 'cadastrar']);
+    Route::get('/cadastro/organizacao', [CadastroOrganizacaoController::class, 'formulario'])->name('cadastro-organizacao');
+    Route::post('/cadastro/organizacao', [CadastroOrganizacaoController::class, 'cadastrar']);
 });
 
-Route::middleware(['auth', VerificarTipo::com(TipoUsuario::AdministradorEmpresa)])->group(function () {
-    Route::get('/dashboard', [PainelController::class, 'exibir'])->name('admin-empresa.painel');
+Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::AdministradorOrganizacao, TipoUsuario::AdministradorSistema)])->prefix('/dashboard')->group(function () {
+    Route::get('/', [PainelController::class, 'exibir'])->name('admin.painel');
+    Route::get('triagem-motorista', [TriagemMotoristaController::class, 'exibir'])->name('admin.triagem-motoristas');
+    Route::post('/triagem-motorista/{perfilMotorista}/aprovar', [TriagemMotoristaController::class, 'aprovar'])->name('triagem-motoristas.aprovar');
+    Route::get('usuarios', [UsuarioController::class, 'exibir'])->name('admin.usuarios');
 });
 
-Route::middleware('auth')->group(function () {
-    Route::get('/perfil', [PerfilController::class, 'editar'])->name('perfil.edit');
-    Route::put('/perfil', [PerfilController::class, 'atualizar'])->name('perfil.update');
-    Route::delete('/perfil', [PerfilController::class, 'excluir'])->name('perfil.destroy');
+Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(function () {
+    Route::post('/motorista', [PerfilMotoristaController::class, 'criar'])->name('motorista.cadastro');
+    Route::get('/home/', fn () => view('passageiro.home'))->name('home');
+    Route::get('/home/motorista', [HomeMotoristaController::class, 'mostrar'])->name('motorista.home');
+    Route::get('/perfil', fn () => view('usuario.perfil'))->name('usuario.perfil');
 });
