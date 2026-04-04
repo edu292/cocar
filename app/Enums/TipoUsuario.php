@@ -6,14 +6,14 @@ enum TipoUsuario: string
 {
     case AdministradorOrganizacao = 'administrador_organizacao';
     case AdministradorSistema = 'administrador_sistema';
-    case Padrao = 'integrante';
+    case Padrao = 'padrao';
 
     public function label(): string
     {
         return match ($this) {
             self::AdministradorOrganizacao => 'Administrador de Organização',
             self::AdministradorSistema => 'Administrador do sistema',
-            self::Padrao => 'Integrante de Organização',
+            self::Padrao => 'Padrão',
         };
     }
 }

@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\TipoUsuario;
 use App\Http\Controllers\Controller;
+use App\Models\Organizacao;
+use App\Models\PerfilMotorista;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -11,6 +14,13 @@ class PainelController extends Controller
 {
     public function exibir(Request $request): View
     {
+        if ($request->user()->eAdminSistema) {
+            $totalOrganizacoes = Organizacao::all()->count();
+            $totalUsuarios = User::all()->count();
+            $totalMotoristasAtivos = PerfilMotorista::whereNotNull('aprovado_em')->count();
+
+            return view('admin.painel-sistema', compact('totalOrganizacoes', 'totalUsuarios', 'totalMotoristasAtivos'));
+        }
         $organizacao = $request->user()->organizacao;
 
         $stats = $organizacao->integrantes()
@@ -23,7 +33,7 @@ class PainelController extends Controller
             ')
             ->first();
 
-        return view('admin.index', [
+        return view('admin.painel-organizacao', [
             'organizacao' => $organizacao,
             'totalUsuarios' => $stats->nao_admins,
             'totalMotoristasAtivos' => $stats->motoristas_ativos,

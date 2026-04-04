@@ -18,7 +18,7 @@
                     </p>
                 </header>
 
-                <form action="{{ route('cadastro-organizacao') }}" method="post" class="form form--split">
+                <form action="{{ route('organizacao.criar') }}" method="post" class="form form--split">
                     @csrf
 
                     <fieldset class="form__fieldset">

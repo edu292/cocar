@@ -24,6 +24,11 @@
                             <tr class="table__row table__row--head">
                                 <th class="table__cell table__cell--head">Nome</th>
                                 <th class="table__cell table__cell--head">Email</th>
+                                @if (auth()->user()->eAdminSistema)
+                                    <th class="table__cell table__cell--head">Nome Empresa</th>
+                                @else
+                                    <th class="table__cell table__cell--head">CPF</th>
+                                @endif
                                 <th class="table__cell table__cell--head">Tipo</th>
                                 <th class="table__cell table__cell--head">Status do Motorista</th>
                             </tr>
@@ -33,10 +38,16 @@
                                 <tr class="table__row">
                                     <td class="table__cell">{{ $user->name }}</td>
                                     <td class="table__cell">{{ $user->email }}</td>
+
+                                    @if (auth()->user()->eAdminSistema)
+                                        <td class="table__cell">{{ $user->organizacao->nome ?? '-' }}</td>
+                                    @else
+                                        <td class="table__cell">{{ $user->cpf }}</td>
+                                    @endif
                                     <td class="table__cell">
-                                        @if ($user->tipo->value == 'administrador_sistema')
+                                        @if ($user->eAdminSistema)
                                             <span class="badge badge--orange">Administrador Sistema</span>
-                                        @elseif ($user->tipo->value == 'administrador_organizacao')
+                                        @elseif ($user->eAdminOrganizacao)
                                             <span class="badge badge--green">Administrador Organização</span>
                                         @else
                                             @if ($user->e_motorista)
@@ -60,7 +71,7 @@
                                 </tr>
                             @empty
                                 <tr class="table__row">
-                                    <td class="table__cell table__cell--empty" colspan="4">Nenhum usuário encontrado.
+                                    <td class="table__cell table__cell--empty" colspan="5">Nenhum usuário encontrado.
                                     </td>
                                 </tr>
                             @endforelse
@@ -84,6 +95,13 @@
                                     {{ request('tipo', 'todos') == 'todos' ? 'checked' : '' }}>
                                 <span>Todos</span>
                             </label>
+                            @if (auth()->user()->eAdminSistema)
+                                <label class="radio-label">
+                                    <input type="radio" name="tipo" value="admin-sistema"
+                                        {{ request('tipo') == 'admin-sistema' ? 'checked' : '' }}>
+                                    <span>Administrador Sistema</span>
+                                </label>
+                            @endif
                             <label class="radio-label">
                                 <input type="radio" name="tipo" value="admin-organizacao"
                                     {{ request('tipo') == 'admin-organizacao' ? 'checked' : '' }}>

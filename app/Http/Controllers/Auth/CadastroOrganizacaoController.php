@@ -52,4 +52,12 @@ class CadastroOrganizacaoController extends Controller
 
         return redirect()->route('admin.painel');
     }
+
+    public function deletar(Request $request): void
+    {
+        $user = $request->user();
+
+        $user->organizacao->delete();
+        DeleteUser->delete($user);
+    }
 }

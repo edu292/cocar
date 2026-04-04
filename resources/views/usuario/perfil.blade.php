@@ -18,7 +18,7 @@
                     <div class="field">
                         <label class="field__label">E-mail</label>
                         <div class="field__input-wrapper">
-                            <input type="email" value="{{ auth()->user()->email }}" disabled>
+                            <input type="email" value="{{ auth()->user()->email }}" name="email" disabled>
                         </div>
                         <p class="field__help">O e-mail é vinculado à sua rede e não pode ser alterado.
                         </p>
@@ -89,12 +89,14 @@
             <section class="card card--settings card--settings-action card--danger">
                 <div class="card__header--left">
                     <h2 class="card__heading card__heading--small text-alert">Excluir Conta</h2>
-                    <p class="card__text card__text--secondary">
+                    <p class="card__text card__text--secondary card__text--left">
                         Ao excluir sua conta, todo o seu histórico de caronas, impacto de CO₂ e conexões na tribo serão
                         permanentemente apagados. Esta ação é irreversível.
                     </p>
                 </div>
-                <form action="/delete-account" method="POST" class="action-form">
+                <form action="{{ route('usuario.deletar') }}" method="POST" class="action-form">
+                    @method('DELETE')
+                    @csrf
                     <button type="button" class="btn btn--red">Excluir Permanentemente</button>
                 </form>
             </section>

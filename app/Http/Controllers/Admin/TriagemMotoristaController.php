@@ -29,6 +29,13 @@ class TriagemMotoristaController extends Controller
 
         $perfilMotorista->update(['aprovado_em' => now()]);
 
-        return back()->with('success', 'O usuário foi aprovado e já pode realizar caronas.');
+        return back();
+    }
+
+    public function rejeitar(Request $request, PerfilMotorista $perfilMotorista): RedirectResponse
+    {
+        $perfilMotorista->delete();
+
+        return back();
     }
 }

@@ -7,7 +7,6 @@ use App\Models\Organizacao;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 
@@ -24,26 +23,18 @@ class CreateNewUser implements CreatesNewUsers
     {
         Validator::make($input, [
             'name' => 'required|string|max:255',
-            'email' => [
-                'required',
-                'string',
-                'email',
-                'max:255',
-                'unique:users',
-                Rule::email()
-                    ->rfcCompliant()
-                    ->preventSpoofing(),
-            ],
+            'email' => 'required|string|email:rfc,spoof|max:255|unique:users',
             'password' => $this->passwordRules(),
-            'cpf' => 'required|regex:/^[0-9]{11}$/|unique:users',
+            'cpf' => 'required|unique:users',
         ])->validate();
 
-        $dominio = substr(strstr($input['email'], '@'), 1);
+        $email = $input['email'];
+        $dominio = substr($email, strpos($email, '@') + 1);
         $organizacao = Organizacao::where('dominio_email', $dominio)->first();
 
         if (! $organizacao) {
             throw ValidationException::withMessages([
-                'email' => ['O domínio do seu e-mail não está cadastrado em nenhuma organização parceira.'],
+                'email' => ['O domínio do seu e-mail não está cadastrado com nenhuma organização parceira.'],
             ]);
         }
 
