@@ -25,7 +25,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => 'required|string|max:255',
             'email' => 'required|string|email:rfc,spoof|max:255|unique:users',
             'password' => $this->passwordRules(),
-            'cpf' => 'required|unique:users',
+            'cpf' => 'required|string|size:11|unique:users',
         ])->validate();
 
         $email = $input['email'];
@@ -46,7 +46,8 @@ class CreateNewUser implements CreatesNewUsers
             'tipo' => TipoUsuario::Padrao,
         ]);
 
-        $user -> carteira() -> create();
+        $user->carteira()->create();
+
         return $user;
     }
 }

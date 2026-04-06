@@ -24,11 +24,11 @@ class CadastroOrganizacaoController extends Controller
     {
         $validated = $request->validate([
             'organizacao-nome' => 'required|string|max:255',
-            'cnpj' => 'required|string|max:14|unique:organizacoes',
+            'cnpj' => 'required|string|size:14|unique:organizacoes',
             'dominio-email' => 'required|string|max:255|unique:organizacoes',
             'administrador-nome' => 'required|string|max:255',
-            'administrador-email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'administrador-cpf' => 'required|string',
+            'administrador-email' => 'required|string|email|max:255|unique:users,email',
+            'administrador-cpf' => 'required|string|size:11',
             'password' => 'required|string|max:255|confirmed',
         ]);
 
