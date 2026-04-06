@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('organizacoes', function (Blueprint $table) {
             $table->id();
-            $table->string('cnpj')->unique();
+            $table->string('cnpj', 14)->unique();
             $table->string('nome');
             $table->string('dominio_email')->unique()->nullable();
             $table->timestamps();

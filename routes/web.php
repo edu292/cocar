@@ -45,6 +45,7 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
 
         return redirect('/')->with('status', 'Conta deletada com sucesso.');
     })->name('usuario.deletar');
+
     Route::get('/carteira', [CarteiraController::class, 'exibir'])->name('usuario.carteira');
     Route::put('/carteira', [CarteiraController::class, 'inserir'])->name('usuario.carteira.inserir');
 });

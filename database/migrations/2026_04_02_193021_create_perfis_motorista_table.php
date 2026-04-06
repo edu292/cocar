@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('perfis_motorista', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('cnh')->unique();
+            $table->string('cnh', 11)->unique();
             $table->timestamp('aprovado_em')->nullable();
             $table->timestamps();
         });
