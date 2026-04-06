@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('carteira', function (Blueprint $table) {
+        Schema::create('carteiras', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->float('Saldo_atual') -> default(0);
-            $table->float('Saldo_verde') -> default(0);
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->decimal('saldo')->default(0);
+            $table->integer('pontos_verdes')->default(0);
         });
     }
 
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('saldo_carona');
+        Schema::dropIfExists('carteiras');
     }
 };

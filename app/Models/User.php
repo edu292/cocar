@@ -29,12 +29,10 @@ class User extends Authenticatable
         ];
     }
 
-
     public function Organizacao(): BelongsTo
     {
         return $this->belongsTo(Organizacao::class);
     }
-
 
     public function perfilMotorista(): HasOne
     {
@@ -55,7 +53,6 @@ class User extends Authenticatable
             get: fn () => $this->tipo == TipoUsuario::AdministradorSistema
         );
     }
-
 
     public function scopeComStatusMotorista(Builder $query, ?string $filtroStatus = null): Builder
     {
@@ -100,6 +97,6 @@ class User extends Authenticatable
 
     public function carteira()
     {
-        return $this->hasOne(carteira::class);
+        return $this->hasOne(Carteira::class);
     }
 }

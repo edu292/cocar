@@ -12,7 +12,7 @@
                     <div class="field">
                         <label class="field__label">Nome Completo</label>
                         <div class="field__input-wrapper">
-                            <input type="text" value="{{ auth()->user()->name }}" required>
+                            <input type="text" value="{{ auth()->user()->name }}" name="name" required>
                         </div>
                     </div>
                     <div class="field">
