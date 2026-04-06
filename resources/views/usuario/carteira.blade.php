@@ -7,9 +7,11 @@
                 <div class="card card--wallet">
                     <div class="brand-stripe brand-stripe--top"></div>
 
+                    <a href="{{ route('home') }}" class="btn btn--orange" style="margin-right: auto"><svg xmlns="http://www.w3.org/2000/svg" width="40" height="24" viewBox="0 0 1024 1024"><path fill="currentColor" d="M224 480h640a32 32 0 1 1 0 64H224a32 32 0 0 1 0-64"/><path fill="currentColor" d="m237.2 512l265.5 265.3a32 32 0 0 1-45.4 45.4l-288-288a32 32 0 0 1 0-45.4l288-288a32 32 0 1 1 45.4 45.4z"/></svg></a>
+
                     <div class="card__header card__header--wallet">
                         <h1 class="card__heading card__heading--small text-blue">Saldo Atual</h1>
-                        <div class="stats-grid__value text-green wallet__balance">{{$carteira -> $Saldo_atual}}</div>
+                        <div class="stats-grid__value text-green wallet__balance">{{$carteira -> Saldo_atual}}</div>
                     </div>
 
                     <form action="{{route('usuario.carteira.inserir')}}" method="POST" class="form">
@@ -30,12 +32,13 @@
                         <div class="field">
                             <div class="field__input-wrapper">
                                 <div class="field__input-icon field__input-icon--text">R$</div>
-                                <input type="number" name="valor" id="valor" step="0.01" min="0.01" placeholder="Outrovalor" >
+                                <input type="number" name="valor" id="valor" step="0.01" min="0.01" placeholder="Outrovalor" value="0.00" >
                             </div>
                         </div>
 
                         <button type="submit" class="btn btn--blue btn--submit">Inserir Saldo</button>
                     </form>
+                    <div class="brand-stripe brand-stripe--bottom"></div>
                 </div>
 
             </main>
@@ -47,7 +50,7 @@
 
             valores_preset.addEventListener('click', (event) => {
                 botao = event.target.closest('button')
-                valor_input.value = botao.dataset.valor
+                valor_input.value = parseInt(valor_input.value) + parseInt(botao.dataset.valor)
             } )
         </script>
     </x-slot:body>

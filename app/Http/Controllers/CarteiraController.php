@@ -15,7 +15,7 @@ class CarteiraController extends Controller
         $validate = $request->validate(['valor' => 'required|min:0|decimal:']);
         $carteira = $request->user()->carteira;
 
-        $carteira->valor += $validate['saldo_atual'];
+        $carteira->Saldo_atual += $validate['valor'];
 
         $carteira->save();
         return back();

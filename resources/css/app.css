@@ -1153,7 +1153,6 @@ select:has(option:disabled:checked) {
     margin-top: 24px;
     width: 100%;
     justify-content: flex-start;
-    overflow-x: auto;
     padding-bottom: 8px;
 }
 
@@ -1447,4 +1446,8 @@ select:has(option:disabled:checked) {
     font-weight: 700;
     font-size: 1.1em;
     color: var(--color-text-muted);
+}
+
+.shortcuts__item--rigth{
+    margin-left: auto;
 }
