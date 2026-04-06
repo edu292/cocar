@@ -38,12 +38,15 @@ class CreateNewUser implements CreatesNewUsers
             ]);
         }
 
-        return $organizacao->integrantes()->create([
+        $user = $organizacao->integrantes()->create([
             'name' => $input['name'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'cpf' => $input['cpf'],
             'tipo' => TipoUsuario::Padrao,
         ]);
+
+        $user -> carteira() -> create();
+        return $user;
     }
 }

@@ -1409,3 +1409,42 @@ select:has(option:disabled:checked) {
         gap: 15px;
     }
 }
+
+.card--wallet {
+    width: 100%;
+    max-width: 450px;
+    margin: 20px;
+}
+
+.card__header--wallet {
+    margin-bottom: 30px;
+}
+
+.wallet__balance {
+    margin-top: 15px;
+}
+
+.wallet__section-title {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: 0.9em;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.wallet__presets {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.wallet__presets .btn {
+    padding: 12px 5px;
+}
+
+.field__input-icon--text {
+    font-weight: 700;
+    font-size: 1.1em;
+    color: var(--color-text-muted);
+}

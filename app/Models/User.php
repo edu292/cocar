@@ -103,8 +103,8 @@ class User extends Authenticatable
         };
     }
 
-    public function saldo()
+    public function carteira()
     {
-        return $this->hasMany(carteira::class);
+        return $this->hasOne(carteira::class);
     }
 }

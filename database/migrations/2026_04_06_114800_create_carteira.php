@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->float('Saldo_atual');
-            $table->float('Saldo_verde');
+            $table->float('Saldo_atual') -> default(0);
+            $table->float('Saldo_verde') -> default(0);
         });
     }
 

@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\PainelController;
 use App\Http\Controllers\Admin\TriagemMotoristaController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Auth\CadastroOrganizacaoController;
+use App\Http\Controllers\CarteiraController;
 use App\Http\Controllers\HomeMotoristaController;
 use App\Http\Controllers\PerfilMotoristaController;
 use App\Http\Middleware\VerificarTipo;
@@ -44,4 +45,6 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
 
         return redirect('/')->with('status', 'Conta deletada com sucesso.');
     })->name('usuario.deletar');
+    Route::get('/carteira', [CarteiraController::class, 'exibir'])->name('usuario.carteira');
+    Route::put('/carteira', [CarteiraController::class, 'inserir'])->name('usuario.carteira.inserir');
 });
