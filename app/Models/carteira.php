@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class carteira extends Model
 {
     protected $table = 'carteira';
-    protected $fillable = ['Saldo_atual', 'Saldo_verde'];
+    protected $fillable = ['Saldo_atual', 'Saldo_verde',
+        'user_id'
+    ];
 
     public function user()
     {
