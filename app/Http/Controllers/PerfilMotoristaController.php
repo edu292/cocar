@@ -9,8 +9,8 @@ class PerfilMotoristaController extends Controller
 {
     public function criar(Request $request): RedirectResponse
     {
-        $user = $request->user();
 
+        $user = $request->user();
         $validated = $request->validate([
             'cnh' => 'required|string',
         ]);

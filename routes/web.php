@@ -26,8 +26,8 @@ Route::middleware('guest')->group(function () {
 Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::AdministradorOrganizacao, TipoUsuario::AdministradorSistema)])->prefix('/dashboard')->group(function () {
     Route::get('/', [PainelController::class, 'exibir'])->name('admin.painel');
     Route::get('triagem-motorista', [TriagemMotoristaController::class, 'exibir'])->name('admin.triagem-motoristas');
-    Route::post('triagem-motorista/{perfilMotorista}/aprovar', [TriagemMotoristaController::class, 'aprovar'])->name('triagem-motoristas.aprovar');
     Route::post('triagem-motorista/{perfilMotorista}/rejeitar', [TriagemMotoristaController::class, 'rejeitar'])->name('triagem-motorista.rejeitar');
+    Route::post('triagem-motorista/{perfilMotorista}/aprovar', [TriagemMotoristaController::class, 'aprovar'])->name('triagem-motoristas.aprovar');
     Route::get('usuarios', [UsuarioController::class, 'exibir'])->name('admin.usuarios');
     Route::get('cadastro', fn () => view('admin.configuracoes'))->name('admin.meu-cadastro');
     Route::put('cadastro/{organizacao}', [OrganizacaoController::class, 'alterar'])->name('organizacoes.alterar');
@@ -37,8 +37,8 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::AdministradorOrgani
 
 Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(function () {
     Route::post('/motorista', [PerfilMotoristaController::class, 'criar'])->name('motorista.cadastro');
-    Route::get('/home/', fn () => view('passageiro.home'))->name('home');
     Route::get('/home/motorista', [HomeMotoristaController::class, 'mostrar'])->name('motorista.home');
+    Route::get('/home/', fn () => view('passageiro.home'))->name('home');
     Route::get('/perfil', fn () => view('usuario.perfil'))->name('usuario.perfil');
     Route::delete('/deletar-conta', function (Request $request, DeleteUser $deleter) {
         $deleter->delete($request->user());

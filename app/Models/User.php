@@ -29,17 +29,13 @@ class User extends Authenticatable
         ];
     }
 
-    /**
-     * @return BelongsTo<Organizacao,User>
-     */
+
     public function Organizacao(): BelongsTo
     {
         return $this->belongsTo(Organizacao::class);
     }
 
-    /**
-     * @return HasOne<PerfilMotorista,User>
-     */
+
     public function perfilMotorista(): HasOne
     {
         return $this->hasOne(PerfilMotorista::class);
@@ -60,9 +56,7 @@ class User extends Authenticatable
         );
     }
 
-    /**
-     * @param  Builder<Model>  $query
-     */
+
     public function scopeComStatusMotorista(Builder $query, ?string $filtroStatus = null): Builder
     {
         $query->withExists(['perfilMotorista as e_motorista'])
@@ -71,9 +65,10 @@ class User extends Authenticatable
             }]);
 
         return $query->when($filtroStatus, fn ($q) => match ($filtroStatus) {
-            'aprovado' => $q->whereHas('perfilMotorista', fn ($sq) => $sq->whereNotNull('aprovado_em')),
             'pendente' => $q->whereHas('perfilMotorista', fn ($sq) => $sq->whereNull('aprovado_em')),
             default => $q,
+            'aprovado' => $q->whereHas('perfilMotorista', fn ($sq) => $sq->whereNotNull('aprovado_em')),
+
         });
     }
 

@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PerfilMotorista extends Model
 {
+    protected $fillable = ['cnh', 'aprovado_em'];
     protected $table = 'perfis_motorista';
 
-    protected $fillable = ['cnh', 'aprovado_em'];
 
-    /**
-     * @return BelongsTo<User,PerfilMotorista>
-     */
+
+
+    // relação entre quantos motoras podem haver por usuário
     public function user()
     {
         return $this->belongsTo(User::class);
