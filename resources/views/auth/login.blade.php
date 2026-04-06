@@ -68,6 +68,8 @@
                 <a href="{{ route('register') }}" class="text-blue">
                     Criar uma conta
                 </a>
+                <div class="stripe-container"><span>Quer adicionar a CoCar à sua organizacao?</span></div>
+                <a class="text-blue" href="{{ route('cadastro-organizacao') }}">Clique aqui</a>
 
                 <div class="brand-stripe brand-stripe--bottom"></div>
             </div>
