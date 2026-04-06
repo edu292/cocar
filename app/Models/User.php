@@ -102,4 +102,9 @@ class User extends Authenticatable
             TipoUsuario::Padrao => 'home'
         };
     }
+
+    public function saldo()
+    {
+        return $this->hasMany(carteira::class);
+    }
 }
