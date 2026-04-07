@@ -16,7 +16,7 @@
 
                     <div class="card__header card__header--wallet">
                         <h1 class="card__heading card__heading--small text-blue">Saldo Atual</h1>
-                        <div class="stats-grid__value text-green wallet__balance">{{ $carteira->saldo }}</div>
+                        <div class="stats-grid__value text-green wallet__balance">R$ {{ $carteira->saldo }}</div>
                     </div>
 
                     <form action="{{ route('usuario.carteira.inserir') }}" method="POST" class="form">
