@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Actions\Fortify\CreateNewUser;
 use App\Enums\TipoUsuario;
 use App\Models\Organizacao;
 use App\Models\User;
@@ -16,17 +17,19 @@ class fluxoTesterSeeder extends Seeder
     public function run(): void
     {
 
-        $org = Organizacao::create([
+        Organizacao::create([
            'cnpj' => '12345678912345',
            'nome' => 'OrganizacaoTeste',
-           'dominio_email' => 'teste@org.com.br'
+           'dominio_email' => 'org.com.br'
         ]);
-        $org ->integrantes()->create([
+
+
+        (new CreateNewUser())->create([
             'name' => 'user',
             'email' => 'user@org.com.br',
             'password' => 'SenhaForte!',
-            'tipo' => TipoUsuario::Padrao,
-            'cpf' => '12312312312']);
-
+            'password_confirmation' => 'SenhaForte!',
+            'cpf' => '12312312312']
+        );
     }
 }
