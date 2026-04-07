@@ -21,11 +21,12 @@ class PainelController extends Controller
 
             return view('admin.painel-sistema', compact('totalOrganizacoes', 'totalUsuarios', 'totalMotoristasAtivos'));
         }
+
         $organizacao = $request->user()->organizacao;
 
         $stats = $organizacao->integrantes()
             ->where('tipo', TipoUsuario::Padrao)
-            ->leftJoin('perfis_motorista', 'user_id', '=', 'perfis_motorista.user_id')
+            ->leftJoin('perfis_motorista', 'users.id', '=', 'perfis_motorista.user_id')
             ->selectRaw('
                 count(*) as nao_admins,
                 count(CASE WHEN perfis_motorista.aprovado_em IS NOT NULL THEN 1 END) as motoristas_ativos,

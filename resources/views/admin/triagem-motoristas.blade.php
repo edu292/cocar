@@ -38,7 +38,8 @@
                         </div>
 
                         <div class="card__actions">
-                            <form action="/motoristas/{{ $motorista->id }}/reject" method="POST" class="action-form">
+                            <form action="{{ route('triagem-motoristas.rejeitar', ['perfilMotorista' => $motorista]) }}"
+                                method="POST" class="action-form">
                                 @csrf
                                 <button type="submit" class="btn btn--outline btn--red">Rejeitar</button>
                             </form>

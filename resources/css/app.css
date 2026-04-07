@@ -1189,12 +1189,12 @@ select:has(option:disabled:checked) {
 }
 
 .shortcuts__label {
+    width: min-content;
     font-size: 0.85em;
     font-weight: 600;
     color: var(--color-text-muted);
 }
 
-/* --- Route Builder (Post a Trip) --- */
 .route-builder {
     display: flex;
     flex-direction: column;
@@ -1448,6 +1448,6 @@ select:has(option:disabled:checked) {
     color: var(--color-text-muted);
 }
 
-.shortcuts__item--rigth{
+.shortcuts__item--rigth {
     margin-left: auto;
 }

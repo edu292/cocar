@@ -10,7 +10,7 @@
                 <ul class="bottom-nav__list">
                     <li class="bottom-nav__item">
                         <a href="{{ route('home') }}"
-                            class="bottom-nav__link {{ request()->is('home') ? 'bottom-nav__link--active' : '' }}">
+                            class="bottom-nav__link {{ request()->RouteIs(['home', 'motorista.home']) ? 'bottom-nav__link--active' : '' }}">
                             <div class="bottom-nav__icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                     <path fill="currentColor" d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z" />
