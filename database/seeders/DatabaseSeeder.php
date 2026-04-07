@@ -15,7 +15,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            AdminSistemaSeeder::class,
+            AdminSistemaSeeder::class, fluxoTesterSeeder::class
         ]);
     }
 }
