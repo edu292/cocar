@@ -1,0 +1,71 @@
+1. trim() — Remove espaços das bordas
+let valor = "  João  ";
+valor.trim(); // "João"
+valor.trim().length; // 4
+
+2. length — Verifica tamanho
+let nome = "Ana";
+nome.length;        // 3
+nome.length === 0;  // false → tem conteúdo
+nome.length >= 3;   // true → mínimo de 3 caracteres
+
+3. Number() e isNaN() — Verifica se é número
+Number("42");      // 42  → converteu
+Number("abc");     // NaN → não é número
+Number("");        // 0   → cuidado com string vazia!
+
+isNaN("abc");      // true  → NÃO é número
+isNaN("42");       // false → É número
+isNaN(Number("42")); // false → É número (forma mais segura)
+
+4. parseInt() e parseFloat() — Converte para número
+javascriptparseInt("10");    // 10
+parseInt("10.9");  // 10  → só parte inteira
+parseFloat("10.9"); // 10.9
+
+parseInt("abc");   // NaN
+parseInt("10abc"); // 10  → pega o que consegue ⚠️ cuidado!
+
+
+5. Comparações numéricas
+javascriptlet idade = Number("25");
+idade >= 18;        // true
+idade >= 0;         // true
+idade <= 120;       // true
+
+6. includes() — Verifica se contém algo
+javascriptlet email = "joao@gmail.com";
+email.includes("@");   // true
+email.includes(".com"); // true
+
+7. startsWith() e endsWith()
+javascriptlet codigo = "BR-123";
+codigo.startsWith("BR"); // true
+codigo.endsWith("123");  // true
+
+8. split() — Divide string em partes
+javascriptlet data = "25/12/2025";
+let partes = data.split("/"); // ["25", "12", "2025"]
+partes.length;    // 3
+partes[0];        // "25"  → dia
+partes[1];        // "12"  → mês
+partes[2];        // "2025" → ano
+
+9. every() — Testa se TODOS passam numa condição
+javascriptlet numeros = [1, 2, 3, 4];
+numeros.every(n => n > 0); // true → todos positivos
+
+10. Checar se é inteiro com Number.isInteger()
+javascriptNumber.isInteger(10);   // true
+Number.isInteger(10.5); // false
+
+
+Verificadores usados direto:
+
+campo.trim().length === 0 // Verifica se a variavel campo está vazia
+(isNaN(Number(campo))) // Verifica se NÃO é um número. Se for qualquer coisa, menos um número: retorna False.
+Number.isInteger(Number(campo))     // Verifica se o número é inteiro
+Pra pegar o ultimo valor de uma lista:  // Util quando: precisa splitar uma lista e pegar seu ultimo valor, -1 começa de trás pra frente, ent -2 pegaria o pernultimo e assim até o infinito (ou o length da lista)
+    ultimovalor = lista[-1]
+
+
