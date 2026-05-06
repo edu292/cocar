@@ -18,7 +18,7 @@
                     </p>
                 </header>
 
-                <form action="{{ route('organizacao.criar') }}" method="post" class="form form--split">
+                <form action="{{ route('organizacao.criar') }}" method="post" class="form form--split" id="formulario">
                     @csrf
 
                     <fieldset class="form__fieldset">
@@ -173,6 +173,17 @@
                                     required placeholder="Repita a senha">
                             </div>
                         </div>
+                        <div class="field" >
+                            <label for="numero de telefone">Número de telefone</label>
+                            <div class="field__input-wrapper" >
+                                <input type="text" id="telefone" name="telefone"
+                                       placeholder="Formato esperado: 4199123456">
+                            </div>
+                        </div>
+                        <div id="inner">
+
+                        </div>
+
                     </fieldset>
 
                     <button class="btn btn--orange form__submit-full" type="submit">Cadastrar</button>

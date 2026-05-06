@@ -18,4 +18,8 @@ class PerfilMotorista extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function grupos(){
+        return $this->hasMany(GrupoCarona::class, "perfil_motorista_id");
+    }
 }

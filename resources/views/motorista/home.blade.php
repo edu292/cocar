@@ -21,6 +21,17 @@
                     </div>
                     <button type="submit" class="btn btn--blue route-builder__btn">Publicar Trajeto</button>
                 </div>
+                <div class="acoes-motorista">
+                    <a href="{{ route('motorista.grupos.criar') }}" class="btn btn-primary">
+                        + Criar Grupo de Carona
+                    </a>
+                </div>
+
+                @if(session('sucesso'))
+                    <div class="alert alert-success">
+                        {{ session('sucesso') }}
+                    </div>
+                @endif
             </form>
         </section>
 

@@ -13,7 +13,7 @@
                     <p class="card__subtitle text-green">Crie sua conta no CoCar</p>
                 </header>
 
-                <form method="POST" action="{{ route('register') }}" class="form">
+                <form method="POST" action="{{ route('register') }}" class="form" id="formulario">
                     @csrf
 
                     <div class="field">
@@ -34,7 +34,7 @@
                     </div>
 
                     <div class="field">
-                        <label for="email">E-mail</label>
+                        <label for="email" id="email">E-mail</label>
                         <div class="field__input-wrapper">
                             <div class="field__input-icon">
                                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,9 +98,23 @@
                                 placeholder="Repita a senha">
                         </div>
                     </div>
-                    <button type="submit" class="btn btn--orange btn--submit">
+                    <div class="field">
+                        <label for="data">data</label>
+                        <div class="field__input-wrapper">
+                            <input type="date" id="data" name="data"
+                                   placeholder="Data Cadastro">
+                        </div>
+                    </div>
+                    <script>
+                        document.getElementById("formulario").addEventListener("submit", function (e) {
+                            let campo = document.getElementById("data").value;
+                            alert(campo)
+                        })
+                    </script>
+                    <button type="submit" class="btn btn--orange btn--submit" id="btn-enviar">
                         Cadastrar
                     </button>
+
                 </form>
 
                 <div class="stripe-container">
@@ -114,5 +128,8 @@
                 <div class="brand-stripe brand-stripe--bottom"></div>
             </div>
         </div>
+
     </x-slot:content>
+
 </x-layout>
+

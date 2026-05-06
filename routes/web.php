@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\CadastroOrganizacaoController;
 use App\Http\Controllers\CarteiraController;
 use App\Http\Controllers\HomeMotoristaController;
 use App\Http\Controllers\PerfilMotoristaController;
+use App\Http\Controllers\GrupoCaronaController;
 use App\Http\Middleware\VerificarTipo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +39,8 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::AdministradorOrgani
 Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(function () {
     Route::post('/motorista', [PerfilMotoristaController::class, 'criar'])->name('motorista.cadastro');
     Route::get('/home/motorista', [HomeMotoristaController::class, 'mostrar'])->name('motorista.home');
+    Route::get('/motorista/criar', [GrupoCaronaController::class, 'create'])->name('motorista.grupos.criar');
+    Route::post('/motorista/', [GrupoCaronaController::class, 'store'])->name('motorista.grupos.store');
     Route::get('/home/', fn () => view('passageiro.home'))->name('home');
     Route::get('/perfil', fn () => view('usuario.perfil'))->name('usuario.perfil');
     Route::delete('/deletar-conta', function (Request $request, DeleteUser $deleter) {

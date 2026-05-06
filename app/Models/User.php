@@ -99,4 +99,8 @@ class User extends Authenticatable
     {
         return $this->hasOne(Carteira::class);
     }
+    public function grupoCaronas()
+    {
+        return $this->belongsToMany(GrupoCarona::class, 'grupo_carona_user', 'user_id', 'grupo_carona_id')->withTimestamps();
+    }
 }
