@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TipoUsuario;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -67,6 +68,7 @@ class GrupoCaronaController extends Controller
         return User::query()
             ->where('organizacao_id', $user->organizacao_id)
             ->whereKeyNot($user->id)
+            ->where('tipo', TipoUsuario::Padrao)
             ->whereDoesntHave('perfilMotorista')
             ->orderBy('name')
             ->get(['id', 'name', 'email']);

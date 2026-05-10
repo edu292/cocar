@@ -34,6 +34,12 @@ test('motorista aprovado visualiza apenas passageiros elegiveis da mesma organiz
         'email' => 'passageiro1@empresa.com',
     ]);
 
+    $adminDaOrganizacao = criarUsuarioDaOrganizacao($organizacao, [
+        'name' => 'Admin da Organizacao',
+        'email' => 'admin@empresa.com',
+        'tipo' => TipoUsuario::AdministradorOrganizacao,
+    ]);
+
     $motoristaDaMesmaOrganizacao = criarUsuarioDaOrganizacao($organizacao, [
         'name' => 'Outro Motorista',
         'email' => 'motorista2@empresa.com',
@@ -58,6 +64,7 @@ test('motorista aprovado visualiza apenas passageiros elegiveis da mesma organiz
 
     $response->assertOk();
     $response->assertSee($passageiroElegivel->name);
+    $response->assertDontSee($adminDaOrganizacao->name);
     $response->assertDontSee($motoristaDaMesmaOrganizacao->name);
     $response->assertDontSee($passageiroDeOutraOrganizacao->name);
 });
