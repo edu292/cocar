@@ -22,7 +22,7 @@
                     <button type="submit" class="btn btn--blue route-builder__btn">Publicar Trajeto</button>
                 </div>
                 <div class="acoes-motorista">
-                    <a href="{{ route('motorista.grupos.criar') }}" class="btn btn-primary">
+                    <a href="{{ route('motorista.grupos.criar') }}" class="btn btn--blue route-builder__btn">
                         + Criar Grupo de Carona
                     </a>
                 </div>

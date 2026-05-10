@@ -40,7 +40,7 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
     Route::post('/motorista', [PerfilMotoristaController::class, 'criar'])->name('motorista.cadastro');
     Route::get('/home/motorista', [HomeMotoristaController::class, 'mostrar'])->name('motorista.home');
     Route::get('/motorista/criar', [GrupoCaronaController::class, 'create'])->name('motorista.grupos.criar');
-    Route::post('/motorista/', [GrupoCaronaController::class, 'store'])->name('motorista.grupos.store');
+    Route::post('/motorista/grupos', [GrupoCaronaController::class, 'store'])->name('motorista.grupos.store');
     Route::get('/home/', fn () => view('passageiro.home'))->name('home');
     Route::get('/perfil', fn () => view('usuario.perfil'))->name('usuario.perfil');
     Route::delete('/deletar-conta', function (Request $request, DeleteUser $deleter) {

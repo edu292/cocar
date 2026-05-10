@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teste - Criar Grupo</title>
+    <title>Criar Grupo de Carona</title>
     <style>
-        /* CSS básico apenas para não ficar tudo grudado na tela */
-        body { font-family: Arial, sans-serif; background-color: #f3f4f6; padding: 20px; }
-        .caixa { background: white; max-width: 500px; margin: 0 auto; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        body { font-family: Arial, sans-serif; background-color: #f3f4f6; padding: 20px; color: #111827; }
+        .caixa { background: white; max-width: 680px; margin: 0 auto; padding: 24px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .campo { margin-bottom: 15px; }
         label { display: block; font-weight: bold; margin-bottom: 5px; }
         input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
@@ -15,15 +14,21 @@
         .btn-salvar { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
         .btn-cancelar { background: #6b7280; color: white; text-decoration: none; padding: 10px 15px; border-radius: 4px; }
         .erro { color: red; font-size: 12px; margin-top: 5px; display: block; }
+        .ajuda { color: #4b5563; font-size: 14px; margin-top: 4px; }
+        .lista-passageiros { border: 1px solid #d1d5db; border-radius: 6px; padding: 12px; display: grid; gap: 10px; max-height: 280px; overflow-y: auto; }
+        .passageiro-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; }
+        .passageiro-item input { width: auto; margin-top: 3px; }
+        .passageiro-item__nome { font-weight: bold; display: block; }
+        .passageiro-item__email { color: #6b7280; font-size: 14px; }
+        .vazio { border: 1px dashed #d1d5db; border-radius: 6px; padding: 14px; color: #6b7280; background: #f9fafb; }
     </style>
 </head>
 <body>
 
 <div class="caixa">
-    <h2>Criar Grupo de Carona (Versão de Teste)</h2>
+    <h2>Criar Grupo de Carona</h2>
 
     <form action="{{ route('motorista.grupos.store') }}" method="POST">
-
         @csrf
 
         <div class="campo">
@@ -48,11 +53,40 @@
             @error('vagas') <span class="erro">{{ $message }}</span> @enderror
         </div>
 
+        <div class="campo">
+            <label>Selecionar usuários para oferecer caronas:</label>
+            <p class="ajuda">Escolha passageiros da mesma organização. O total selecionado não pode ultrapassar o número de vagas.</p>
+
+            @if($passageirosDisponiveis->isEmpty())
+                <div class="vazio">Nenhum passageiro elegível foi encontrado na sua organização.</div>
+            @else
+                <div class="lista-passageiros">
+                    @foreach($passageirosDisponiveis as $passageiro)
+                        <label class="passageiro-item" for="passageiro-{{ $passageiro->id }}">
+                            <input
+                                type="checkbox"
+                                id="passageiro-{{ $passageiro->id }}"
+                                name="passageiros[]"
+                                value="{{ $passageiro->id }}"
+                                {{ in_array($passageiro->id, old('passageiros', [])) ? 'checked' : '' }}
+                            >
+                            <span>
+                                <span class="passageiro-item__nome">{{ $passageiro->name }}</span>
+                                <span class="passageiro-item__email">{{ $passageiro->email }}</span>
+                            </span>
+                        </label>
+                    @endforeach
+                </div>
+            @endif
+
+            @error('passageiros') <span class="erro">{{ $message }}</span> @enderror
+            @error('passageiros.*') <span class="erro">{{ $message }}</span> @enderror
+        </div>
+
         <div class="botoes">
             <button type="submit" class="btn-salvar">Salvar Grupo</button>
             <a href="{{ route('motorista.home') }}" class="btn-cancelar">Voltar</a>
         </div>
-
     </form>
 </div>
 
