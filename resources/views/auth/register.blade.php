@@ -98,19 +98,6 @@
                                 placeholder="Repita a senha">
                         </div>
                     </div>
-                    <div class="field">
-                        <label for="data">data</label>
-                        <div class="field__input-wrapper">
-                            <input type="date" id="data" name="data"
-                                   placeholder="Data Cadastro">
-                        </div>
-                    </div>
-                    <script>
-                        document.getElementById("formulario").addEventListener("submit", function (e) {
-                            let campo = document.getElementById("data").value;
-                            alert(campo)
-                        })
-                    </script>
                     <button type="submit" class="btn btn--orange btn--submit" id="btn-enviar">
                         Cadastrar
                     </button>
@@ -132,4 +119,3 @@
     </x-slot:content>
 
 </x-layout>
-
