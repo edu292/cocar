@@ -44,6 +44,9 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
     Route::get('/motorista/criar', [GrupoCaronaController::class, 'create'])->name('motorista.grupos.criar');
     Route::post('/motorista/grupos', [GrupoCaronaController::class, 'store'])->name('motorista.grupos.store');
     
+    // MODIFICADO: Rota de exclusão de grupo
+    Route::delete('/motorista/grupos/{grupo}', [GrupoCaronaController::class, 'destroy'])->name('motorista.grupos.destroy');
+    
     // MODIFICADO: Rota para o passageiro entrar em uma carona
     Route::post('/grupos/{grupo}/entrar', [GrupoCaronaController::class, 'entrar'])->name('grupos.entrar');
     

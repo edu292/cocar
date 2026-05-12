@@ -94,7 +94,8 @@
                 @forelse($meusGrupos as $grupo)
                 <div class="trip-card">
                     <div class="trip-card__header">
-                        <span class="trip-card__time text-blue">{{ ucfirst($grupo->frequencia) }}</span>
+                        <!-- MODIFICADO: Usando o helper formatado em vez de ucfirst -->
+                        <span class="trip-card__time text-blue">{{ $grupo->frequenciaFormatada() }}</span>
                         <span class="badge badge--green">Inscrito</span>
                     </div>
                     <div class="trip-card__path">
@@ -128,7 +129,8 @@
                 @forelse($gruposDisponiveis as $grupo)
                 <div class="trip-card">
                     <div class="trip-card__header">
-                        <span class="trip-card__time text-text-muted">{{ ucfirst($grupo->frequencia) }}</span>
+                        <!-- MODIFICADO: Usando o helper formatado em vez de ucfirst -->
+                        <span class="trip-card__time text-text-muted">{{ $grupo->frequenciaFormatada() }}</span>
                         <span class="badge badge--blue">{{ $grupo->vagas - $grupo->passageiros_count }} Vagas Livres</span>
                     </div>
                     <div class="trip-card__path">

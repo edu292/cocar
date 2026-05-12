@@ -40,6 +40,12 @@ class GrupoCaronaController extends Controller
         $dadosValidados = $request->validate([
             'nome' => 'required|string|max:255',
             'frequencia' => 'required|in:semanal,mensal',
+            // MODIFICADO: Validação condicional dos dias de semana
+            'dias_semana' => 'required_if:frequencia,semanal|array',
+            'dias_semana.*' => 'in:seg,ter,qua,qui,sex,sab,dom',
+            // MODIFICADO: Validação condicional dos dias do mês
+            'dias_mes' => 'required_if:frequencia,mensal|array',
+            'dias_mes.*' => 'integer|min:1|max:31',
             'vagas' => 'required|integer|min:1|max:4',
             'passageiros' => 'nullable|array',
             'passageiros.*' => [
@@ -47,6 +53,13 @@ class GrupoCaronaController extends Controller
                 Rule::in($idsPassageirosDisponiveis),
             ],
         ]);
+
+        // MODIFICADO: Se selecionou semanal, apaga mensal (caso haja sujeira no POST). E vice-versa.
+        if ($dadosValidados['frequencia'] === 'semanal') {
+            $dadosValidados['dias_mes'] = null;
+        } else {
+            $dadosValidados['dias_semana'] = null;
+        }
 
         $passageirosSelecionados = collect($dadosValidados['passageiros'] ?? [])->unique()->values();
 
@@ -92,5 +105,19 @@ class GrupoCaronaController extends Controller
         $grupo->passageiros()->attach($user->id);
 
         return back()->with('sucesso', 'Você entrou no grupo de carona com sucesso!');
+    }
+
+    // MODIFICADO: Método para o motorista excluir o próprio grupo
+    public function destroy(GrupoCarona $grupo, Request $request): RedirectResponse
+    {
+        $perfilMotorista = $request->user()->perfilMotorista;
+        
+        if (!$perfilMotorista || $grupo->perfil_motorista_id !== $perfilMotorista->id) {
+            return back()->with('erro', 'Acesso não autorizado para exclusão deste grupo.');
+        }
+
+        $grupo->delete();
+
+        return back()->with('sucesso', 'Grupo de carona excluído com sucesso.');
     }
 }

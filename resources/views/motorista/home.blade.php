@@ -32,6 +32,11 @@
                         {{ session('sucesso') }}
                     </div>
                 @endif
+                @if(session('erro'))
+                    <div class="alert alert-danger" style="color:red; margin-top:10px;">
+                        {{ session('erro') }}
+                    </div>
+                @endif
             </form>
         </section>
 
@@ -43,13 +48,14 @@
                 @forelse($grupos as $grupo)
                 <div class="trip-card">
                     <div class="trip-card__header">
-                        <span class="trip-card__time text-orange">{{ ucfirst($grupo->frequencia) }}</span>
+                        <!-- MODIFICADO: Usando o helper formatado em vez de ucfirst -->
+                        <span class="trip-card__time text-orange">{{ $grupo->frequenciaFormatada() }}</span>
                         <span class="badge badge--blue">{{ $grupo->passageiros_count }} / {{ $grupo->vagas }} Vagas</span>
                     </div>
                     <div class="trip-card__path">
                         <span class="trip-card__location" style="font-weight:bold;">{{ $grupo->nome }}</span>
                     </div>
-                    <div class="trip-card__actions">
+                    <div class="trip-card__actions" style="display:flex; gap:8px;">
                         <button class="btn btn--outline trip-card__btn-msg" aria-label="Mensagear passageiros">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
                                 <path fill="currentColor"
@@ -59,6 +65,17 @@
                         <button class="btn btn--green trip-card__btn-confirm" onclick="document.getElementById('detalhes-grupo-{{ $grupo->id }}').style.display = document.getElementById('detalhes-grupo-{{ $grupo->id }}').style.display === 'none' ? 'block' : 'none';">
                             Ver Detalhes
                         </button>
+                        
+                        <!-- MODIFICADO: Botão de exclusão -->
+                        <form action="{{ route('motorista.grupos.destroy', $grupo->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja excluir este grupo de carona?');" style="margin: 0; padding: 0;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn--outline" aria-label="Excluir grupo" style="color: red; border-color: red; padding: 10px; display:flex; align-items:center; justify-content:center;" title="Excluir Grupo">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24">
+                                    <path fill="currentColor" d="M19 4h-3.5l-1-1h-5l-1 1H5v2h14zM6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6z"/>
+                                </svg>
+                            </button>
+                        </form>
                     </div>
                     
                     <!-- MODIFICADO: Seção de detalhes com os passageiros inscritos -->
