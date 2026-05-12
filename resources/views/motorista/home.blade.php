@@ -56,9 +56,26 @@
                                     d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2m-2 12H6v-2h12zm0-3H6V9h12zm0-3H6V6h12z" />
                             </svg>
                         </button>
-                        <button class="btn btn--green trip-card__btn-confirm">
+                        <button class="btn btn--green trip-card__btn-confirm" onclick="document.getElementById('detalhes-grupo-{{ $grupo->id }}').style.display = document.getElementById('detalhes-grupo-{{ $grupo->id }}').style.display === 'none' ? 'block' : 'none';">
                             Ver Detalhes
                         </button>
+                    </div>
+                    
+                    <!-- MODIFICADO: Seção de detalhes com os passageiros inscritos -->
+                    <div id="detalhes-grupo-{{ $grupo->id }}" class="trip-card__details" style="display: none; width: 100%; margin-top: 15px; border-top: 1px solid #e5e7eb; padding-top: 10px;">
+                        <h4 style="font-size: 14px; font-weight: bold; margin-bottom: 5px; color: #111827;">Passageiros:</h4>
+                        @if($grupo->passageiros->isEmpty())
+                            <p style="font-size: 14px; color: #6b7280;">Nenhum passageiro inscrito ainda.</p>
+                        @else
+                            <ul style="list-style: none; padding: 0; margin: 0;">
+                                @foreach($grupo->passageiros as $passageiro)
+                                    <li style="font-size: 14px; padding: 6px 0; border-bottom: 1px dashed #e5e7eb; display: flex; justify-content: space-between;">
+                                        <span style="font-weight: 500; color: #374151;">{{ $passageiro->name }}</span>
+                                        <span style="color: #6b7280; font-size: 12px;">{{ $passageiro->email }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        @endif
                     </div>
                 </div>
                 @empty

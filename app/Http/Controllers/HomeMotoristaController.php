@@ -18,8 +18,8 @@ class HomeMotoristaController extends Controller
             return view('motorista.pendente');
         }
 
-        // MODIFICADO: Buscar grupos com a quantidade de passageiros inscritos
-        $grupos = $perfilMotorista->grupos()->withCount('passageiros')->get();
+        // MODIFICADO: Buscar grupos com a quantidade de passageiros inscritos e os dados dos passageiros
+        $grupos = $perfilMotorista->grupos()->withCount('passageiros')->with('passageiros')->get();
 
         return view('motorista.home', compact('grupos'));
     }
