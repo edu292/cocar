@@ -8,6 +8,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+// MODIFICADO: Adicionado import do GrupoCarona
+use App\Models\GrupoCarona;
 
 class GrupoCaronaController extends Controller
 {
@@ -72,5 +74,23 @@ class GrupoCaronaController extends Controller
             ->whereDoesntHave('perfilMotorista')
             ->orderBy('name')
             ->get(['id', 'name', 'email']);
+    }
+
+    // MODIFICADO: Adicionado método para inscrever um passageiro em um grupo de carona
+    public function entrar(GrupoCarona $grupo, Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        if ($grupo->passageiros()->where('user_id', $user->id)->exists()) {
+            return back()->with('erro', 'Você já está neste grupo.');
+        }
+
+        if ($grupo->passageiros()->count() >= $grupo->vagas) {
+            return back()->with('erro', 'Este grupo já está lotado.');
+        }
+
+        $grupo->passageiros()->attach($user->id);
+
+        return back()->with('sucesso', 'Você entrou no grupo de carona com sucesso!');
     }
 }

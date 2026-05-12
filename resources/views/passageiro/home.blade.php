@@ -20,7 +20,20 @@
                             d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.05-.35 2.025T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" />
                     </svg>
                 </button>
+                </button>
             </form>
+            
+            <!-- MODIFICADO: Adicionado feedback de sessão (erros e sucessos) -->
+            @if(session('sucesso'))
+                <div class="alert alert-success" style="margin-top:15px; color:green;">
+                    {{ session('sucesso') }}
+                </div>
+            @endif
+            @if(session('erro'))
+                <div class="alert alert-danger" style="margin-top:15px; color:red;">
+                    {{ session('erro') }}
+                </div>
+            @endif
 
             <div class="shortcuts">
                 <button class="shortcuts__item">
@@ -75,16 +88,70 @@
         <section class="card card--home">
             <h3 class="card__heading card__heading--small text-blue">Próximas Caronas</h3>
             <p class="card__text card__text--left card__text--secondary">Sua agenda de mobilidade coletiva.</p>
-            <div class="empty-state-wrapper empty-state-wrapper--compact">
-                <div class="card card--empty">
-                    <div class="card__icon text-blue">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
-                            <path fill="currentColor"
-                                d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5s1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" />
-                        </svg>
+            
+            <!-- MODIFICADO: Mostrando grupos que o passageiro participa -->
+            <div class="trip-list" style="margin-top: 15px;">
+                @forelse($meusGrupos as $grupo)
+                <div class="trip-card">
+                    <div class="trip-card__header">
+                        <span class="trip-card__time text-blue">{{ ucfirst($grupo->frequencia) }}</span>
+                        <span class="badge badge--green">Inscrito</span>
                     </div>
-                    <p>Nenhuma rota programada. Inicie uma busca acima!</p>
+                    <div class="trip-card__path">
+                        <span class="trip-card__location" style="font-weight:bold;">{{ $grupo->nome }}</span>
+                    </div>
+                    <div class="trip-card__actions" style="margin-top:10px;">
+                        <span style="font-size:14px; color:#6b7280;">Motorista: {{ $grupo->motorista->user->name }}</span>
+                    </div>
                 </div>
+                @empty
+                <div class="empty-state-wrapper empty-state-wrapper--compact">
+                    <div class="card card--empty">
+                        <div class="card__icon text-blue">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
+                                <path fill="currentColor"
+                                    d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5s1.5.67 1.5 1.5s-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z" />
+                            </svg>
+                        </div>
+                        <p>Nenhuma rota programada. Inscreva-se numa carona abaixo!</p>
+                    </div>
+                </div>
+                @endforelse
+            </div>
+        </section>
+        
+        <!-- MODIFICADO: Nova section para caronas disponíveis para aplicar -->
+        <section class="card card--home">
+            <h3 class="card__heading card__heading--small text-orange">Caronas Disponíveis</h3>
+            <p class="card__text card__text--left card__text--secondary">Junte-se a grupos da sua organização.</p>
+            <div class="trip-list" style="margin-top: 15px;">
+                @forelse($gruposDisponiveis as $grupo)
+                <div class="trip-card">
+                    <div class="trip-card__header">
+                        <span class="trip-card__time text-text-muted">{{ ucfirst($grupo->frequencia) }}</span>
+                        <span class="badge badge--blue">{{ $grupo->vagas - $grupo->passageiros_count }} Vagas Livres</span>
+                    </div>
+                    <div class="trip-card__path">
+                        <span class="trip-card__location" style="font-weight:bold;">{{ $grupo->nome }}</span>
+                    </div>
+                    <div class="trip-card__actions" style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:14px; color:#6b7280;">{{ $grupo->motorista->user->name }}</span>
+                        
+                        <form action="{{ route('grupos.entrar', $grupo->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn--green" style="padding: 6px 12px; font-size:14px;">
+                                Participar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                @empty
+                <div class="empty-state-wrapper empty-state-wrapper--compact">
+                    <div class="card card--empty">
+                        <p>Nenhuma carona com vagas disponível no momento.</p>
+                    </div>
+                </div>
+                @endforelse
             </div>
         </section>
 

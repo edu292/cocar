@@ -1,94 +1,80 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar Grupo de Carona</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f3f4f6; padding: 20px; color: #111827; }
-        .caixa { background: white; max-width: 680px; margin: 0 auto; padding: 24px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .campo { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; }
-        input, select { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-        .botoes { margin-top: 20px; display: flex; gap: 10px; }
-        .btn-salvar { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; }
-        .btn-cancelar { background: #6b7280; color: white; text-decoration: none; padding: 10px 15px; border-radius: 4px; }
-        .erro { color: red; font-size: 12px; margin-top: 5px; display: block; }
-        .ajuda { color: #4b5563; font-size: 14px; margin-top: 4px; }
-        .lista-passageiros { border: 1px solid #d1d5db; border-radius: 6px; padding: 12px; display: grid; gap: 10px; max-height: 280px; overflow-y: auto; }
-        .passageiro-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px; border: 1px solid #e5e7eb; border-radius: 6px; }
-        .passageiro-item input { width: auto; margin-top: 3px; }
-        .passageiro-item__nome { font-weight: bold; display: block; }
-        .passageiro-item__email { color: #6b7280; font-size: 14px; }
-        .vazio { border: 1px dashed #d1d5db; border-radius: 6px; padding: 14px; color: #6b7280; background: #f9fafb; }
-    </style>
-</head>
-<body>
+<x-home-layout mode="motorista">
+    <x-slot:title>Criar Grupo de Carona</x-slot:title>
+    <x-slot:content>
+        <!-- MODIFICADO: Refatorado para usar o layout padrao e classes css do projeto -->
+        <section class="card card--home">
+            <h3 class="card__heading card__heading--small text-blue">Criar Grupo de Carona</h3>
 
-<div class="caixa">
-    <h2>Criar Grupo de Carona</h2>
+            <form action="{{ route('motorista.grupos.store') }}" method="POST" class="route-builder">
+                @csrf
 
-    <form action="{{ route('motorista.grupos.store') }}" method="POST">
-        @csrf
-
-        <div class="campo">
-            <label for="nome">Nome do Grupo:</label>
-            <input type="text" name="nome" id="nome" value="{{ old('nome') }}" required>
-            @error('nome') <span class="erro">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="campo">
-            <label for="frequencia">Frequência:</label>
-            <select name="frequencia" id="frequencia" required>
-                <option value="">Selecione...</option>
-                <option value="semanal" {{ old('frequencia') == 'semanal' ? 'selected' : '' }}>Semanal</option>
-                <option value="mensal" {{ old('frequencia') == 'mensal' ? 'selected' : '' }}>Mensal</option>
-            </select>
-            @error('frequencia') <span class="erro">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="campo">
-            <label for="vagas">Vagas disponíveis (1 a 4):</label>
-            <input type="number" name="vagas" id="vagas" min="1" max="4" value="{{ old('vagas') }}" required>
-            @error('vagas') <span class="erro">{{ $message }}</span> @enderror
-        </div>
-
-        <div class="campo">
-            <label>Selecionar usuários para oferecer caronas:</label>
-            <p class="ajuda">Escolha passageiros da mesma organização. O total selecionado não pode ultrapassar o número de vagas.</p>
-
-            @if($passageirosDisponiveis->isEmpty())
-                <div class="vazio">Nenhum passageiro elegível foi encontrado na sua organização.</div>
-            @else
-                <div class="lista-passageiros">
-                    @foreach($passageirosDisponiveis as $passageiro)
-                        <label class="passageiro-item" for="passageiro-{{ $passageiro->id }}">
-                            <input
-                                type="checkbox"
-                                id="passageiro-{{ $passageiro->id }}"
-                                name="passageiros[]"
-                                value="{{ $passageiro->id }}"
-                                {{ in_array($passageiro->id, old('passageiros', [])) ? 'checked' : '' }}
-                            >
-                            <span>
-                                <span class="passageiro-item__nome">{{ $passageiro->name }}</span>
-                                <span class="passageiro-item__email">{{ $passageiro->email }}</span>
-                            </span>
-                        </label>
-                    @endforeach
+                <div class="field">
+                    <label class="field__label" for="nome" style="font-weight:bold; margin-bottom:5px; display:block;">Nome do Grupo:</label>
+                    <div class="field__input-wrapper">
+                        <input type="text" name="nome" id="nome" value="{{ old('nome') }}" required>
+                    </div>
+                    @error('nome') <span class="text-orange" style="font-size:12px;">{{ $message }}</span> @enderror
                 </div>
-            @endif
 
-            @error('passageiros') <span class="erro">{{ $message }}</span> @enderror
-            @error('passageiros.*') <span class="erro">{{ $message }}</span> @enderror
-        </div>
+                <div class="field" style="margin-top: 15px;">
+                    <label class="field__label" for="frequencia" style="font-weight:bold; margin-bottom:5px; display:block;">Frequência:</label>
+                    <div class="field__input-wrapper">
+                        <select name="frequencia" id="frequencia" required style="width:100%; border:none; outline:none; background:transparent;">
+                            <option value="">Selecione...</option>
+                            <option value="semanal" {{ old('frequencia') == 'semanal' ? 'selected' : '' }}>Semanal</option>
+                            <option value="mensal" {{ old('frequencia') == 'mensal' ? 'selected' : '' }}>Mensal</option>
+                        </select>
+                    </div>
+                    @error('frequencia') <span class="text-orange" style="font-size:12px;">{{ $message }}</span> @enderror
+                </div>
 
-        <div class="botoes">
-            <button type="submit" class="btn-salvar">Salvar Grupo</button>
-            <a href="{{ route('motorista.home') }}" class="btn-cancelar">Voltar</a>
-        </div>
-    </form>
-</div>
+                <div class="field" style="margin-top: 15px;">
+                    <label class="field__label" for="vagas" style="font-weight:bold; margin-bottom:5px; display:block;">Vagas disponíveis (1 a 4):</label>
+                    <div class="field__input-wrapper">
+                        <input type="number" name="vagas" id="vagas" min="1" max="4" value="{{ old('vagas') }}" required style="width:100%; border:none; outline:none; background:transparent;">
+                    </div>
+                    @error('vagas') <span class="text-orange" style="font-size:12px;">{{ $message }}</span> @enderror
+                </div>
 
-</body>
-</html>
+                <div class="field" style="margin-top: 15px;">
+                    <label class="field__label" style="font-weight:bold; display:block;">Selecionar passageiros (Opcional):</label>
+                    <p class="card__text card__text--left card__text--secondary" style="margin-top: 4px;">Escolha passageiros da mesma organização.</p>
+
+                    @if($passageirosDisponiveis->isEmpty())
+                        <div class="empty-state-wrapper empty-state-wrapper--compact" style="margin-top:10px;">
+                            <div class="card card--empty">
+                                <p>Nenhum passageiro elegível foi encontrado na sua organização.</p>
+                            </div>
+                        </div>
+                    @else
+                        <div class="trip-list" style="margin-top:10px; max-height: 280px; overflow-y: auto;">
+                            @foreach($passageirosDisponiveis as $passageiro)
+                                <label class="trip-card" for="passageiro-{{ $passageiro->id }}" style="cursor:pointer; flex-direction:row; justify-content:flex-start; gap:10px;">
+                                    <input
+                                        type="checkbox"
+                                        id="passageiro-{{ $passageiro->id }}"
+                                        name="passageiros[]"
+                                        value="{{ $passageiro->id }}"
+                                        {{ in_array($passageiro->id, old('passageiros', [])) ? 'checked' : '' }}
+                                    >
+                                    <div>
+                                        <span style="font-weight:bold; display:block;">{{ $passageiro->name }}</span>
+                                        <span class="text-text-muted" style="font-size: 14px;">{{ $passageiro->email }}</span>
+                                    </div>
+                                </label>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    @error('passageiros') <span class="text-orange" style="font-size:12px;">{{ $message }}</span> @enderror
+                    @error('passageiros.*') <span class="text-orange" style="font-size:12px;">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="route-builder__row" style="margin-top: 20px;">
+                    <button type="submit" class="btn btn--green route-builder__btn">Salvar Grupo</button>
+                    <a href="{{ route('motorista.home') }}" class="btn btn--outline text-blue" style="text-align:center;">Cancelar</a>
+                </div>
+            </form>
+        </section>
+    </x-slot:content>
+</x-home-layout>
