@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -29,11 +31,17 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * @return BelongsTo<Organizacao,User>
+     */
     public function Organizacao(): BelongsTo
     {
         return $this->belongsTo(Organizacao::class);
     }
 
+    /**
+     * @return HasOne<PerfilMotorista,User>
+     */
     public function perfilMotorista(): HasOne
     {
         return $this->hasOne(PerfilMotorista::class);
@@ -54,6 +62,9 @@ class User extends Authenticatable
         );
     }
 
+    /**
+     * @param  Builder<Model>  $query
+     */
     public function scopeComStatusMotorista(Builder $query, ?string $filtroStatus = null): Builder
     {
         $query->withExists(['perfilMotorista as e_motorista'])
@@ -95,12 +106,32 @@ class User extends Authenticatable
         };
     }
 
-    public function carteira()
+    /**
+     * @return HasOne<Carteira,User>
+     */
+    public function carteira(): HasOne
     {
         return $this->hasOne(Carteira::class);
     }
-    public function grupoCaronas()
+
+    public function grupoCaronas(): BelongsToMany
     {
         return $this->belongsToMany(GrupoCarona::class, 'grupo_carona_user', 'user_id', 'grupo_carona_id')->withTimestamps();
+    }
+
+    /**
+     * @return HasMany<Carona,User>
+     */
+    public function trajetos(): HasMany
+    {
+        return $this->hasMany(Trajeto::class, 'motorista_id');
+    }
+
+    /**
+     * @return HasMany<PedidoCarona,User>
+     */
+    public function pedidosCarona(): HasMany
+    {
+        return $this->hasMany(PedidoCarona::class);
     }
 }
