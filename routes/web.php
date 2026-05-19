@@ -8,16 +8,15 @@ use App\Http\Controllers\Admin\TriagemMotoristaController;
 use App\Http\Controllers\Admin\UsuarioController;
 use App\Http\Controllers\Auth\CadastroOrganizacaoController;
 use App\Http\Controllers\CarteiraController;
-use App\Http\Controllers\HomeMotoristaController;
-use App\Http\Controllers\PerfilMotoristaController;
 use App\Http\Controllers\GrupoCaronaController;
-// MODIFICADO: Adicionado Controller de Passageiro
+use App\Http\Controllers\HomeMotoristaController;
 use App\Http\Controllers\HomePassageiroController;
+use App\Http\Controllers\Organizacao\BeneficioController;
+use App\Http\Controllers\PerfilMotoristaController;
+use App\Http\Controllers\TrajetoController;
 use App\Http\Middleware\VerificarTipo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-// MODIFICADO: Adicionado Controller de Beneficios do motora
-use App\Http\Controllers\Organizacao\BeneficioController;
 
 Route::get('/', function () {
     return view('index');
@@ -48,13 +47,9 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
     Route::get('/motorista/criar', [GrupoCaronaController::class, 'create'])->name('motorista.grupos.criar');
     Route::post('/motorista/grupos', [GrupoCaronaController::class, 'store'])->name('motorista.grupos.store');
 
-    // MODIFICADO: Rota de exclusão de grupo
     Route::delete('/motorista/grupos/{grupo}', [GrupoCaronaController::class, 'destroy'])->name('motorista.grupos.destroy');
 
-    // MODIFICADO: Rota para o passageiro entrar em uma carona
     Route::post('/grupos/{grupo}/entrar', [GrupoCaronaController::class, 'entrar'])->name('grupos.entrar');
-
-    // MODIFICADO: Usando o novo controller da home
     Route::get('/home/', [HomePassageiroController::class, 'mostrar'])->name('home');
     Route::get('/perfil', fn () => view('usuario.perfil'))->name('usuario.perfil');
     Route::delete('/deletar-conta', function (Request $request, DeleteUser $deleter) {
@@ -65,4 +60,11 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
 
     Route::get('/carteira', [CarteiraController::class, 'exibir'])->name('usuario.carteira');
     Route::put('/carteira', [CarteiraController::class, 'inserir'])->name('usuario.carteira.inserir');
+
+    Route::post('/trajeto', [TrajetoController::class, 'store'])->name('trajeto.store');
+    Route::get('/trajeto/{trajeto}', [TrajetoController::class, 'show'])->name('trajeto.show');
+    Route::delete('/trajeto/{trajeto}', [TrajetoController::class, 'destroy'])->name('trajeto.destroy');
+    Route::get('/trajeto/{trajeto}/rota', [TrajetoController::class, 'rota'])->name('trajeto.rota');
+    Route::post('/trajeto/{trajeto}/iniciar', [TrajetoController::class, 'iniciar'])->name('trajeto.iniciar');
+    Route::post('/trajeto/{trajeto}/finalizar', [TrajetoController::class, 'finalizar'])->name('trajeto.finalizar');
 });
