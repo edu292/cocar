@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Http::macro('mapbox', function () {
+            return Http::baseUrl('https://api.mapbox.com')
+                ->withHeaders(['Custom-Header' => 'value'])
+                ->withQueryParameters([
+                    'access_token' => config('services.mapbox.token'),
+                    'geometries' => 'geojson',
+                    'language' => 'pt-BR',
+                ]);
+        });
     }
 }
