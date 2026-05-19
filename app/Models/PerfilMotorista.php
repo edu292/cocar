@@ -22,4 +22,11 @@ class PerfilMotorista extends Model
     public function grupos(){
         return $this->hasMany(GrupoCarona::class, "perfil_motorista_id");
     }
+
+    public function beneficios()
+    {
+        return $this->belongsToMany(Beneficio::class, 'beneficio_motorista')
+            ->withPivot('km_acumulado', 'status', 'atingido_em')
+            ->withTimestamps();
+    }
 }

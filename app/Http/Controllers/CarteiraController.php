@@ -18,7 +18,8 @@ class CarteiraController extends Controller
     public function inserir(Request $request): RedirectResponse
     {
         $validated = $request->validate(
-            ['valor' => 'required|min:0|decimal:0,2 ']
+            ['valor' => 'required|min:0|decimal:0,2 '],
+            ['valor' => 'Valor inválido, verifique e tente novamente']
         );
 
         $carteira = $request->user()->carteira;

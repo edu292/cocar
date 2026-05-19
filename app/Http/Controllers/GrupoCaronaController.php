@@ -52,6 +52,14 @@ class GrupoCaronaController extends Controller
                 'integer',
                 Rule::in($idsPassageirosDisponiveis),
             ],
+        ],
+        [
+            'nome.required' => 'Ei, você esqueceu de dar um nome para a carona!',
+            'nome.max' => 'O nome do grupo está muito grande.',
+            'frequencia.required' => 'Por favor, informe se a carona é semanal ou mensal.',
+            'frequencia.in' => 'Opção de frequência inválida.',
+            'vagas.required' => 'Você precisa informar quantas vagas tem no carro.',
+            'vagas.max' => 'O limite máximo é de 4 vagas por carro.',
         ]);
 
         // MODIFICADO: Se selecionou semanal, apaga mensal (caso haja sujeira no POST). E vice-versa.
@@ -111,7 +119,7 @@ class GrupoCaronaController extends Controller
     public function destroy(GrupoCarona $grupo, Request $request): RedirectResponse
     {
         $perfilMotorista = $request->user()->perfilMotorista;
-        
+
         if (!$perfilMotorista || $grupo->perfil_motorista_id !== $perfilMotorista->id) {
             return back()->with('erro', 'Acesso não autorizado para exclusão deste grupo.');
         }

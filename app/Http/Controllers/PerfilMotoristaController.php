@@ -13,6 +13,9 @@ class PerfilMotoristaController extends Controller
         $user = $request->user();
         $validated = $request->validate([
             'cnh' => 'required|string',
+        ],
+        [
+            'cnh' => 'Formato inválido, verifique e tente novamente'
         ]);
 
         $user->perfilMotorista()->create([

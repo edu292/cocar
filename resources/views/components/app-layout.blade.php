@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:title>{{ $title }}</x-slot:title>
+    <x-slot:title>{{ $title ?? 'CoCar'}}</x-slot:title>
     <x-slot:body>
         <div class="app-layout bg-grafismo">
             <main class="app-layout__content">

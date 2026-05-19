@@ -16,6 +16,8 @@ use App\Http\Controllers\HomePassageiroController;
 use App\Http\Middleware\VerificarTipo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+// MODIFICADO: Adicionado Controller de Beneficios do motora
+use App\Http\Controllers\Organizacao\BeneficioController;
 
 Route::get('/', function () {
     return view('index');
@@ -34,6 +36,8 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::AdministradorOrgani
     Route::get('usuarios', [UsuarioController::class, 'exibir'])->name('admin.usuarios');
     Route::get('cadastro', fn () => view('admin.configuracoes'))->name('admin.meu-cadastro');
     Route::put('cadastro/{organizacao}', [OrganizacaoController::class, 'alterar'])->name('organizacoes.alterar');
+    Route::get('/beneficios/criar', [BeneficioController::class, 'create'])->name('admin.beneficios.criar');
+    Route::post('/beneficios', [BeneficioController::class, 'store'])->name('admin.beneficios.store');
     Route::get('organizacoes', [OrganizacaoController::class, 'listar'])->name('admin.organizacoes');
     Route::delete('cadastro', [CadastroOrganizacaoController::class, 'deletar'])->name('admin.meu-cadastro.deletar');
 });
@@ -43,13 +47,13 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
     Route::get('/home/motorista', [HomeMotoristaController::class, 'mostrar'])->name('motorista.home');
     Route::get('/motorista/criar', [GrupoCaronaController::class, 'create'])->name('motorista.grupos.criar');
     Route::post('/motorista/grupos', [GrupoCaronaController::class, 'store'])->name('motorista.grupos.store');
-    
+
     // MODIFICADO: Rota de exclusão de grupo
     Route::delete('/motorista/grupos/{grupo}', [GrupoCaronaController::class, 'destroy'])->name('motorista.grupos.destroy');
-    
+
     // MODIFICADO: Rota para o passageiro entrar em uma carona
     Route::post('/grupos/{grupo}/entrar', [GrupoCaronaController::class, 'entrar'])->name('grupos.entrar');
-    
+
     // MODIFICADO: Usando o novo controller da home
     Route::get('/home/', [HomePassageiroController::class, 'mostrar'])->name('home');
     Route::get('/perfil', fn () => view('usuario.perfil'))->name('usuario.perfil');

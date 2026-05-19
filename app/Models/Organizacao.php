@@ -18,4 +18,8 @@ class Organizacao extends Model
     {
         return $this->hasMany(User::class);
     }
+    public function beneficios()
+    {
+        return $this->hasMany(Beneficio::class);
+    }
 }
