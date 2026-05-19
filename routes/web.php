@@ -12,6 +12,7 @@ use App\Http\Controllers\GrupoCaronaController;
 use App\Http\Controllers\HomeMotoristaController;
 use App\Http\Controllers\HomePassageiroController;
 use App\Http\Controllers\Organizacao\BeneficioController;
+use App\Http\Controllers\PedidoCaronaController;
 use App\Http\Controllers\PerfilMotoristaController;
 use App\Http\Controllers\TrajetoController;
 use App\Http\Middleware\VerificarTipo;
@@ -65,8 +66,11 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
     Route::get('/trajeto/{trajeto}', [TrajetoController::class, 'show'])->name('trajeto.show');
     Route::delete('/trajeto/{trajeto}', [TrajetoController::class, 'destroy'])->name('trajeto.destroy');
     Route::get('/trajeto/{trajeto}/rota', [TrajetoController::class, 'rota'])->name('trajeto.rota');
+    Route::post('trajeto/{trajeto}/caronas/{pedidoID}', [TrajetoController::class, 'carona'])->name('trajeto.criar-carona');
+    Route::get('/trajeto/{trajeto}/sugestoes-carona', [TrajetoController::class, 'sugestoesCarona'])->name('trajeto.sugestoes-carona');
     Route::post('/trajeto/{trajeto}/iniciar', [TrajetoController::class, 'iniciar'])->name('trajeto.iniciar');
     Route::post('/trajeto/{trajeto}/finalizar', [TrajetoController::class, 'finalizar'])->name('trajeto.finalizar');
+    Route::post('/trajeto/{trajetoID}/embarcar/{caronaID}', [TrajetoController::class, 'embarcar'])->name('trajeto.embarcar-carona');
 
     Route::post('/pedido-carona', [PedidoCaronaController::class, 'store'])->name('pedido-carona.store');
     Route::get('/pedido-carona/{pedidoCarona}', [PedidoCaronaController::class, 'show'])->name('pedido-carona.show');
