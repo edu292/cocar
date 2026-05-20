@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\CaronaStatus;
 use App\Models\PedidoCarona;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +12,11 @@ class PedidoCaronaController extends Controller
 {
     public function store(Request $request): RedirectResponse
     {
+        $caronas = $request->user()->caronas();
+        if ($caronas->where('status', CaronaStatus::EM_ANDAMENTO)->exists()) {
+            return back()->with('erro', 'Já existe um Pedido de Carona em andamento.');
+        }
+
         $validated = $request->validate([
             'origem' => 'required',
             'destino' => 'required',

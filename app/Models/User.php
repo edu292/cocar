@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -133,5 +134,13 @@ class User extends Authenticatable
     public function pedidosCarona(): HasMany
     {
         return $this->hasMany(PedidoCarona::class);
+    }
+
+    /**
+     * @return HasManyThrough<Carona,Model,User>
+     */
+    public function caronas(): HasManyThrough
+    {
+        return $this->hasManyThrough(Carona::class, PedidoCarona::class, 'user_id', 'pedido_carona_id');
     }
 }

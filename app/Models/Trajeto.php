@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use stdClass;
 
 class Trajeto extends Model
 {
@@ -27,6 +26,7 @@ class Trajeto extends Model
         'destino' => PointCast::class,
         'rota' => GeoJSONCast::class,
         'localizacao_motorista' => PointCast::class,
+        'status' => TrajetoStatus::class,
     ];
 
     /**

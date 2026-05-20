@@ -4,24 +4,20 @@
         Adicionar Passageiros
     </x-slot:title>
     <x-slot:content>
-        @if ($trajeto->status == TrajetoStatus::PLANEJADO)
-            <div class="bottom-panel">
+        <div class="bottom-panel">
+            @if ($trajeto->status == TrajetoStatus::PLANEJADO)
                 <form class="bottom-panel__actions" hx-post="{{ route('trajeto.iniciar', ['trajeto' => $trajeto->id]) }}">
                     <button class="btn btn--green" type="submit">Iniciar Trajeto</button>
                 </form>
-            </div>
-            <div hx-trigger="load" hx-get="{{ route('trajeto.sugestoes', ['trajeto' => $trajeto->id]) }}"
-                id="sugestoes-carona" style="display: none;"></div>
-        @elseif ($trajeto->status == TrajetoStatus::EM_ANDAMENTO)
-            <div class="bottom-panel">
+                <div hx-trigger="load" hx-get="{{ route('trajeto.sugestoes-carona', ['trajeto' => $trajeto->id]) }}"
+                    id="sugestoes-carona" style="display: none;"></div>
+            @elseif ($trajeto->status == TrajetoStatus::EM_ANDAMENTO)
                 <form class="bottom-panel__actions"
                     hx-post="{{ route('trajeto.destroy', ['trajeto' => $trajeto->id]) }}">
                     <button class="btn btn--red" type="submit">Cancelar Trajeto</button>
                 </form>
-            </div>
-        @endif
-
-
+            @endif
+        </div>
 
         <script>
             async function syncTrajeto() {

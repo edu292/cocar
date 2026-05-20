@@ -6,7 +6,7 @@
         </div>
         <div class="map-popup__actions">
             <form class="action-form"
-                hx-post="{{ route('trajeto.carona', ['trajeto' => request()->route('trajeto'), 'pedidoID' => $sugestao->id]) }}"
+                hx-post="{{ route('trajeto.criar-carona', ['trajeto' => request()->route('trajeto'), 'pedidoID' => $sugestao->id]) }}"
                 hx-swap="outerHTML">
                 <button class="btn btn--blue" type="submit">Adicionar</button>
             </form>
