@@ -19,7 +19,7 @@ class AdminSistemaSeeder extends Seeder
             'email' => 'admin@cocar.com.br',
             'password' => Hash::make('senha123'),
             'cpf' => '16354399074',
-            'tipo' => TipoUsuario::AdministradorSistema,
+            'tipo' => TipoUsuario::ADMINISTRADOR_SISTEMA,
         ]);
     }
 }

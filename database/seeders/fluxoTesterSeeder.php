@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Actions\Fortify\CreateNewUser;
 use App\Enums\TipoUsuario;
 use App\Models\Organizacao;
 use Illuminate\Database\Seeder;
@@ -29,30 +28,32 @@ class fluxoTesterSeeder extends Seeder
             'email' => 'admin@org.com.br',
             'cpf' => '11111111111',
             'password' => Hash::make('SenhaForte!'),
-            'tipo' => TipoUsuario::AdministradorOrganizacao,
+            'tipo' => TipoUsuario::ADMINISTRADOR_ORGANIZACAO,
 
         ]);
 
-        $motorista = (new CreateNewUser)->create([
+        $motorista = $org->integrantes()->create([
             'name' => 'motorista',
             'email' => 'motorista@org.com.br',
-            'password' => 'SenhaForte!',
-            'password_confirmation' => 'SenhaForte!',
-            'cpf' => '22222222222']
-        );
+            'password' => Hash::make('SenhaForte!'),
+            'cpf' => '22222222222',
+            'tipo' => TipoUsuario::PADRAO,
+        ]);
+
+        $motorista->carteira()->create();
 
         $motorista->perfilMotorista()->create([
             'cnh' => '11111111111',
             'aprovado_em' => now(),
         ]);
 
-        (new CreateNewUser)->create([
-            'name' => 'user',
-            'email' => 'user@org.com.br',
-            'password' => 'SenhaForte!',
-            'password_confirmation' => 'SenhaForte!',
-            'cpf' => '33333333333']
-        );
-
+        $passageiro = $org->integrantes()->create([
+            'name' => 'passageiro',
+            'email' => 'passageiro@org.com.br',
+            'password' => Hash::make('SenhaForte!'),
+            'cpf' => '33333333333',
+            'tipo' => TipoUsuario::PADRAO,
+        ]);
+        $passageiro->carteira()->create();
     }
 }

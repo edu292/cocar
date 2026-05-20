@@ -1,6 +1,6 @@
 <?php
 
-use App\Enums\CaronaStatus;
+use App\Enums\StatusCarona;
 use App\Models\PedidoCarona;
 use App\Models\Trajeto;
 use Illuminate\Database\Migrations\Migration;
@@ -18,8 +18,10 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(PedidoCarona::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Trajeto::class)->constrained()->cascadeOnDelete();
-            $table->integer('ordem')->nullable();
-            $table->string('status')->default(CaronaStatus::AGUARDANDO_INICIO);
+            $table->integer('ordem_parada')->nullable();
+            $table->string('status')->default(StatusCarona::AGUARDANDO_EMBARQUE);
+            $table->timestampTz('horario_embarque')->nullable();
+            $table->timestampTz('horario_desembarque')->nullable();
             $table->timestamps();
             $table->unique(['pedido_carona_id', 'trajeto_id']);
         });

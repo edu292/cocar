@@ -15,8 +15,10 @@ return new class extends Migration
         Schema::create('pedidos_carona', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->geography('origem', subtype: 'point')->index();
-            $table->geography('destino', subtype: 'point')->index();
+            $table->geography('origem_coords', subtype: 'point')->index();
+            $table->geography('destino_coords', subtype: 'point')->index();
+            $table->string('origem_endereco');
+            $table->string('destino_endereco');
             $table->timestamps();
         });
     }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\GrupoCarona;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,8 +16,8 @@ return new class extends Migration
         Schema::create('grupo_carona_user', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId("grupo_carona_id")->constrained("grupos_carona")->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignIdFor(GrupoCarona::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
         });
     }
 
