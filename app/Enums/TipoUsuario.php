@@ -4,16 +4,16 @@ namespace App\Enums;
 
 enum TipoUsuario: string
 {
-    case AdministradorOrganizacao = 'administrador_organizacao';
-    case AdministradorSistema = 'administrador_sistema';
-    case Padrao = 'padrao';
+    case ADMINISTRADOR_ORGANIZACAO = 'administrador_organizacao';
+    case ADMINISTRADOR_SISTEMA = 'administrador_sistema';
+    case PADRAO = 'padrao';
 
     public function label(): string
     {
         return match ($this) {
-            self::AdministradorOrganizacao => 'Administrador de Organização',
-            self::AdministradorSistema => 'Administrador do sistema',
-            self::Padrao => 'Padrão',
+            self::ADMINISTRADOR_ORGANIZACAO => 'Administrador de Organização',
+            self::ADMINISTRADOR_SISTEMA => 'Administrador do sistema',
+            self::PADRAO => 'Padrão',
         };
     }
 }

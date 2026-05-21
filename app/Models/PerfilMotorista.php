@@ -2,21 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
  * @property int $user_id
  * @property string $cnh
  * @property string|null $aprovado_em
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Beneficio> $beneficios
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Collection<int, Beneficio> $beneficios
  * @property-read int|null $beneficios_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\GrupoCarona> $grupos
+ * @property-read Collection<int, GrupoCarona> $grupos
  * @property-read int|null $grupos_count
- * @property-read \App\Models\User $user
+ * @property-read User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PerfilMotorista newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PerfilMotorista newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PerfilMotorista query()
@@ -31,22 +35,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PerfilMotorista extends Model
 {
     protected $fillable = ['cnh', 'aprovado_em'];
+
     protected $table = 'perfis_motorista';
 
-
-
-
-    // relação entre quantos motoras podem haver por usuário
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function grupos(){
-        return $this->hasMany(GrupoCarona::class, "perfil_motorista_id");
+    public function grupos(): HasMany
+    {
+        return $this->hasMany(GrupoCarona::class, 'perfil_motorista_id');
     }
 
-    public function beneficios()
+    public function beneficios(): BelongsToMany
     {
         return $this->belongsToMany(Beneficio::class, 'beneficio_motorista')
             ->withPivot('km_acumulado', 'status', 'atingido_em')

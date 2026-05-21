@@ -14,8 +14,8 @@ class UsuarioController extends Controller
     {
         $user = $request->user();
         $query = match ($user->tipo) {
-            TipoUsuario::AdministradorOrganizacao => $user->organizacao->integrantes(),
-            TipoUsuario::AdministradorSistema => User::query(),
+            TipoUsuario::ADMINISTRADOR_ORGANIZACAO => $user->organizacao->integrantes(),
+            TipoUsuario::ADMINISTRADOR_SISTEMA => User::query(),
         };
 
         $users = $query->comStatusMotorista($request->input('status-mototista'))

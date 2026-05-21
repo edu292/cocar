@@ -43,7 +43,7 @@ class CadastroOrganizacaoController extends Controller
                 'name' => $validated['administrador-nome'],
                 'email' => $validated['administrador-email'],
                 'password' => Hash::make($validated['password']),
-                'tipo' => TipoUsuario::AdministradorOrganizacao,
+                'tipo' => TipoUsuario::ADMINISTRADOR_ORGANIZACAO,
                 'cpf' => $validated['administrador-cpf'],
             ]);
         });

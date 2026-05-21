@@ -25,7 +25,7 @@ class PainelController extends Controller
         $organizacao = $request->user()->organizacao;
 
         $stats = $organizacao->integrantes()
-            ->where('tipo', TipoUsuario::Padrao)
+            ->where('tipo', TipoUsuario::PADRAO)
             ->leftJoin('perfis_motorista', 'users.id', '=', 'perfis_motorista.user_id')
             ->selectRaw('
                 count(*) as nao_admins,

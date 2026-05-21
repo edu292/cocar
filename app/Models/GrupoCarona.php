@@ -2,23 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-// MODIFICADO: Adicionado use para o Builder
 use Illuminate\Database\Eloquent\Builder;
+// MODIFICADO: Adicionado use para o Builder
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
  * @property int $perfil_motorista_id
  * @property string $nome
  * @property string $frequencia
  * @property int $vagas
  * @property array<array-key, mixed>|null $dias_semana
  * @property array<array-key, mixed>|null $dias_mes
- * @property-read \App\Models\PerfilMotorista $motorista
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $passageiros
+ * @property-read PerfilMotorista $motorista
+ * @property-read Collection<int, User> $passageiros
  * @property-read int|null $passageiros_count
+ *
  * @method static Builder<static>|GrupoCarona newModelQuery()
  * @method static Builder<static>|GrupoCarona newQuery()
  * @method static Builder<static>|GrupoCarona query()
@@ -31,22 +34,22 @@ use Illuminate\Database\Eloquent\Builder;
  * @method static Builder<static>|GrupoCarona wherePerfilMotoristaId($value)
  * @method static Builder<static>|GrupoCarona whereUpdatedAt($value)
  * @method static Builder<static>|GrupoCarona whereVagas($value)
+ *
  * @mixin \Eloquent
  */
 class GrupoCarona extends Model
 {
-
     protected $table = 'grupos_carona';
+
     protected $fillable = [
         'perfil_motorista_id',
         'nome',
         'frequencia',
-        'dias_semana', // MODIFICADO: adicionado suporte ao campo array
-        'dias_mes',    // MODIFICADO: adicionado suporte ao campo array
+        'dias_semana',
+        'dias_mes',
         'vagas',
     ];
 
-    // MODIFICADO: Casts para interpretar campos JSON como Array
     protected function casts(): array
     {
         return [
@@ -55,7 +58,6 @@ class GrupoCarona extends Model
         ];
     }
 
-    // MODIFICADO: Adicionado Global Scope para filtrar pela organização do usuário logado
     protected static function booted()
     {
         static::addGlobalScope('organizacao', function (Builder $builder) {
@@ -72,29 +74,31 @@ class GrupoCarona extends Model
 
     public function motorista()
     {
-        return $this->belongsTo(PerfilMotorista::class, "perfil_motorista_id");
+        return $this->belongsTo(PerfilMotorista::class, 'perfil_motorista_id');
     }
+
     public function passageiros()
     {
         return $this->belongsToMany(User::class)
             ->withTimestamps();
     }
 
-    // MODIFICADO: Helper para formatar a saída de frequência dinamicamente nas Views
     public function frequenciaFormatada(): string
     {
-        if ($this->frequencia === 'semanal' && !empty($this->dias_semana)) {
+        if ($this->frequencia === 'semanal' && ! empty($this->dias_semana)) {
             $mapa = ['seg' => 'Seg', 'ter' => 'Ter', 'qua' => 'Qua', 'qui' => 'Qui', 'sex' => 'Sex', 'sab' => 'Sáb', 'dom' => 'Dom'];
-            $dias = array_map(fn($d) => $mapa[$d] ?? $d, $this->dias_semana);
-            return 'Semanal (' . implode(', ', $dias) . ')';
+            $dias = array_map(fn ($d) => $mapa[$d] ?? $d, $this->dias_semana);
+
+            return 'Semanal ('.implode(', ', $dias).')';
         }
-        
-        if ($this->frequencia === 'mensal' && !empty($this->dias_mes)) {
+
+        if ($this->frequencia === 'mensal' && ! empty($this->dias_mes)) {
             $dias = $this->dias_mes;
             sort($dias);
-            return 'Mensal (Dias ' . implode(', ', $dias) . ')';
+
+            return 'Mensal (Dias '.implode(', ', $dias).')';
         }
-        
+
         return ucfirst($this->frequencia);
     }
 }

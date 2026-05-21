@@ -43,7 +43,7 @@ class CreateNewUser implements CreatesNewUsers
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'cpf' => $input['cpf'],
-            'tipo' => TipoUsuario::Padrao,
+            'tipo' => TipoUsuario::PADRAO,
         ]);
 
         $user->carteira()->create();

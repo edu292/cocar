@@ -11,7 +11,7 @@ function criarUsuarioDaOrganizacao(Organizacao $organizacao, array $atributos = 
 {
     return User::factory()->create(array_merge([
         'organizacao_id' => $organizacao->id,
-        'tipo' => TipoUsuario::Padrao,
+        'tipo' => TipoUsuario::PADRAO,
         'cpf' => fake()->numerify('###########'),
     ], $atributos));
 }
@@ -37,7 +37,7 @@ test('motorista aprovado visualiza apenas passageiros elegiveis da mesma organiz
     $adminDaOrganizacao = criarUsuarioDaOrganizacao($organizacao, [
         'name' => 'Admin da Organizacao',
         'email' => 'admin@empresa.com',
-        'tipo' => TipoUsuario::AdministradorOrganizacao,
+        'tipo' => TipoUsuario::ADMINISTRADOR_ORGANIZACAO,
     ]);
 
     $motoristaDaMesmaOrganizacao = criarUsuarioDaOrganizacao($organizacao, [
