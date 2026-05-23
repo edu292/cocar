@@ -1,4 +1,4 @@
-@use('App\Enums\CaronaStatus')
+@use('App\Enums\StatusCarona')
 <x-map>
     <x-slot:title>Pedido Carona</x-slot:title>
     <x-slot:content>
@@ -22,7 +22,7 @@
                     @method('DELETE')
                     <button class="btn btn--outline btn--red" type="sumbit">Cancelar</button>
                 </form>
-            @elseif ($status == CaronaStatus::MOTORISTA_A_CAMINHO)
+            @elseif ($status == StatusCarona::AGUARDANDO_EMBARQUE)
                 <div class="bottom-panel__header">
                     <span class="bottom-panel__title">Motorista a caminho</span>
                     <span class="bottom-panel__subtitle">Chega em 5 minutos</span>
@@ -35,7 +35,7 @@
                         <span class="bottom-panel__text">Fiat Uno Branco • ABC-1234</span>
                     </div>
                 </div>
-            @elseif ($status == CaronaStatus::EM_ANDAMENTO)
+            @elseif ($status == StatusCarona::EM_ANDAMENTO)
                 <div class="bottom-panel__header">
                     <span class="bottom-panel__title">A caminho do destino</span>
                     <span class="bottom-panel__subtitle">Chegada prevista às 14:30</span>

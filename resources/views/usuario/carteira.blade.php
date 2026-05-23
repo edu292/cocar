@@ -19,9 +19,9 @@
                         <div class="stats-grid__value text-green wallet__balance">R$ {{ $carteira->saldo }}</div>
                     </div>
 
-                    <form action="{{ route('usuario.carteira.inserir') }}" method="POST" class="form">
+                    <form action="{{ route('carteira.depositar') }}" method="post" class="form">
                         @csrf
-                        @method('PUT')
+                        @method('PATCH')
                         <h2 class="wallet__section-title">Adicionar Saldo</h2>
 
                         <div class="wallet__presets" id="valores-preset">

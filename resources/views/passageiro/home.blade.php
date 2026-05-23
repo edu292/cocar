@@ -2,17 +2,21 @@
     <x-slot:title>Passageiro</x-slot:title>
     <x-slot:content>
         <section class="card card--home">
-            <form class="search-bar" action="{{ route('pedido-carona.store') }}" method="post">
-                <div class="field search-bar__field">
-                    <div class="field__input-wrapper search-bar__input-wrapper">
-                        <div class="field__input-icon text-orange">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                                <path fill="currentColor"
-                                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5z" />
-                            </svg>
-                        </div>
-                        <x-location-select placeholder="Ponto de Partida" name="origem" required />
-                    </div>
+            <form class="search-bar" action="{{ route('pedido-carona.store') }}" method="post" autocomplete="off">
+                @csrf
+                <div class="route-timeline" hx-get="{{ route('pedido-carona.estimativa') }}"
+                    hx-trigger="endereco-selected[this.querySelectorAll('[data-coord-input]:not([value=\'\'])').length === this.querySelectorAll('[data-coord-input]').length]"
+                    hx-target="#estimate-container" hx-include="[data-coord-input]" ">
+                    <div class="field search-bar__field">
+                        <div class="field__input-wrapper search-bar__input-wrapper">
+                            <div class="field__input-icon text-blue">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                    viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r=" 6" fill="currentColor" />
+                </svg>
+                </div>
+                <x-endereco-autocomplete placeholder="Ponto de Partida" name="origem" />
+                </div>
                 </div>
 
                 <div class="field search-bar__field">
@@ -23,18 +27,15 @@
                                     d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5s2.5 1.12 2.5 2.5s-1.12 2.5-2.5 2.5z" />
                             </svg>
                         </div>
-                        <x-location-select placeholder="Para onde deseja ir?" name="destino" required />
+                        <x-endereco-autocomplete placeholder="Para onde deseja ir?" name="destino" />
                     </div>
                 </div>
-                <button type="submit" class="btn btn--blue search-bar__btn" aria-label="Buscar destino">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-                        <path fill="currentColor"
-                            d="m19.6 21l-6.3-6.3q-.75.6-1.725.95T9.5 16q-2.725 0-4.612-1.888T3 9.5t1.888-4.612T9.5 3t4.613 1.888T16 9.5q0 1.05-.35 2.025T14.7 13.3l6.3 6.3zM9.5 14q1.875 0 3.188-1.312T14 9.5t-1.312-3.187T9.5 5T6.313 6.313T5 9.5t1.313 3.188T9.5 14" />
-                    </svg>
-                </button>
+                </div>
+
+                <div id="estimate-container">
+                </div>
             </form>
 
-            <!-- MODIFICADO: Adicionado feedback de sessão (erros e sucessos) -->
             @if (session('sucesso'))
                 <div class="alert alert-success" style="margin-top:15px; color:green;">
                     {{ session('sucesso') }}
@@ -81,17 +82,6 @@
                     </div>
                     <span class="shortcuts__label">Adicionar</span>
                 </button>
-                <a href="{{ route('usuario.carteira') }}" class="shortcuts__item shortcuts__item--rigth">
-                    <div class="shortcuts__icon text-blue">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 512 512">
-                            <path fill="currentColor"
-                                d="M95.5 104h320a88 88 0 0 1 11.18.71a66 66 0 0 0-77.51-55.56L86 94.08h-.3a66 66 0 0 0-41.07 26.13A87.57 87.57 0 0 1 95.5 104m320 24h-320a64.07 64.07 0 0 0-64 64v192a64.07 64.07 0 0 0 64 64h320a64.07 64.07 0 0 0 64-64V192a64.07 64.07 0 0 0-64-64M368 320a32 32 0 1 1 32-32a32 32 0 0 1-32 32" />
-                            <path fill="currentColor"
-                                d="M32 259.5V160c0-21.67 12-58 53.65-65.87C121 87.5 156 87.5 156 87.5s23 16 4 16s-18.5 24.5 0 24.5s0 23.5 0 23.5L85.5 236Z" />
-                        </svg>
-                    </div>
-                    <span class="shortcuts__label">Carteira</span>
-                </a>
 
             </div>
         </section>

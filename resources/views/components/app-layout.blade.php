@@ -1,5 +1,5 @@
 <x-layout>
-    <x-slot:title>{{ $title ?? 'CoCar'}}</x-slot:title>
+    <x-slot:title>{{ $title ?? 'CoCar' }}</x-slot:title>
     <x-slot:body>
         <div class="app-layout bg-grafismo">
             <main class="app-layout__content">
@@ -33,7 +33,7 @@
                         </a>
                     </li>
                     <li class="bottom-nav__item">
-                        <a href="/atividade"
+                        <a href="{{ route('transacao.index') }}"
                             class="bottom-nav__link {{ request()->is('atividade*') ? 'bottom-nav__link--active' : '' }}">
                             <div class="bottom-nav__icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"

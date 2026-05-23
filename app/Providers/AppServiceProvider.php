@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Http::macro('mapbox', function () {
+        Http::macro('mapApi', function () {
             return Http::baseUrl('https://api.mapbox.com')
                 ->withHeaders(['Custom-Header' => 'value'])
                 ->withQueryParameters([

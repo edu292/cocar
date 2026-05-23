@@ -1,6 +1,7 @@
 <?php
 
-use App\Models\Carona;
+use App\Models\PedidoCarona;
+use App\Models\Trajeto;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -15,9 +16,11 @@ return new class extends Migration
     {
         Schema::create('transacoes', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class)->constrained();
-            $table->foreignIdFor(Carona::class)->constrained();
+            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(PedidoCarona::class)->nullable()->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Trajeto::class)->nullable()->constrained()->cascadeOnDelete();
             $table->string('tipo');
+            $table->string('status');
             $table->decimal('valor');
             $table->timestamps();
         });

@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\ExibivelException;
 use App\Http\Middleware\VerificarTipo;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -18,5 +19,13 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->redirectUsersTo(fn ($request) => $request->user()->homeUrl());
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (ExibivelException $exception) {
+            if (request()->expectsJson()) {
+                return response()->json(['message' => $exception->getMessage()], 422);
+            }
+
+            return back()
+                ->withInput()
+                ->withErrors(['erro' => $exception->getMessage()]);
+        });
     })->create();
