@@ -1,6 +1,7 @@
 :root {
   --color-brand-blue: #365691;
   --color-brand-orange: #be602d;
+  --color-purple: #6a1b9a;
   --color-brand-green: #7b9d78;
   --color-text-muted: #777;
   --color-alert-red: #c40404;
@@ -1613,6 +1614,7 @@ select:has(option:disabled:checked) {
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  text-transform: uppercase;
   background-color: color-mix(
     in srgb,
     var(--color-brand-blue) 10%,
@@ -1708,6 +1710,11 @@ select:has(option:disabled:checked) {
 .tx-card__icon--gray {
   background: color-mix(in srgb, var(--color-text-muted) 15%, transparent);
   color: var(--color-text-muted);
+}
+
+.tx-card__icon--purple {
+  background: color-mix(in srgb, var(--color-purple) 15%, transparent);
+  color: var(--color-purple);
 }
 
 .tx-card__info {
@@ -1967,4 +1974,108 @@ select:has(option:disabled:checked) {
 
 .wallet-deposit__form .btn--submit {
   margin-top: 5px;
+}
+
+.floating-pill {
+  position: fixed;
+  bottom: 85px;
+  right: 20px;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 8px 8px;
+  border-radius: 50px;
+  background-color: white;
+  box-shadow: 0 8px 24px
+    color-mix(in srgb, var(--color-brand-blue) 15%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-brand-blue) 10%, transparent);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+}
+
+.floating-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px
+    color-mix(in srgb, var(--color-brand-blue) 25%, transparent);
+}
+
+.floating-pill__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: color-mix(
+    in srgb,
+    var(--color-brand-blue) 10%,
+    transparent
+  );
+  color: var(--color-brand-blue);
+  flex-shrink: 0;
+}
+
+.floating-pill__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.floating-pill__content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.floating-pill__label {
+  font-size: 0.65em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+  line-height: 1;
+  margin-bottom: 2px;
+}
+
+.floating-pill__value {
+  font-size: 0.9em;
+  font-weight: 700;
+  color: var(--color-brand-blue);
+  line-height: 1;
+}
+
+.floating-pill--orange {
+  border-color: color-mix(in srgb, var(--color-brand-orange) 10%, transparent);
+  box-shadow: 0 8px 24px
+    color-mix(in srgb, var(--color-brand-orange) 15%, transparent);
+}
+
+.floating-pill--orange:hover {
+  box-shadow: 0 12px 32px
+    color-mix(in srgb, var(--color-brand-orange) 25%, transparent);
+}
+
+.floating-pill--orange .floating-pill__icon {
+  background-color: color-mix(
+    in srgb,
+    var(--color-brand-orange) 10%,
+    transparent
+  );
+  color: var(--color-brand-orange);
+}
+
+.floating-pill--orange .floating-pill__value {
+  color: var(--color-brand-orange);
+}
+
+.floating-pill--dragging {
+  cursor: grabbing;
+  transition: none;
+  transform: scale(1.02);
+  box-shadow: 0 16px 40px
+    color-mix(in srgb, var(--color-brand-blue) 30%, transparent);
 }
