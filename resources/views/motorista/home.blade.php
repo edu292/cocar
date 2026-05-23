@@ -5,12 +5,12 @@
             <form class="route-builder" action="{{ route('trajeto.store') }}" method="post">
                 <div class="field">
                     <div class="field__input-wrapper route-builder__input-wrapper">
-                        <x-location-select placeholder="Saindo de onde?" name="origem" />
+                        <x-endereco-autocomplete placeholder="Saindo de onde?" name="origem" />
                     </div>
                 </div>
                 <div class="field">
                     <div class="field__input-wrapper route-builder__input-wrapper">
-                        <x-location-select placeholder="Indo para onde?" name="destino" />
+                        <x-endereco-autocomplete placeholder="Indo para onde?" name="destino" />
                     </div>
                 </div>
                 <div class="route-builder__row">

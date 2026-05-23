@@ -21,7 +21,6 @@ use Illuminate\Support\Carbon;
  * @property-read PerfilMotorista $motorista
  * @property-read Collection<int, User> $passageiros
  * @property-read int|null $passageiros_count
- *
  * @method static Builder<static>|GrupoCarona newModelQuery()
  * @method static Builder<static>|GrupoCarona newQuery()
  * @method static Builder<static>|GrupoCarona query()
@@ -34,7 +33,6 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|GrupoCarona wherePerfilMotoristaId($value)
  * @method static Builder<static>|GrupoCarona whereUpdatedAt($value)
  * @method static Builder<static>|GrupoCarona whereVagas($value)
- *
  * @mixin \Eloquent
  */
 class GrupoCarona extends Model

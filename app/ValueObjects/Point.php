@@ -2,6 +2,7 @@
 
 namespace App\ValueObjects;
 
+use InvalidArgumentException;
 use JsonSerializable;
 
 class Point implements JsonSerializable
@@ -23,7 +24,7 @@ class Point implements JsonSerializable
             return new self((float) $x, (float) $y);
         }
 
-        throw new \InvalidArgumentException('Invalid point data structure');
+        throw new InvalidArgumentException('Invalid point data structure');
     }
 
     public static function formatPoints(self ...$points): string

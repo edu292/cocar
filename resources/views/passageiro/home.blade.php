@@ -32,6 +32,12 @@
                 </div>
                 </div>
 
+                @if ($errors->has('erro'))
+                    <div class="alert alert-danger" style="margin-top:15px; color:red;">
+                        {{ $errors->first('erro') }}
+                    </div>
+                @endif
+
                 <div id="estimate-container">
                 </div>
             </form>

@@ -4,6 +4,7 @@ namespace App\Casts;
 
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -18,7 +19,7 @@ class GeoJSONCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        if (! $value) {
+        if ($value instanceof Expression) {
             return null;
         }
 
@@ -26,7 +27,7 @@ class GeoJSONCast implements CastsAttributes
             return $value;
         }
 
-        return json_decode($value, true);
+        return is_string($value) ? json_decode($value, true) : null;
     }
 
     /**

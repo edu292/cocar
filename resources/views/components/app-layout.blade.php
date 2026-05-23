@@ -61,5 +61,6 @@
                 </ul>
             </nav>
         </div>
+        <x-viagem-ativa />
     </x-slot:body>
 </x-layout>
