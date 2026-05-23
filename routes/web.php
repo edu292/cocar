@@ -15,6 +15,7 @@ use App\Http\Controllers\Organizacao\BeneficioController;
 use App\Http\Controllers\PedidoCaronaController;
 use App\Http\Controllers\PerfilMotoristaController;
 use App\Http\Controllers\TrajetoController;
+use App\Http\Controllers\TransacaoController;
 use App\Http\Middleware\VerificarTipo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -28,7 +29,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/organizacoes', [CadastroOrganizacaoController::class, 'cadastrar'])->name('organizacao.criar');
 });
 
-Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::AdministradorOrganizacao, TipoUsuario::AdministradorSistema)])->prefix('/dashboard')->group(function () {
+Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::ADMINISTRADOR_ORGANIZACAO, TipoUsuario::ADMINISTRADOR_SISTEMA)])->prefix('/dashboard')->group(function () {
     Route::get('/', [PainelController::class, 'exibir'])->name('admin.painel');
     Route::get('triagem-motorista', [TriagemMotoristaController::class, 'exibir'])->name('admin.triagem-motoristas');
     Route::post('triagem-motorista/{perfilMotorista}/rejeitar', [TriagemMotoristaController::class, 'rejeitar'])->name('triagem-motoristas.rejeitar');
@@ -42,7 +43,7 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::AdministradorOrgani
     Route::delete('cadastro', [CadastroOrganizacaoController::class, 'deletar'])->name('admin.meu-cadastro.deletar');
 });
 
-Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(function () {
+Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::PADRAO)])->group(function () {
     Route::post('/motorista', [PerfilMotoristaController::class, 'criar'])->name('motorista.cadastro');
     Route::get('/home/motorista', [HomeMotoristaController::class, 'mostrar'])->name('motorista.home');
     Route::get('/motorista/criar', [GrupoCaronaController::class, 'create'])->name('motorista.grupos.criar');
@@ -60,7 +61,7 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
     })->name('usuario.deletar');
 
     Route::get('/carteira', [CarteiraController::class, 'exibir'])->name('usuario.carteira');
-    Route::put('/carteira', [CarteiraController::class, 'inserir'])->name('usuario.carteira.inserir');
+    Route::patch('/carteira', [CarteiraController::class, 'depositar'])->name('carteira.depositar');
 
     Route::post('/trajeto', [TrajetoController::class, 'store'])->name('trajeto.store');
     Route::get('/trajeto/{trajeto}', [TrajetoController::class, 'show'])->name('trajeto.show');
@@ -76,4 +77,6 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::Padrao)])->group(fu
     Route::get('/pedido-carona/estimativa', [PedidoCaronaController::class, 'estimativa'])->name('pedido-carona.estimativa');
     Route::get('/pedido-carona/{pedidoCarona}', [PedidoCaronaController::class, 'show'])->name('pedido-carona.show');
     Route::delete('/pedido-carona/{pedidoCarona}', [PedidoCaronaController::class, 'destroy'])->name('pedido-carona.destroy');
+
+    Route::get('/atividade', [TransacaoController::class, 'index'])->name('transacao.index');
 });
