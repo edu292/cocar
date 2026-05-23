@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum TrajetoStatus: string
+enum StatusTrajeto: string
 {
     case PLANEJADO = 'planejado';
     case EM_ANDAMENTO = 'em_andamento';

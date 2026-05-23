@@ -2,36 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Enums\CaronaStatus;
-use App\Models\Carona;
+use App\Models\PedidoCarona;
 use App\Models\Trajeto;
+use App\Services\SugestaoCaronaService;
+use App\Services\TrajetoService;
 use App\ValueObjects\Point;
+use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Http;
 
 class TrajetoController extends Controller
 {
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, TrajetoService $trajetoService): RedirectResponse
     {
         $validated = $request->validate([
-            'origem' => 'required',
-            'destino' => 'required',
+            'origem-coords' => 'required',
+            'origem-endereco' => 'required',
+            'destino-coords' => 'required',
+            'destino-endereco' => 'required',
         ]);
 
-        $origem = Point::from($validated['origem']);
-        $destino = Point::from($validated['destino']);
-
-        $res = Http::mapbox()->get('/directions/v5/mapbox/driving-traffic/'.Point::formatPoints($origem, $destino));
-        $rota = $res->json('routes.0.geometry');
-
-        $trajeto = Trajeto::create([
-            'origem' => $origem,
-            'destino' => $destino,
-            'rota' => $rota,
-            'motorista' => $request->user()->id,
-        ]);
+        $trajeto = $trajetoService->novoTrajeto(
+            origemEndereco: $validated['origem-endereco'],
+            origem: Point::from($validated['origem-coords']),
+            destino: Point::from($validated['destino-coords']),
+            destinoEndereco: $validated['destino-endereco'],
+            userID: Auth::id()
+        );
 
         return to_route('trajeto.show', ['trajeto' => $trajeto->id]);
     }
@@ -43,48 +41,43 @@ class TrajetoController extends Controller
             ->header('Hx-Trigger-After-Settle', 'atualizarRota');
     }
 
-    public function rota(Request $request, Trajeto $trajeto)
+    public function rota(Request $request, Trajeto $trajeto, TrajetoService $trajetoService)
     {
-        $trajeto->paradas = $trajeto->paradas();
+        $trajeto->paradas = $trajetoService->obterParadas($trajeto);
 
         return json_encode($trajeto);
     }
 
-    public function sugestoesCarona(Request $request, Trajeto $trajeto): Response
+    public function sugestoesCarona(Request $request, int $trajetoID, SugestaoCaronaService $sugestaoCaronaService): Response
     {
-        $sugestoes = $trajeto->sugestoesCarona(5000, 24);
+        $sugestoes = $sugestaoCaronaService->obterSugestoesParaTrajeto($trajetoID);
 
-        return response()->view('motorista.sugestoes-carona', compact('sugestoes'))->header('Hx-Trigger-After-Settle', 'hidratarSugestoesCarona');
+        return response()
+            ->view('motorista.sugestoes-carona', compact('sugestoes'))
+            ->header('Hx-Trigger-After-Settle', 'hidratarSugestoesCarona');
     }
 
-    public function carona(Request $request, Trajeto $trajeto, int $pedidoID): Response
+    public function carona(Request $request, Trajeto $trajeto, PedidoCarona $pedidoCarona, TrajetoService $trajetoService): Response
     {
-        $trajeto->pedidosCarona()->attach($pedidoID);
-        $trajeto->atualizarRota();
+        if (! carona) {
+            $trajetoService->atualizarRota($trajeto);
+        }
 
         return response('')->header('Hx-Trigger', 'atualizarRota');
     }
 
-    public function iniciar(Request $request, Trajeto $trajeto): void
+    public function iniciar(Request $request, Trajeto $trajeto, TrajetoService $trajetoService): void
     {
-        $trajeto->iniciar();
+        $trajetoService->iniciarTrajeto($trajeto);
     }
 
-    public function finalizar(Request $request, Trajeto $trajeto): void
+    public function finalizar(Request $request, Trajeto $trajeto, TrajetoService $trajetoService): void
     {
-        $trajeto->finalizar();
+        $trajetoService->finalizarTrajeto($trajeto);
     }
 
-    public function embarcar(Request $request, int $trajetoID, int $caronaID): void
+    public function embarcar(Request $request, Trajeto $trajeto, PedidoCarona $pedidoCarona, TrajetoService $trajetoService): void
     {
-        $carona = Carona::with(['trajeto', 'pedidoCarona'])
-            ->where('trajeto_id', $trajetoID)
-            ->findOrFail($caronaID);
-
-        $carona->trajeto->localizacao_motorista = $carona->pedidoCarona->origem;
-        $carona->trajeto->save();
-
-        $carona->status = CaronaStatus::EM_ANDAMENTO;
-        $carona->save();
+        $trajetoService->vincularPassgeiro($trajeto, $pedidoCarona);
     }
 }
