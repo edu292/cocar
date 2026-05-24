@@ -5,9 +5,11 @@ namespace App\Services;
 use App\DataTransferObjects\PedidoCaronaEstimativa;
 use App\Enums\FaseCarona;
 use App\Enums\StatusCarona;
+use App\Enums\StatusPedidoCarona;
+use App\Enums\TipoTransacao;
 use App\Exceptions\ExibivelException;
+use App\Models\Carteira;
 use App\Models\PedidoCarona;
-use App\Models\User;
 use App\ValueObjects\Point;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +21,7 @@ class PedidoCaronaService
 
     public function __construct(protected MapApiService $mapApiService, protected PagamentoService $pagamentoService) {}
 
-    public function estimativaCusto(Point $origem, Point $destino, User $user): PedidoCaronaEstimativa
+    public function estimativaCusto(Point $origem, Point $destino, int $userID): PedidoCaronaEstimativa
     {
         $result = $this->mapApiService->obterRotaDireta($origem, $destino);
         $distanciaMetros = $result->routes[0]->distance;
@@ -27,7 +29,7 @@ class PedidoCaronaService
 
         $min = bcmul($distanciaKm, $this->custoKmMin, 2);
         $max = bcmul($distanciaKm, $this->custoKmMax, 2);
-        $saldo = $user->carteira->saldo;
+        $saldo = Carteira::where('user_id', $userID)->firstOrFail()->saldo;
 
         return new PedidoCaronaEstimativa(
             min: $min,
@@ -37,24 +39,50 @@ class PedidoCaronaService
         );
     }
 
-    public function novoPedido(array $dados, User $user): PedidoCarona
+    public function temCaronaAtiva(int $userID): bool
     {
-        if ($user->caronas()->whereIn('status', StatusCarona::naFase(FaseCarona::ATIVA))->exists()) {
+        return PedidoCarona::where('user_id', $userID)
+            ->where(function ($query) {
+                $query->where('status', StatusPedidoCarona::PROCURANDO_MOTORISTA)
+                    ->orWhereHas('caronas', function ($caronasQuery) {
+                        $caronasQuery->whereIn('status', StatusCarona::naFase(FaseCarona::ATIVA));
+                    });
+            })
+            ->exists();
+    }
+
+    public function novoPedido(array $dados, int $userID): PedidoCarona
+    {
+        if ($this->temCaronaAtiva($userID)) {
             throw new ExibivelException('Usuário já possui um pedido em andamento');
         }
 
-        $estimativa = $this->estimativaCusto($dados['origem_coords'], $dados['destino_coords'], $user);
+        $estimativa = $this->estimativaCusto($dados['origem_coords'], $dados['destino_coords'], $userID);
 
         if (! $estimativa->saldoUsuarioSuficiente) {
             throw new ExibivelException('Saldo insuficiente');
         }
 
-        return DB::transaction(function () use ($dados, $user, $estimativa) {
-            $pedidoCarona = $user->pedidosCarona()->create($dados);
+        return DB::transaction(function () use ($dados, $userID, $estimativa) {
+            $pedidoCarona = PedidoCarona::create([...$dados, 'user_id' => $userID]);
 
-            $this->pagamentoService->reterValor($user->id, $estimativa->max, $pedidoCarona->id);
+            $this->pagamentoService->reterValor($userID, $estimativa->max, $pedidoCarona->id);
 
             return $pedidoCarona;
+        });
+    }
+
+    public function cancelarPedido(PedidoCarona $pedidoCarona): void
+    {
+        DB::transaction(function () use ($pedidoCarona) {
+            $pedidoCarona->update(['status' => StatusPedidoCarona::CANCELADO]);
+            $pedidoCarona->caronas()
+                ->whereIn('status', StatusCarona::naFase(FaseCarona::ATIVA))
+                ->update(['status' => StatusCarona::CANCELADA_PASSAGEIRO]);
+            $transacao = $pedidoCarona->transacoes()
+                ->where('tipo', TipoTransacao::RETENCAO)
+                ->firstOrFail();
+            $this->pagamentoService->realizarEstorno($transacao);
         });
     }
 }

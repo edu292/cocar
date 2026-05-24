@@ -2,14 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\FaseCarona;
 use App\Models\PedidoCarona;
 use App\Services\PagamentoService;
 use App\Services\PedidoCaronaService;
 use App\ValueObjects\Point;
+use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\View\View;
+use Symfony\Component\HttpFoundation\Response as SymphonyResponse;
 
 class PedidoCaronaController extends Controller
 {
@@ -23,7 +25,7 @@ class PedidoCaronaController extends Controller
         $estimativa = $service->estimativaCusto(
             Point::from($validated['origem_coords']),
             Point::from($validated['destino_coords']),
-            $request->user()
+            Auth::id()
         );
 
         return response(view('passageiro.estimativa', compact('estimativa')));
@@ -42,20 +44,24 @@ class PedidoCaronaController extends Controller
 
         $pedidoCarona = $service->novoPedido(
             $validated,
-            $request->user(),
+            Auth::id(),
         );
 
         return to_route('pedido-carona.show', ['pedidoCarona' => $pedidoCarona->id]);
     }
 
-    public function show(Request $request, PedidoCarona $pedidoCarona, PagamentoService $pagamentoService): View
+    public function show(Request $request, PedidoCarona $pedidoCarona, PagamentoService $pagamentoService): SymphonyResponse
     {
+        if (! in_array($pedidoCarona->status()->fase(), [FaseCarona::DESCOBERTA, FaseCarona::ATIVA])) {
+            return to_route($request->user()->homeUrl());
+        }
+
         return view('passageiro.mapa', compact('pedidoCarona'));
     }
 
-    public function destroy(Request $request, PedidoCarona $pedidoCarona): RedirectResponse
+    public function destroy(Request $request, PedidoCarona $pedidoCarona, PedidoCaronaService $service): RedirectResponse
     {
-        $pedidoCarona->delete();
+        $service->cancelarPedido($pedidoCarona);
 
         return to_route($request->user()->homeUrl());
     }

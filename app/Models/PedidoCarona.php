@@ -4,8 +4,10 @@ namespace App\Models;
 
 use App\Casts\PointCast;
 use App\Enums\StatusCarona;
+use App\Enums\StatusPedidoCarona;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +21,6 @@ use Illuminate\Support\Facades\DB;
  * @property Carbon|null $updated_at
  * @property-read Carona|null $carona
  * @property-read User $user
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona query()
@@ -29,28 +30,39 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereOrigem($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereUserId($value)
- *
  * @property string $endereco
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereEndereco($value)
- *
  * @property string $endereco_origem
  * @property string $endereco_destino
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereEnderecoDestino($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereEnderecoOrigem($value)
- *
+ * @property mixed $origem_coords
+ * @property mixed $destino_coords
+ * @property string $origem_endereco
+ * @property string $destino_endereco
+ * @property StatusPedidoCarona $status
+ * @property-read \App\Models\Carona|null $caronaAtual
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Carona> $caronas
+ * @property-read int|null $caronas_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transacao> $transacoes
+ * @property-read int|null $transacoes_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereDestinoCoords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereDestinoEndereco($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereOrigemCoords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereOrigemEndereco($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereStatus($value)
  * @mixin \Eloquent
  */
 class PedidoCarona extends Model
 {
     protected $table = 'pedidos_carona';
 
-    protected $fillable = ['origem_coords', 'origem_endereco', 'destino_coords', 'destino_endereco', 'user_id'];
+    protected $fillable = ['origem_coords', 'origem_endereco', 'destino_coords', 'destino_endereco', 'user_id', 'status'];
 
     protected $casts = [
         'origem_coords' => PointCast::class,
         'destino_coords' => PointCast::class,
+        'status' => StatusPedidoCarona::class,
     ];
 
     /**
@@ -64,9 +76,22 @@ class PedidoCarona extends Model
     /**
      * @return HasOne<Carona,PedidoCarona>
      */
-    public function carona(): HasOne
+    public function caronas(): HasMany
     {
-        return $this->hasOne(Carona::class, 'pedido_carona_id');
+        return $this->hasMany(Carona::class);
+    }
+
+    public function caronaAtual(): HasOne
+    {
+        return $this->hasOne(Carona::class)->latestOfMany();
+    }
+
+    /**
+     * @return HasMany<Transacao,PedidoCarona>
+     */
+    public function transacoes(): HasMany
+    {
+        return $this->hasMany(Transacao::class);
     }
 
     public static function booted(): void
@@ -103,12 +128,12 @@ class PedidoCarona extends Model
         return $resultado->distance_meters ?? 0;
     }
 
-    public function status(): StatusCarona
+    public function status(): StatusPedidoCarona|StatusCarona
     {
-        if (! $this->carona) {
-            return StatusCarona::PROCURANDO_MOTORISTA;
+        if ($this->status === StatusPedidoCarona::ATENDIDO) {
+            return $this->caronaAtual->status;
         }
 
-        return $this->carona->status;
+        return $this->status;
     }
 }

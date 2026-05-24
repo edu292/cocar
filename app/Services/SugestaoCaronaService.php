@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\StatusPedidoCarona;
 use App\Models\PedidoCarona;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -19,24 +20,25 @@ class SugestaoCaronaService
     public function obterSugestoesParaTrajeto(int $trajetoID): Collection
     {
         return PedidoCarona::withoutGlobalScope('as_geojson')
-            ->from('pedidos_carona as p')
             ->select([
-                'p.*',
-                DB::raw('ST_AsGeoJSON(p.origem) as origem'),
-                DB::raw('ST_AsGeoJSON(p.destino) as destino'),
-                DB::raw('ST_Distance(p.origem, t.rota)::float AS desvio_metros'),
+                'pedidos_carona.*',
+                DB::raw('ST_AsGeoJSON(pedidos_carona.origem_coords) as origem_coords'),
+                DB::raw('ST_AsGeoJSON(pedidos_carona.destino_coords) as destino_coords'),
+                DB::raw('ST_Distance(pedidos_carona.origem_coords, trajetos.rota)::float AS desvio_metros'),
             ])
-            ->join('trajetos as t', function ($j) {
-                $j->whereRaw('ST_DWithin(p.origem, t.rota, ?::float)', [$this->distanciaMaximaSugestaoCarona])
-                    ->whereRaw('ST_DWithin(p.destino, t.destino, ?::float)', [$this->distanciaMaximaSugestaoCarona]);
+            ->join('trajetos', function ($join) use ($trajetoID) {
+                $join->where('trajetos.id', $trajetoID)
+                    ->whereRaw('ST_DWithin(pedidos_carona.origem_coords, trajetos.rota, ?::float)', [$this->distanciaMaximaSugestaoCarona])
+                    ->whereRaw('ST_DWithin(pedidos_carona.destino_coords, trajetos.destino_coords, ?::float)', [$this->distanciaMaximaSugestaoCarona]);
             })
-            ->where('t.id', $trajetoID)
-            ->whereNotExists(function ($query) {
-                $query->select(DB::raw(1))
-                    ->from('caronas')
-                    ->whereColumn('caronas.pedido_carona_id', 'p.id');
+            ->whereNotIn('pedidos_carona.status', [
+                StatusPedidoCarona::CANCELADO,
+                StatusPedidoCarona::ATENDIDO,
+            ])
+            ->whereDoesntHave('caronas', function ($query) use ($trajetoID) {
+                $query->where('trajeto_id', $trajetoID);
             })
-            ->orderBy(DB::raw('ST_Distance(p.origem, t.rota)'))
+            ->orderByRaw('ST_Distance(pedidos_carona.origem_coords, trajetos.rota)')
             ->limit($this->limiteSugestoesCarona)
             ->get();
     }

@@ -4,9 +4,8 @@ namespace App\Enums;
 
 enum StatusCarona: string
 {
-    case PROCURANDO_MOTORISTA = 'procurando_motorista';
-
-    case AGUARDANDO_EMBARQUE = 'aguardando_embarque';
+    case ACEITA = 'aceita';
+    case MOTORISTA_A_CAMINHO = 'motorista_a_caminho';
     case EM_ANDAMENTO = 'em_andamento';
 
     case CONCLUIDA = 'concluida';
@@ -18,21 +17,20 @@ enum StatusCarona: string
     public function label(): string
     {
         return match ($this) {
-            self::PROCURANDO_MOTORISTA => 'Procurando Motorista',
-            self::AGUARDANDO_EMBARQUE => 'Aguardando Embarque',
+            self::ACEITA => 'Aceita',
+            self::MOTORISTA_A_CAMINHO => 'Motorista a Caminho',
             self::EM_ANDAMENTO => 'Em Andamento',
             self::CONCLUIDA => 'Concluída',
             self::PASSAGEIRO_AUSENTE => 'Passageiro Ausente',
             self::CANCELADA_MOTORISTA => 'Cancelado pelo Motorista',
-            self::CANCELADA_PASSAGEIRO => 'Cancelado pelo passageiro'
+            self::CANCELADA_PASSAGEIRO => 'Cancelada pelo Passageiro'
         };
     }
 
     public function fase(): FaseCarona
     {
         return match ($this) {
-            self::PROCURANDO_MOTORISTA => FaseCarona::DESCOBERTA,
-            self::AGUARDANDO_EMBARQUE, self::EM_ANDAMENTO => FaseCarona::ATIVA,
+            self::MOTORISTA_A_CAMINHO, self::EM_ANDAMENTO, self::ACEITA => FaseCarona::ATIVA,
             self::CONCLUIDA => FaseCarona::SUCESSO,
             self::PASSAGEIRO_AUSENTE, self::CANCELADA_MOTORISTA, self::CANCELADA_PASSAGEIRO => FaseCarona::FALHA
         };

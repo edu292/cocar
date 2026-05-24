@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StatusPedidoCarona;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -19,6 +20,7 @@ return new class extends Migration
             $table->geography('destino_coords', subtype: 'point')->index();
             $table->string('origem_endereco');
             $table->string('destino_endereco');
+            $table->string('status')->default(StatusPedidoCarona::PROCURANDO_MOTORISTA);
             $table->timestamps();
         });
     }
