@@ -67,7 +67,7 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::PADRAO)])->group(fu
     Route::get('/trajeto/{trajeto}', [TrajetoController::class, 'show'])->name('trajeto.show');
     Route::delete('/trajeto/{trajeto}', [TrajetoController::class, 'destroy'])->name('trajeto.destroy');
     Route::get('/trajeto/{trajeto}/rota', [TrajetoController::class, 'rota'])->name('trajeto.rota');
-    Route::post('trajeto/{trajeto}/caronas/{pedidoID}', [TrajetoController::class, 'carona'])->name('trajeto.criar-carona');
+    Route::post('trajeto/{trajeto}/caronas/{pedidoCarona}', [TrajetoController::class, 'atenderPedidoCarona'])->name('trajeto.criar-carona');
     Route::get('/trajeto/{trajeto}/sugestoes-carona', [TrajetoController::class, 'sugestoesCarona'])->name('trajeto.sugestoes-carona');
     Route::post('/trajeto/{trajeto}/iniciar', [TrajetoController::class, 'iniciar'])->name('trajeto.iniciar');
     Route::post('/trajeto/{trajeto}/finalizar', [TrajetoController::class, 'finalizar'])->name('trajeto.finalizar');
