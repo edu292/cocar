@@ -17,7 +17,7 @@ class AdminSistemaSeeder extends Seeder
         User::create([
             'name' => 'Cocar CEO',
             'email' => 'admin@cocar.com.br',
-            'password' => Hash::make('senha123'),
+            'password' => Hash::make('SenhaForte!'),
             'cpf' => '00666034044',
             'tipo' => TipoUsuario::ADMINISTRADOR_SISTEMA,
         ]);

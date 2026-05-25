@@ -31,12 +31,19 @@ a {
 }
 
 input,
-select {
+select,
+textarea {
   width: 100%;
   padding: 15px 5px;
   border: none;
   background-color: inherit;
+  font-family: inherit;
+  font-size: inherit;
   outline: none;
+}
+
+textarea {
+  resize: vertical;
 }
 
 input::placeholder {
@@ -149,7 +156,7 @@ select:has(option:disabled:checked) {
 }
 
 .text-purple {
-    color: var(--color-purple);
+  color: var(--color-purple);
 }
 
 .logo {
@@ -212,6 +219,10 @@ select:has(option:disabled:checked) {
   --background-color: var(--color-brand-blue);
 }
 
+.btn--gray {
+  --background-color: var(--color-text-muted);
+}
+
 .field {
   display: flex;
   flex-direction: column;
@@ -256,6 +267,18 @@ select:has(option:disabled:checked) {
   flex-direction: column;
   gap: 15px;
   width: 100%;
+}
+
+.form__actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+  align-items: center;
+}
+
+.form__actions .btn {
+  flex: 0 1 auto;
+  margin-top: 0;
 }
 
 .stripe-container {
@@ -761,7 +784,7 @@ select:has(option:disabled:checked) {
   margin-bottom: 10px;
 }
 
-.users-layout {
+.index-layout {
   display: grid;
   grid-template-columns: 1fr 300px;
   gap: 20px;
@@ -769,10 +792,83 @@ select:has(option:disabled:checked) {
   align-items: start;
 }
 
-.users-layout__main {
+.index-layout--single {
+  grid-template-columns: 1fr;
+}
+
+.index-layout__main {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.table__link {
+  color: var(--color-brand-blue);
+  font-weight: 600;
+}
+
+.table__link:hover {
+  text-decoration: underline;
+}
+
+.card__header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--color-text-muted) 20%, transparent);
+}
+
+.btn--icon {
+  flex: 0 0 auto;
+  padding: 0;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+}
+
+.btn--icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.toolbar {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+  align-items: stretch;
+  flex-wrap: wrap;
+}
+
+.toolbar__main {
+  flex: 1;
+  min-width: 250px;
+  margin: 0; /* Override potential form margins */
+}
+
+.toolbar__side {
+  flex: 0 0 auto;
+  display: flex;
+}
+
+.toolbar__side .btn {
+  margin-top: 0; /* Override generic .btn--submit margins if present */
+}
+
+.btn--small {
+  padding: 8px 12px;
+  font-size: 0.9em;
+}
+
+.table__cell--actions {
+  width: 1%;
+  white-space: nowrap;
+  text-align: right;
+}
+
+.table__cell--actions .action-form {
+  min-width: 0; /* Override existing .action-form min-width */
 }
 
 .card--flush-bottom {

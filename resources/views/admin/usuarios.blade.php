@@ -1,8 +1,8 @@
 <x-dashboard-layout>
     <x-slot:title>Usuários</x-slot:title>
     <x-slot:content>
-        <div class="users-layout">
-            <div class="users-layout__main">
+        <div class="index-layout">
+            <div class="index-layout__main">
                 <div class="card card--stretch card--flush-bottom">
                     <div class="field">
                         <div class="field__input-wrapper">

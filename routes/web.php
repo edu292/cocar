@@ -37,8 +37,14 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::ADMINISTRADOR_ORGAN
     Route::get('usuarios', [UsuarioController::class, 'exibir'])->name('admin.usuarios');
     Route::get('cadastro', fn () => view('admin.configuracoes'))->name('admin.meu-cadastro');
     Route::put('cadastro/{organizacao}', [OrganizacaoController::class, 'alterar'])->name('organizacoes.alterar');
+
+    Route::get('/beneficios', [BeneficioController::class, 'index'])->name('admin.beneficios.index');
     Route::get('/beneficios/criar', [BeneficioController::class, 'create'])->name('admin.beneficios.criar');
     Route::post('/beneficios', [BeneficioController::class, 'store'])->name('admin.beneficios.store');
+    Route::delete('/beneficios/{beneficio}', [BeneficioController::class, 'destroy'])->name('admin.beneficios.remover');
+    Route::get('/beneficios/{beneficio}', [BeneficioController::class, 'edit'])->name('admin.beneficios.editar');
+    Route::put('/beneficios/{beneficio}', [BeneficioController::class, 'update'])->name('admin.beneficios.atualizar');
+
     Route::get('organizacoes', [OrganizacaoController::class, 'listar'])->name('admin.organizacoes');
     Route::delete('cadastro', [CadastroOrganizacaoController::class, 'deletar'])->name('admin.meu-cadastro.deletar');
 });
