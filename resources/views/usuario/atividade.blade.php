@@ -72,7 +72,8 @@
                                         'tx-card__icon--green' => $transacao->tipo === TipoTransacao::DEPOSITO,
                                         'tx-card__icon--orange' => $transacao->tipo === TipoTransacao::RETENCAO,
                                         'tx-card__icon--gray' => $transacao->tipo === TipoTransacao::LIQUIDACAO,
-                                        'tx-card__icon--blue' => $transacao->tipo === TipoTransacao::REEMBOLSO,
+                                        'tx-card__icon--blue' => $transacao->tipo === TipoTransacao::AJUDA_CUSTO,
+                                        'tx-card__icon--purple' => $transacao->tipo === TipoTransacao::ESTORNO,
                                     ])>
                                         @if ($transacao->tipo == TipoTransacao::DEPOSITO)
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -89,10 +90,15 @@
                                                 <path fill="currentColor"
                                                     d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z" />
                                             </svg>
-                                        @elseif ($transacao->tipo == TipoTransacao::REEMBOLSO)
+                                        @elseif ($transacao->tipo == TipoTransacao::AJUDA_CUSTO)
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                                                 <path fill="currentColor"
                                                     d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16m11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5s1.5.67 1.5 1.5s-.67 1.5-1.5 1.5M5 11l1.5-4.5h11L19 11z" />
+                                            </svg>
+                                        @elseif ($transacao->tipo == TipoTransacao::ESTORNO)
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                                <path fill="currentColor"
+                                                    d="M19 7v4H7.83l3.59-3.59L10 6l-6 6l6 6l1.41-1.41L7.83 13H21V7z" />
                                             </svg>
                                         @endif
                                     </div>
