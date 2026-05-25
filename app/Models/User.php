@@ -20,6 +20,7 @@ use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * @property int $id
@@ -51,7 +52,6 @@ use Illuminate\Support\Carbon;
  * @property-read PerfilMotorista|null $perfilMotorista
  * @property-read Collection<int, Trajeto> $trajetos
  * @property-read int|null $trajetos_count
- *
  * @method static Builder<static>|User comStatusMotorista(?string $filtroStatus = null)
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static Builder<static>|User newModelQuery()
@@ -72,7 +72,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|User whereTwoFactorRecoveryCodes($value)
  * @method static Builder<static>|User whereTwoFactorSecret($value)
  * @method static Builder<static>|User whereUpdatedAt($value)
- *
+ * @property-read \App\Models\Organizacao|null $organizacao
  * @mixin \Eloquent
  */
 #[Fillable(['name', 'email', 'password', 'tipo', 'organizacao_id', 'cpf'])]
@@ -93,7 +93,7 @@ class User extends Authenticatable
     /**
      * @return BelongsTo<Organizacao,User>
      */
-    public function Organizacao(): BelongsTo
+    public function organizacao(): BelongsTo
     {
         return $this->belongsTo(Organizacao::class);
     }
@@ -200,5 +200,10 @@ class User extends Authenticatable
     public function caronas(): HasManyThrough
     {
         return $this->hasManyThrough(Carona::class, PedidoCarona::class);
+    }
+
+    public function iniciais(): string
+    {
+        return Str::initials($this->name);
     }
 }

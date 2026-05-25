@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignIdFor(PedidoCarona::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Trajeto::class)->constrained()->cascadeOnDelete();
             $table->integer('ordem_parada')->nullable();
-            $table->string('status')->default(StatusCarona::AGUARDANDO_EMBARQUE);
+            $table->string('status')->default(StatusCarona::ACEITA);
             $table->timestampTz('horario_embarque')->nullable();
             $table->timestampTz('horario_desembarque')->nullable();
             $table->timestamps();
