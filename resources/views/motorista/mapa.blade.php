@@ -1,22 +1,22 @@
-@use('App\Enums\TrajetoStatus')
+@use('App\Enums\StatusTrajeto')
 <x-map>
     <x-slot:title>
         Adicionar Passageiros
     </x-slot:title>
     <x-slot:content>
         <div class="bottom-panel">
-            @if ($trajeto->status == TrajetoStatus::PLANEJADO)
+            @if ($trajeto->status == StatusTrajeto::PLANEJADO)
                 <form class="bottom-panel__actions" hx-post="{{ route('trajeto.iniciar', ['trajeto' => $trajeto->id]) }}">
                     <button class="btn btn--green" type="submit">Iniciar Trajeto</button>
                 </form>
                 <div hx-trigger="load" hx-get="{{ route('trajeto.sugestoes-carona', ['trajeto' => $trajeto->id]) }}"
                     id="sugestoes-carona" style="display: none;"></div>
-            @elseif ($trajeto->status == TrajetoStatus::EM_ANDAMENTO)
-                <form class="bottom-panel__actions"
-                    hx-post="{{ route('trajeto.destroy', ['trajeto' => $trajeto->id]) }}">
-                    <button class="btn btn--red" type="submit">Cancelar Trajeto</button>
-                </form>
             @endif
+            <form class="bottom-panel__actions" hx-post="{{ route('trajeto.destroy', ['trajeto' => $trajeto->id]) }}">
+                @csrf
+                @method('DELETE')
+                <button class="btn btn--red" type="submit">Cancelar Trajeto</button>
+            </form>
         </div>
 
         <script>
@@ -30,20 +30,33 @@
                     const isLast = idx === trajeto.paradas.length - 1;
 
                     let action = '';
-                    if (!isFirst && trajeto.status != 'planejado') {
-                        if (isLast) {
-                            const urlFinalizar = "{{ route('trajeto.finalizar', ['trajeto' => $trajeto->id]) }}";
-                            action = `<form class="action-form" hx-post="${urlFinalizar}">
-                            <button class="btn btn--blue" type="submit">Finalizar</button>
-                          </form>`;
-                        } else {
-                            let urlEmbarcar =
-                                "{{ route('trajeto.embarcar-carona', ['trajetoID' => $trajeto->id, 'caronaID' => ':caronaID']) }}";
-                            urlEmbarcar = urlEmbarcar.replace(':caronaID', parada.carona_id);
 
-                            action = `<form class="action-form" hx-post="${urlEmbarcar}" hx-swap="outerHTML">
-                            <button class="btn btn--blue" type="submit">Embarcar</button>
-                          </form>`;
+                    if (!isFirst) {
+                        if (isLast) {
+                            if (trajeto.status != 'planejado') {
+                                const urlFinalizar = "{{ route('trajeto.finalizar', ['trajeto' => $trajeto->id]) }}";
+                                action += `<form class="action-form" hx-post="${urlFinalizar}">
+                                    <button class="btn btn--blue" type="submit">Finalizar</button>
+                                </form>`;
+                            }
+                        } else {
+                            let urlCancelar =
+                                "{{ route('trajeto.cancelar-carona', ['trajeto' => $trajeto->id, 'carona' => ':caronaID']) }}"
+                                .replace(':caronaID', parada.carona_id);
+
+                            action += `<form class="action-form" hx-delete="${urlCancelar}" hx-swap="outerHTML">
+                                <button class="btn btn--red" type="submit">Cancelar</button>
+                            </form>`;
+
+                            if (trajeto.status != 'planejado') {
+                                let urlEmbarcar =
+                                    "{{ route('trajeto.embarcar-carona', ['trajeto' => $trajeto->id, 'carona' => ':caronaID']) }}"
+                                    .replace(':caronaID', parada.carona_id);
+
+                                action += `<form class="action-form" hx-post="${urlEmbarcar}" hx-swap="outerHTML">
+                                    <button class="btn btn--blue" type="submit">Embarcar</button>
+                                </form>`;
+                            }
                         }
                     }
 
@@ -64,6 +77,7 @@
             }
 
             document.addEventListener('atualizarRota', syncTrajeto);
+
             map.on('load', syncTrajeto);
 
             document.addEventListener('hidratarSugestoesCarona', async () => {
@@ -73,15 +87,6 @@
                     const marker = new maplibregl.Marker({
                             color: "#be602d"
                         }).setLngLat(JSON.parse(el.dataset.coord))
-                        .setPopup(popup).addTo(map);
-                }
-            })
-
-            document.addEventListener('hidratarParadas', async () => {
-                parent = document.getElementById('paradas');
-                for (const el of parent.children) {
-                    const popup = new maplibregl.Popup().setDOMContent(el);
-                    const marker = new maplibregl.Marker().setLngLat(JSON.parse(el.dataset.coord))
                         .setPopup(popup).addTo(map);
                 }
             })

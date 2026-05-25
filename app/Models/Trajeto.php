@@ -28,7 +28,6 @@ use Illuminate\Support\Facades\DB;
  * @property-read int|null $caronas_count
  * @property-read Collection<int, PedidoCarona> $pedidosCarona
  * @property-read int|null $pedidos_carona_count
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto query()
@@ -43,26 +42,43 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereOrigem($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereRota($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereStatus($value)
- *
  * @property int $user_id
  * @property string|null $created_at
  * @property string|null $updated_at
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereUserId($value)
- *
  * @property string $endereco_origem
  * @property string $endereco_destino
- *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereEnderecoDestino($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereEnderecoOrigem($value)
- *
+ * @property mixed $origem_coords
+ * @property string $origem_endereco
+ * @property mixed $destino_coords
+ * @property string $destino_endereco
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereDestinoCoords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereDestinoEndereco($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereOrigemCoords($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereOrigemEndereco($value)
  * @mixin \Eloquent
  */
 class Trajeto extends Model
 {
-    protected $fillable = ['origem_coords', 'origem_endereco', 'destino_coords', 'destino_endereco', 'rota', 'distancia_percorrida', 'custo_total', 'user_id'];
+    protected $fillable = [
+        'origem_coords',
+        'status',
+        'localizacao_motorista',
+        'horario_inicio',
+        'horario_fim',
+        'origem_endereco',
+        'destino_coords',
+        'destino_endereco',
+        'rota',
+        'distancia_percorrida',
+        'custo_total',
+        'user_id',
+    ];
 
     protected $casts = [
         'origem_coords' => PointCast::class,
@@ -75,7 +91,7 @@ class Trajeto extends Model
     /**
      * @return BelongsTo<User,Carona>
      */
-    public function motorista(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
@@ -98,8 +114,8 @@ class Trajeto extends Model
         static::addGlobalScope('as_geojson', function ($builder) {
             $builder->addSelect([
                 '*',
-                DB::raw('ST_AsGeoJSON(origem_coords) as origem'),
-                DB::raw('ST_AsGeoJSON(destino_coords) as destino'),
+                DB::raw('ST_AsGeoJSON(origem_coords) as origem_coords'),
+                DB::raw('ST_AsGeoJSON(destino_coords) as destino_coords'),
                 DB::raw('ST_AsGeoJSON(rota) as rota'),
                 DB::raw('ST_AsGeoJSON(localizacao_motorista) as localizacao_motorista'),
             ]);

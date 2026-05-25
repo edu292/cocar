@@ -71,7 +71,8 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::PADRAO)])->group(fu
     Route::get('/trajeto/{trajeto}/sugestoes-carona', [TrajetoController::class, 'sugestoesCarona'])->name('trajeto.sugestoes-carona');
     Route::post('/trajeto/{trajeto}/iniciar', [TrajetoController::class, 'iniciar'])->name('trajeto.iniciar');
     Route::post('/trajeto/{trajeto}/finalizar', [TrajetoController::class, 'finalizar'])->name('trajeto.finalizar');
-    Route::post('/trajeto/{trajetoID}/embarcar/{caronaID}', [TrajetoController::class, 'embarcar'])->name('trajeto.embarcar-carona');
+    Route::post('/trajeto/{trajeto}/embarcar/{carona}', [TrajetoController::class, 'embarcar'])->name('trajeto.embarcar-carona');
+    Route::delete('/trajeto/{trajeto}/caronas/{carona}', [TrajetoController::class, 'cancelarCarona'])->name('trajeto.cancelar-carona');
 
     Route::post('/pedido-carona', [PedidoCaronaController::class, 'store'])->name('pedido-carona.store');
     Route::get('/pedido-carona/estimativa', [PedidoCaronaController::class, 'estimativa'])->name('pedido-carona.estimativa');

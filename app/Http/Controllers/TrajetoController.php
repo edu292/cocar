@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Carona;
 use App\Models\PedidoCarona;
 use App\Models\Trajeto;
 use App\Services\SugestaoCaronaService;
@@ -17,18 +18,18 @@ class TrajetoController extends Controller
     public function store(Request $request, TrajetoService $trajetoService): RedirectResponse
     {
         $validated = $request->validate([
-            'origem-coords' => 'required',
-            'origem-endereco' => 'required',
-            'destino-coords' => 'required',
-            'destino-endereco' => 'required',
+            'origem_coords' => 'required',
+            'origem_endereco' => 'required',
+            'destino_coords' => 'required',
+            'destino_endereco' => 'required',
         ]);
 
+        $validated['origem_coords'] = Point::from($validated['origem_coords']);
+        $validated['destino_coords'] = Point::from($validated['destino_coords']);
+
         $trajeto = $trajetoService->novoTrajeto(
-            origemEndereco: $validated['origem-endereco'],
-            origem: Point::from($validated['origem-coords']),
-            destino: Point::from($validated['destino-coords']),
-            destinoEndereco: $validated['destino-endereco'],
-            userID: Auth::id()
+            $validated,
+            Auth::id()
         );
 
         return to_route('trajeto.show', ['trajeto' => $trajeto->id]);
@@ -48,36 +49,55 @@ class TrajetoController extends Controller
         return json_encode($trajeto);
     }
 
-    public function sugestoesCarona(Request $request, int $trajetoID, SugestaoCaronaService $sugestaoCaronaService): Response
+    public function sugestoesCarona(Request $request, int $trajetoID, SugestaoCaronaService $service): Response
     {
-        $sugestoes = $sugestaoCaronaService->obterSugestoesParaTrajeto($trajetoID);
+        $sugestoes = $service->obterSugestoesParaTrajeto($trajetoID);
 
         return response()
             ->view('motorista.sugestoes-carona', compact('sugestoes'))
             ->header('Hx-Trigger-After-Settle', 'hidratarSugestoesCarona');
     }
 
-    public function carona(Request $request, Trajeto $trajeto, PedidoCarona $pedidoCarona, TrajetoService $trajetoService): Response
+    public function atenderPedidoCarona(Request $request, Trajeto $trajeto, PedidoCarona $pedidoCarona, TrajetoService $service): Response
     {
-        if (! carona) {
-            $trajetoService->atualizarRota($trajeto);
-        }
+        $service->atenderPedidoCarona($trajeto, $pedidoCarona);
 
         return response('')->header('Hx-Trigger', 'atualizarRota');
     }
 
-    public function iniciar(Request $request, Trajeto $trajeto, TrajetoService $trajetoService): void
+    public function iniciar(Request $request, Trajeto $trajeto, TrajetoService $trajetoService): Response
     {
         $trajetoService->iniciarTrajeto($trajeto);
+
+        return response('')->header('Hx-Refresh', 'true');
     }
 
-    public function finalizar(Request $request, Trajeto $trajeto, TrajetoService $trajetoService): void
+    public function finalizar(Request $request, Trajeto $trajeto, TrajetoService $trajetoService): RedirectResponse
     {
         $trajetoService->finalizarTrajeto($trajeto);
+
+        return to_route($request->user()->homeUrl());
     }
 
-    public function embarcar(Request $request, Trajeto $trajeto, PedidoCarona $pedidoCarona, TrajetoService $trajetoService): void
+    public function embarcar(Request $request, Trajeto $trajeto, Carona $carona, TrajetoService $service): Response
     {
-        $trajetoService->vincularPassgeiro($trajeto, $pedidoCarona);
+        $service->embarcarPassageiro($trajeto, $carona);
+
+        return response('')->header('Hx-Trigger', 'atualizarRota');
+    }
+
+    public function cancelarCarona(Request $request, Trajeto $trajeto, Carona $carona, TrajetoService $service): Response
+    {
+        $service->cancelarCarona($carona);
+
+        return response('')->header('Hx-Trigger', 'atualizarRota');
+
+    }
+
+    public function destroy(Request $request, Trajeto $trajeto, TrajetoService $service): RedirectResponse
+    {
+        $service->cancelarTrajeto($trajeto);
+
+        return response('')->header('Hx-Redirect', to_route($request->user()->homeUrl()));
     }
 }

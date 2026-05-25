@@ -2,12 +2,14 @@
 
 namespace App\Services;
 
+use App\Enums\FaseCarona;
 use App\Enums\StatusCarona;
+use App\Enums\StatusPedidoCarona;
 use App\Enums\StatusTrajeto;
 use App\Models\Carona;
 use App\Models\PedidoCarona;
 use App\Models\Trajeto;
-use App\ValueObjects\Point;
+use Exception;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
@@ -19,16 +21,13 @@ class TrajetoService
 
     public function __construct(protected PagamentoService $pagamentoService, protected MapApiService $mapApiService) {}
 
-    public function novoTrajeto(string $origemEndereco, Point $origem, string $destinoEndereco, Point $destino, int $userID): Trajeto
+    public function novoTrajeto(array $dados, int $userID): Trajeto
     {
-        $result = $this->mapApiService->obterRotaDireta($origem, $destino);
+        $result = $this->mapApiService->obterRotaDireta($dados['origem_coords'], $dados['destino_coords']);
         $geometry = $result->routes[0]->geometry;
 
         return Trajeto::create([
-            'origem_endereco' => $origemEndereco,
-            'origem' => $origem,
-            'destino_endereco' => $destinoEndereco,
-            'destino' => $destino,
+            ...$dados,
             'rota' => $geometry,
             'user_id' => $userID,
         ]);
@@ -36,24 +35,40 @@ class TrajetoService
 
     public function iniciarTrajeto(Trajeto $trajeto): void
     {
+        if ($trajeto->status != StatusTrajeto::PLANEJADO) {
+            throw new Exception('Só é possível iniciar um trajeto planejado.');
+        }
+
         $trajeto->update([
             'horario_inicio' => now(),
-            'localizacao_motorista' => $trajeto->origem,
+            'localizacao_motorista' => $trajeto->origem_coords,
             'status' => StatusTrajeto::EM_ANDAMENTO,
         ]);
+
+        $trajeto->caronas()
+            ->where('status', StatusCarona::ACEITA)
+            ->update(['status' => StatusCarona::MOTORISTA_A_CAMINHO]);
     }
 
     public function finalizarTrajeto(Trajeto $trajeto): void
     {
-        $trajeto->update([
-            'horario_fim' => now(),
-            'localizacao_motorista' => DB::raw('destino_coords'),
-            'status' => StatusTrajeto::CONCLUIDO,
-        ]);
+        DB::transaction(function () use ($trajeto) {
+            $trajeto->update([
+                'horario_fim' => now(),
+                'localizacao_motorista' => $trajeto->destino_coords,
+                'status' => StatusTrajeto::CONCLUIDO,
+            ]);
 
-        $trajeto->caronas()
-            ->where('status', StatusCarona::EM_ANDAMENTO)
-            ->update(['status' => StatusCarona::CONCLUIDA]);
+            $trajeto->caronas()
+                ->where('status', StatusCarona::EM_ANDAMENTO)
+                ->update([
+                    'status' => StatusCarona::CONCLUIDA,
+                    'horario_desembarque' => now(),
+                ]);
+
+            $totalArrecadado = $this->pagamentoService->consolidarTransacoes($trajeto->id);
+            $this->pagamentoService->depositarAjudaCusto($trajeto->user->id, $trajeto->id, $totalArrecadado);
+        });
     }
 
     public function atualizarRota(Trajeto $trajeto): void
@@ -70,13 +85,13 @@ class TrajetoService
             array_pop($waypoints);
 
             foreach ($waypoints as $waypoint) {
-                $carona = $trajeto->caronas()->whereHas(PedidoCarona::class, function ($query) use ($waypoint) {
+                $carona = $trajeto->caronas()->whereHas('pedidoCarona', function ($query) use ($waypoint) {
                     $query->whereRaw(
-                        'ST_DWithin(origem::geography, ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?)',
+                        'ST_DWithin(origem_coords, ST_SetSRID(ST_MakePoint(?, ?), 4326)::geography, ?)',
                         [$waypoint->longitude, $waypoint->latitude, $this->gapAceitavelDistanciaWaypoint]
                     );
                 })->first();
-                $carona->update(['ordem_parada' => $waypoint - index]);
+                $carona->update(['ordem_parada' => $waypoint->index]);
             }
         });
     }
@@ -84,19 +99,22 @@ class TrajetoService
     public function obterParadas(Trajeto $trajeto): Collection
     {
         $trajeto->loadMissing('caronas.pedidoCarona');
-        $paradas = $this->caronas->map(fn ($carona) => [
-            'carona_id' => $carona->id,
-            'coord' => $carona->pedidoCarona->origem,
-        ]);
+        $paradas = $trajeto->caronas()
+            ->whereIn('status', StatusCarona::naFase(FaseCarona::ATIVA))
+            ->get()
+            ->map(fn ($carona) => [
+                'carona_id' => $carona->id,
+                'coord' => $carona->pedidoCarona->origem_coords,
+            ]);
 
         $paradas->prepend([
             'carona_id' => null,
-            'coord' => $this->origem,
+            'coord' => $trajeto->origem_coords,
         ]);
 
         $paradas->push([
             'carona_id' => null,
-            'coord' => $this->destino,
+            'coord' => $trajeto->destino_coords,
         ]);
 
         return $paradas;
@@ -114,30 +132,53 @@ class TrajetoService
         ) AS distancia::INTEGER
     ', [
             'rota' => $trajeto->getRawOriginal('rota'),
-            'origem' => $pedidoCarona->getRawOriginal('origem'),
-            'destino' => $pedidoCarona->getRawOriginal('destino'),
+            'origem' => $pedidoCarona->getRawOriginal('origem_coords'),
+            'destino' => $pedidoCarona->getRawOriginal('destino_coord'),
         ]);
 
         return $resultado?->distancia ?? 0;
     }
 
-    public function vincularPassgeiro(Trajeto $trajeto, PedidoCarona $pedidoCarona): Carona
+    public function atenderPedidoCarona(Trajeto $trajeto, PedidoCarona $pedidoCarona): Carona
     {
-        $passageiro = $pedidoCarona->user;
-
-        $distancia = $this->calcularDistanciaCarona($trajeto, $pedidoCarona);
-        $valorReter = bcmul($this->custoKM, (string) $distancia, 2);
-
-        return DB::transaction(function () use ($trajeto, $pedidoCarona, $passageiro, $valorReter) {
-
-            $carona = $trajeto->caronas()->create([
-                'pedido_carona_id' => $pedidoCarona->id,
-                'status' => StatusCarona::AGUARDANDO_EMBARQUE,
-            ]);
-
-            $this->pagamentoService->reterValor($passageiro, $valorReter, $carona->id);
+        return DB::transaction(function () use ($trajeto, $pedidoCarona) {
+            $pedidoCarona->update(['status' => StatusPedidoCarona::ATENDIDO]);
+            $carona = $trajeto->caronas()->create(['pedido_carona_id' => $pedidoCarona->id]);
+            $this->atualizarRota($trajeto);
 
             return $carona;
+        });
+    }
+
+    public function embarcarPassageiro(Trajeto $trajeto, Carona $carona): void
+    {
+        $trajeto->update(['localizacao_motorista' => $carona->pedidoCarona->origem_coords]);
+        $carona->update([
+            'status' => StatusCarona::EM_ANDAMENTO,
+            'horario_embarque' => now(),
+        ]);
+    }
+
+    public function cancelarCarona(Carona $carona): void
+    {
+        DB::transaction(function () use ($carona) {
+            $carona->update(['status' => StatusCarona::CANCELADA_MOTORISTA]);
+            $carona->pedidoCarona()->update(['status' => StatusPedidoCarona::PROCURANDO_MOTORISTA]);
+            $this->atualizarRota($carona->trajeto);
+        });
+
+    }
+
+    public function cancelarTrajeto(Trajeto $trajeto): void
+    {
+        DB::transaction(function () use ($trajeto) {
+            $trajeto->update(['status' => StatusTrajeto::CANCELADO]);
+
+            PedidoCarona::whereHas('caronaAtual', function ($query) use ($trajeto) {
+                $query->where('trajeto_id', $trajeto->id);
+            })->update(['status' => StatusPedidoCarona::PROCURANDO_MOTORISTA]);
+
+            $trajeto->caronas()->update(['status' => StatusCarona::CANCELADA_MOTORISTA]);
         });
     }
 }
