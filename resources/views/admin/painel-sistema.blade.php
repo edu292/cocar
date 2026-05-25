@@ -20,6 +20,18 @@
                     <span class="stats-grid__value text-orange">{{ $totalMotoristasAtivos }}</span>
                     <span class="stats-grid__label">Total Motoristas Ativos</span>
                 </div>
+                <div class="stats-grid__item">
+                    <span class="stats-grid__value text-orange">{{ $caronasRealizadas }}</span>
+                    <span class="stats-grid__label">Caronas Realizadas</span>
+                </div>
+                <div class="stats-grid__item">
+                    <span class="stats-grid__value text-purple">{{ $distanciaTotal }}km</span>
+                    <span class="stats-grid__label">Distância Compartilhada</span>
+                </div>
+                <div class="stats-grid__item">
+                    <span class="stats-grid__value text-green">{{ $emissoesEvitadas }}kg</span>
+                    <span class="stats-grid__label">CO₂ Evitado</span>
+                </div>
             </div>
         </div>
     </x-slot:content>

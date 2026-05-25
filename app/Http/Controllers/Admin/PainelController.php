@@ -23,10 +23,8 @@ class PainelController extends Controller
             $totalUsuarios = User::count();
             $totalMotoristasAtivos = PerfilMotorista::whereNotNull('aprovado_em')->count();
 
-            $trajetosStats = Trajeto::where('status', StatusTrajeto::CONCLUIDO)
-                ->selectRaw('
-                    COALESCE(DIV(SUM(distancia_percorrida), 1000), 0) as distancia_total
-                ')->first();
+            $distanciaTotalMetros = Trajeto::where('status', StatusTrajeto::CONCLUIDO)->sum('distancia_percorrida');
+            $distanciaTotal = bcdiv($distanciaTotalMetros, '1000', '2');
 
             $caronasRealizadas = Carona::where('status', StatusCarona::CONCLUIDA)->count();
 
@@ -34,8 +32,8 @@ class PainelController extends Controller
                 'totalOrganizacoes' => $totalOrganizacoes,
                 'totalUsuarios' => $totalUsuarios,
                 'totalMotoristasAtivos' => $totalMotoristasAtivos,
-                'distanciaTotal' => round($trajetosStats->distancia_total, 2),
-                'emissoesEvitadas' => round($trajetosStats->distancia_total * 0.12, 2),
+                'distanciaTotal' => $distanciaTotal,
+                'emissoesEvitadas' => round($distanciaTotal * 0.12, 2),
                 'caronasRealizadas' => $caronasRealizadas,
             ]);
         }
