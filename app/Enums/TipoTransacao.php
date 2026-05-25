@@ -8,14 +8,14 @@ enum TipoTransacao: string
     case RETENCAO = 'retencao';
     case LIQUIDACAO = 'liquidacao';
     case ESTORNO = 'estorno';
-    case REEMBOLSO = 'reembolso';
+    case AJUDA_CUSTO = 'reembolso';
 
     public function label(): string
     {
         return match ($this) {
             self::RETENCAO => 'Reserva de Saldo',
             self::LIQUIDACAO => 'Fechamento da Carona',
-            self::REEMBOLSO => 'Ajuda de Custo',
+            self::AJUDA_CUSTO => 'Ajuda de Custo',
             self::DEPOSITO => 'Depósito',
             self::ESTORNO => 'Estorno'
         };
@@ -24,7 +24,7 @@ enum TipoTransacao: string
     public function direcao(): DirecaoTransacao
     {
         return match ($this) {
-            self::DEPOSITO, self::REEMBOLSO, self::ESTORNO => DirecaoTransacao::ENTRADA,
+            self::DEPOSITO, self::AJUDA_CUSTO, self::ESTORNO => DirecaoTransacao::ENTRADA,
             self::RETENCAO, self::LIQUIDACAO => DirecaoTransacao::SAIDA,
         };
     }
@@ -32,7 +32,7 @@ enum TipoTransacao: string
     public function contexto(): ContextoTransacao
     {
         return match ($this) {
-            self::REEMBOLSO => ContextoTransacao::TRAJETO,
+            self::AJUDA_CUSTO => ContextoTransacao::TRAJETO,
             self::RETENCAO, self::LIQUIDACAO, self::ESTORNO => ContextoTransacao::PEDIDO_CARONA,
             self::DEPOSITO => ContextoTransacao::NENHUM
         };

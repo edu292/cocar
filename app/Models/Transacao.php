@@ -77,14 +77,23 @@ class Transacao extends Model
     public function scopeWithContextAndLedger(Builder $query): Builder
     {
         $query->with([
-            'pedidoCarona.carona',
+            'pedidoCarona.caronas',
             'trajeto',
         ]);
 
         $rawCaseSql = "
         CASE 
-            WHEN tipo IN ('deposito', 'reembolso', 'estorno') THEN valor
-            WHEN tipo IN ('retencao', 'liquidacao') THEN -valor
+            WHEN tipo IN ('deposito', 'reembolso', 'estorno', 'ajuda_custo') THEN valor
+            WHEN tipo = 'liquidacao' THEN -valor
+            WHEN tipo = 'retencao' THEN 
+                CASE 
+                    WHEN EXISTS (
+                        SELECT 1 FROM transacoes t2 
+                        WHERE t2.pedido_carona_id = transacoes.pedido_carona_id 
+                        AND t2.tipo = 'liquidacao'
+                    ) THEN 0
+                    ELSE -valor
+                END
             ELSE 0
         END
     ";
