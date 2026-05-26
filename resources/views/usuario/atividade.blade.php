@@ -174,7 +174,7 @@
                                         <div class="tx-card__detail-item">
                                             <span class="tx-card__detail-label">Distância Total</span>
                                             <span
-                                                class="tx-card__detail-value">{{ $transacao->trajeto->distancia_total }}</span>
+                                                class="tx-card__detail-value">{{ $transacao->trajeto->distanciaPercorridaKM() }} KM</span>
                                         </div>
                                     @endif
                                 </div>

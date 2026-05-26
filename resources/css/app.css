@@ -148,6 +148,10 @@ select:has(option:disabled:checked) {
   color: var(--color-brand-blue);
 }
 
+.text-purple {
+    color: var(--color-purple);
+}
+
 .logo {
   width: 100px;
   height: 100px;
@@ -644,7 +648,7 @@ select:has(option:disabled:checked) {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
   width: 100%;
   margin-top: 30px;
