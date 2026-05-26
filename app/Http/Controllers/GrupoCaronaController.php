@@ -13,6 +13,31 @@ use Illuminate\Validation\Rule;
 
 class GrupoCaronaController extends Controller
 {
+    public function index(Request $request): View|RedirectResponse
+    {
+        $user = $request->user();
+        $perfilMotorista = $user->perfilMotorista;
+
+        if ($perfilMotorista && $perfilMotorista->aprovado_em) {
+            $grupos = $perfilMotorista->grupos()->withCount('passageiros')->with('passageiros')->get();
+            return view('grupos.index', compact('grupos', 'perfilMotorista'));
+        }
+
+        $meusGrupos = $user->grupoCaronas()->with('motorista.user')->get();
+        $gruposDisponiveis = GrupoCarona::with('motorista.user')
+            ->withCount('passageiros')
+            ->whereDoesntHave('passageiros', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->whereHas('motorista', function($query) use ($user) {
+                $query->where('user_id', '!=', $user->id);
+            })
+            ->get()
+            ->filter(fn($grupo) => $grupo->passageiros_count < $grupo->vagas);
+
+        return view('grupos.index', compact('meusGrupos', 'gruposDisponiveis', 'perfilMotorista'));
+    }
+
     public function create(Request $request): View|RedirectResponse
     {
         $motorista = $request->user()->perfilMotorista;
@@ -113,6 +138,19 @@ class GrupoCaronaController extends Controller
         $grupo->passageiros()->attach($user->id);
 
         return back()->with('sucesso', 'Você entrou no grupo de carona com sucesso!');
+    }
+
+    public function sair(GrupoCarona $grupo, Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        if (! $grupo->passageiros()->where('user_id', $user->id)->exists()) {
+            return back()->with('erro', 'Você não está neste grupo.');
+        }
+
+        $grupo->passageiros()->detach($user->id);
+
+        return back()->with('sucesso', 'Você saiu do grupo de carona com sucesso!');
     }
 
     // MODIFICADO: Método para o motorista excluir o próprio grupo

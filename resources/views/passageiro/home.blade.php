@@ -108,9 +108,16 @@
                         <div class="trip-card__path">
                             <span class="trip-card__location" style="font-weight:bold;">{{ $grupo->nome }}</span>
                         </div>
-                        <div class="trip-card__actions" style="margin-top:10px;">
+                        <div class="trip-card__actions" style="margin-top:10px; display:flex; justify-content:space-between; align-items:center;">
                             <span style="font-size:14px; color:#6b7280;">Motorista:
                                 {{ $grupo->motorista->user->name }}</span>
+                            <form action="{{ route('grupos.sair', $grupo->id) }}" method="POST" onsubmit="return confirm('Tem certeza que deseja sair deste grupo?');" style="margin: 0; padding: 0;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn--outline" style="color:red; border-color:red; padding: 4px 10px; font-size: 13px;">
+                                    Sair
+                                </button>
+                            </form>
                         </div>
                     </div>
                 @empty

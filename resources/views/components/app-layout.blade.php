@@ -20,8 +20,8 @@
                         </a>
                     </li>
                     <li class="bottom-nav__item">
-                        <a href="/grupos"
-                            class="bottom-nav__link {{ request()->is('grupos*') ? 'bottom-nav__link--active' : '' }}">
+                        <a href="{{ route('grupos.index') }}"
+                            class="bottom-nav__link {{ request()->routeIs('grupos.index') ? 'bottom-nav__link--active' : '' }}">
                             <div class="bottom-nav__icon">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                     viewBox="0 0 24 24">

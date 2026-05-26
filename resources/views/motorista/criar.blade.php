@@ -1,6 +1,19 @@
 <x-home-layout mode="motorista">
     <x-slot:title>Criar Grupo de Carona</x-slot:title>
     <x-slot:content>
+        <style>
+            .checkbox-pill { display: inline-block; cursor: pointer; }
+            .checkbox-pill input { display: none; }
+            .checkbox-pill span { display: inline-block; padding: 6px 14px; border: 2px solid #e5e7eb; border-radius: 9999px; background-color: #f9fafb; color: #4b5563; font-weight: 500; font-size: 14px; transition: all 0.2s ease; user-select: none; }
+            .checkbox-pill input:checked + span { background-color: #3b82f6; border-color: #3b82f6; color: white; }
+            .checkbox-pill:hover span { border-color: #3b82f6; }
+
+            .checkbox-circle { display: inline-block; cursor: pointer; }
+            .checkbox-circle input { display: none; }
+            .checkbox-circle span { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border: 2px solid #e5e7eb; border-radius: 50%; background-color: #f9fafb; color: #4b5563; font-weight: 500; font-size: 14px; transition: all 0.2s ease; user-select: none; }
+            .checkbox-circle input:checked + span { background-color: #f97316; border-color: #f97316; color: white; }
+            .checkbox-circle:hover span { border-color: #f97316; }
+        </style>
         <!-- MODIFICADO: Refatorado para usar o layout padrao e classes css do projeto -->
         <section class="card card--home">
             <h3 class="card__heading card__heading--small text-blue">Criar Grupo de Carona</h3>
@@ -32,9 +45,12 @@
                 <!-- MODIFICADO: Campos dinâmicos para os dias da semana -->
                 <div class="field" id="semanal_fields" style="margin-top: 15px; display: {{ old('frequencia') == 'semanal' ? 'block' : 'none' }};">
                     <label class="field__label" style="font-weight:bold; margin-bottom:5px; display:block;">Dias da Semana:</label>
-                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                         @foreach(['seg'=>'Segunda', 'ter'=>'Terça', 'qua'=>'Quarta', 'qui'=>'Quinta', 'sex'=>'Sexta', 'sab'=>'Sábado', 'dom'=>'Domingo'] as $val => $label)
-                        <label style="cursor:pointer;"><input type="checkbox" name="dias_semana[]" value="{{ $val }}" {{ in_array($val, old('dias_semana', [])) ? 'checked' : '' }}> {{ $label }}</label>
+                        <label class="checkbox-pill">
+                            <input type="checkbox" name="dias_semana[]" value="{{ $val }}" {{ in_array($val, old('dias_semana', [])) ? 'checked' : '' }}>
+                            <span>{{ $label }}</span>
+                        </label>
                         @endforeach
                     </div>
                     @error('dias_semana') <span class="text-orange" style="font-size:12px;">{{ $message }}</span> @enderror
@@ -46,7 +62,10 @@
                     <label class="field__label" style="font-weight:bold; margin-bottom:5px; display:block;">Dias do Mês:</label>
                     <div style="display: flex; gap: 8px; flex-wrap: wrap;">
                         @for($i=1; $i<=31; $i++)
-                        <label style="cursor:pointer; width:40px; font-size:14px;"><input type="checkbox" name="dias_mes[]" value="{{ $i }}" {{ in_array($i, old('dias_mes', [])) ? 'checked' : '' }}> {{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</label>
+                        <label class="checkbox-circle">
+                            <input type="checkbox" name="dias_mes[]" value="{{ $i }}" {{ in_array($i, old('dias_mes', [])) ? 'checked' : '' }}>
+                            <span>{{ str_pad($i, 2, '0', STR_PAD_LEFT) }}</span>
+                        </label>
                         @endfor
                     </div>
                     @error('dias_mes') <span class="text-orange" style="font-size:12px;">{{ $message }}</span> @enderror
@@ -72,9 +91,45 @@
                             </div>
                         </div>
                     @else
+                        <style>
+                            .passenger-card-label {
+                                transition: all 0.2s ease;
+                                border: 2px solid transparent;
+                            }
+                            .passenger-card-label:has(input:checked) {
+                                border-color: #3b82f6;
+                                background-color: #eff6ff;
+                            }
+                            .passenger-card-label input[type="checkbox"] {
+                                appearance: none;
+                                width: 22px;
+                                height: 22px;
+                                border: 2px solid #d1d5db;
+                                border-radius: 6px;
+                                outline: none;
+                                cursor: pointer;
+                                transition: all 0.2s ease;
+                                position: relative;
+                                margin: 0;
+                            }
+                            .passenger-card-label input[type="checkbox"]:checked {
+                                background-color: #3b82f6;
+                                border-color: #3b82f6;
+                            }
+                            .passenger-card-label input[type="checkbox"]:checked::after {
+                                content: '✓';
+                                color: white;
+                                position: absolute;
+                                top: 50%;
+                                left: 50%;
+                                transform: translate(-50%, -50%);
+                                font-size: 14px;
+                                font-weight: bold;
+                            }
+                        </style>
                         <div class="trip-list" style="margin-top:10px; max-height: 280px; overflow-y: auto;">
                             @foreach($passageirosDisponiveis as $passageiro)
-                                <label class="trip-card" for="passageiro-{{ $passageiro->id }}" style="cursor:pointer; flex-direction:row; justify-content:flex-start; gap:10px;">
+                                <label class="trip-card passenger-card-label" for="passageiro-{{ $passageiro->id }}" style="cursor:pointer; flex-direction:row; justify-content:flex-start; gap:15px; align-items:center;">
                                     <input
                                         type="checkbox"
                                         id="passageiro-{{ $passageiro->id }}"

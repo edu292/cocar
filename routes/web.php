@@ -46,12 +46,14 @@ Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::ADMINISTRADOR_ORGAN
 Route::middleware(['auth', VerificarTipo::sendo(TipoUsuario::PADRAO)])->group(function () {
     Route::post('/motorista', [PerfilMotoristaController::class, 'criar'])->name('motorista.cadastro');
     Route::get('/home/motorista', [HomeMotoristaController::class, 'mostrar'])->name('motorista.home');
+    Route::get('/grupos', [GrupoCaronaController::class, 'index'])->name('grupos.index');
     Route::get('/motorista/criar', [GrupoCaronaController::class, 'create'])->name('motorista.grupos.criar');
     Route::post('/motorista/grupos', [GrupoCaronaController::class, 'store'])->name('motorista.grupos.store');
 
     Route::delete('/motorista/grupos/{grupo}', [GrupoCaronaController::class, 'destroy'])->name('motorista.grupos.destroy');
 
     Route::post('/grupos/{grupo}/entrar', [GrupoCaronaController::class, 'entrar'])->name('grupos.entrar');
+    Route::delete('/grupos/{grupo}/sair', [GrupoCaronaController::class, 'sair'])->name('grupos.sair');
     Route::get('/home/', [HomePassageiroController::class, 'mostrar'])->name('home');
     Route::get('/perfil', fn () => view('usuario.perfil'))->name('usuario.perfil');
     Route::delete('/deletar-conta', function (Request $request, DeleteUser $deleter) {

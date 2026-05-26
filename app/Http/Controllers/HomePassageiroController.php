@@ -22,6 +22,9 @@ class HomePassageiroController extends Controller
             ->whereDoesntHave('passageiros', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })
+            ->whereHas('motorista', function($query) use ($user) {
+                $query->where('user_id', '!=', $user->id);
+            })
             ->get()
             ->filter(fn($grupo) => $grupo->passageiros_count < $grupo->vagas);
 
