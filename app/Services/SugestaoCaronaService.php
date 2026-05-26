@@ -31,10 +31,10 @@ class SugestaoCaronaService
                     ->whereRaw('ST_DWithin(pedidos_carona.origem_coords, trajetos.rota, ?::float)', [$this->distanciaMaximaSugestaoCarona])
                     ->whereRaw('ST_DWithin(pedidos_carona.destino_coords, trajetos.destino_coords, ?::float)', [$this->distanciaMaximaSugestaoCarona]);
             })
-            ->whereNotIn('pedidos_carona.status', [
-                StatusPedidoCarona::CANCELADO,
-                StatusPedidoCarona::ATENDIDO,
-            ])
+            ->join('users as passageiro_user', 'passageiro_user.id', '=', 'pedidos_carona.user_id')
+            ->join('users as motorista_user', 'motorista_user.id', '=', 'trajetos.user_id')
+            ->whereColumn('passageiro_user.organizacao_id', '=', 'motorista_user.organizacao_id')
+            ->where('pedidos_carona.status', StatusPedidoCarona::PROCURANDO_MOTORISTA)
             ->whereDoesntHave('caronas', function ($query) use ($trajetoID) {
                 $query->where('trajeto_id', $trajetoID);
             })

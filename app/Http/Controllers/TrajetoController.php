@@ -94,10 +94,10 @@ class TrajetoController extends Controller
 
     }
 
-    public function destroy(Request $request, Trajeto $trajeto, TrajetoService $service): RedirectResponse
+    public function destroy(Request $request, Trajeto $trajeto, TrajetoService $service): Response
     {
         $service->cancelarTrajeto($trajeto);
 
-        return to_route($request->user()->homeUrl());
+        return response('')->header('Hx-Redirect', route($request->user()->homeUrl()));
     }
 }
