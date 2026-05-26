@@ -12,7 +12,7 @@ class MapApiService
 {
     public function obterRotaDireta(Point $origem, Point $destino): RouteResult
     {
-        $res = Http::mapApi()->get(
+        $res = Http::mapbox()->get(
             '/directions/v5/mapbox/driving-traffic/'.Point::formatPoints($origem, $destino),
             ['alternatives' => 'true']
         );
@@ -35,7 +35,7 @@ class MapApiService
     public function obterRotaOtimizada(array $paradas): RouteResult
     {
         $path = 'optimized-trips/v1/mapbox/driving-traffic/'.Point::formatPoints(...$paradas);
-        $res = Http::mapApi()->get($path, ['roundtrip' => 'false', 'source' => 'first', 'destination' => 'last']);
+        $res = Http::mapbox()->get($path, ['roundtrip' => 'false', 'source' => 'first', 'destination' => 'last']);
         $data = $res->json();
 
         $routes = collect($data['trips'] ?? [])

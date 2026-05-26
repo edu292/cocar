@@ -18,7 +18,7 @@ class fluxoTesterSeeder extends Seeder
     {
 
         $org = Organizacao::create([
-            'cnpj' => '12345678912345',
+            'cnpj' => '75054728000103',
             'nome' => 'OrganizacaoTeste',
             'dominio_email' => 'org.com.br',
         ]);
@@ -26,7 +26,7 @@ class fluxoTesterSeeder extends Seeder
         $org->integrantes()->create([
             'name' => 'admin',
             'email' => 'admin@org.com.br',
-            'cpf' => '11111111111',
+            'cpf' => '63507515075',
             'password' => Hash::make('SenhaForte!'),
             'tipo' => TipoUsuario::ADMINISTRADOR_ORGANIZACAO,
 
@@ -36,14 +36,14 @@ class fluxoTesterSeeder extends Seeder
             'name' => 'motorista',
             'email' => 'motorista@org.com.br',
             'password' => Hash::make('SenhaForte!'),
-            'cpf' => '22222222222',
+            'cpf' => '79874737077',
             'tipo' => TipoUsuario::PADRAO,
         ]);
 
         $motorista->carteira()->create();
 
         $motorista->perfilMotorista()->create([
-            'cnh' => '11111111111',
+            'cnh' => '92189958447',
             'aprovado_em' => now(),
         ]);
 
@@ -51,7 +51,7 @@ class fluxoTesterSeeder extends Seeder
             'name' => 'passageiro',
             'email' => 'passageiro@org.com.br',
             'password' => Hash::make('SenhaForte!'),
-            'cpf' => '33333333333',
+            'cpf' => '64090083095',
             'tipo' => TipoUsuario::PADRAO,
         ]);
         $passageiro->carteira()->create();

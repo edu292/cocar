@@ -18,7 +18,7 @@ class AdminSistemaSeeder extends Seeder
             'name' => 'Cocar CEO',
             'email' => 'admin@cocar.com.br',
             'password' => Hash::make('senha123'),
-            'cpf' => '16354399074',
+            'cpf' => '00666034044',
             'tipo' => TipoUsuario::ADMINISTRADOR_SISTEMA,
         ]);
     }

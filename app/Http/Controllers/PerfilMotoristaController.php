@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Rules\Cnh;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -12,10 +13,7 @@ class PerfilMotoristaController extends Controller
 
         $user = $request->user();
         $validated = $request->validate([
-            'cnh' => 'required|string',
-        ],
-        [
-            'cnh' => 'Formato inválido, verifique e tente novamente'
+            'cnh' => ['required', 'string', new Cnh],
         ]);
 
         $user->perfilMotorista()->create([

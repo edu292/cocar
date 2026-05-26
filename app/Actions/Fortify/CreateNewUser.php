@@ -5,6 +5,7 @@ namespace App\Actions\Fortify;
 use App\Enums\TipoUsuario;
 use App\Models\Organizacao;
 use App\Models\User;
+use App\Rules\Cpf;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -25,7 +26,7 @@ class CreateNewUser implements CreatesNewUsers
             'name' => 'required|string|max:255',
             'email' => 'required|string|email:rfc,spoof|max:255|unique:users',
             'password' => $this->passwordRules(),
-            'cpf' => 'required|string|size:11|unique:users',
+            'cpf' => ['required', 'string', new Cpf, 'unique:users'],
         ])->validate();
 
         $email = $input['email'];

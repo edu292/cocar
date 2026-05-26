@@ -6,6 +6,8 @@ use App\Enums\TipoUsuario;
 use App\Http\Controllers\Controller;
 use App\Models\Organizacao;
 use App\Models\User;
+use App\Rules\Cnpj;
+use App\Rules\Cpf;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,11 +26,11 @@ class CadastroOrganizacaoController extends Controller
     {
         $validated = $request->validate([
             'organizacao-nome' => 'required|string|max:255',
-            'cnpj' => 'required|string|size:14|unique:organizacoes',
-            'dominio-email' => 'required|string|max:255|unique:organizacoes',
+            'cnpj' => ['required', 'string', new Cnpj, 'unique:organizacoes'],
+            'dominio_email' => 'required|string|max:255|unique:organizacoes',
             'administrador-nome' => 'required|string|max:255',
             'administrador-email' => 'required|string|email|max:255|unique:users,email',
-            'administrador-cpf' => 'required|string|size:11',
+            'administrador-cpf' => ['required', 'string', new Cpf],
             'password' => 'required|string|max:255|confirmed',
         ]);
 
@@ -36,7 +38,7 @@ class CadastroOrganizacaoController extends Controller
             $organizacao = Organizacao::create([
                 'nome' => $validated['organizacao-nome'],
                 'cnpj' => $validated['cnpj'],
-                'dominio_email' => $validated['dominio-email'],
+                'dominio_email' => $validated['dominio_email'],
             ]);
 
             return $organizacao->integrantes()->create([

@@ -20,9 +20,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Http::macro('mapApi', function () {
+        Http::macro('mapbox', function () {
             return Http::baseUrl('https://api.mapbox.com')
-                ->withHeaders(['Custom-Header' => 'value'])
                 ->withQueryParameters([
                     'access_token' => config('services.mapbox.token'),
                     'geometries' => 'geojson',
