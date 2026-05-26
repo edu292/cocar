@@ -81,22 +81,23 @@ class Transacao extends Model
             'trajeto',
         ]);
 
+        $query->where(function ($q) {
+            $q->whereNotIn('transacoes.tipo', ['retencao', 'reembolso', 'estorno'])
+                ->orWhereNotExists(function ($sub) {
+                    $sub->select(DB::raw(1))
+                        ->from('transacoes as t2')
+                        ->whereColumn('t2.pedido_carona_id', 'transacoes.pedido_carona_id')
+                        ->where('t2.tipo', 'liquidacao');
+                });
+        });
+
         $rawCaseSql = "
         CASE 
             WHEN tipo IN ('deposito', 'reembolso', 'estorno', 'ajuda_custo') THEN valor
-            WHEN tipo = 'liquidacao' THEN -valor
-            WHEN tipo = 'retencao' THEN 
-                CASE 
-                    WHEN EXISTS (
-                        SELECT 1 FROM transacoes t2 
-                        WHERE t2.pedido_carona_id = transacoes.pedido_carona_id 
-                        AND t2.tipo = 'liquidacao'
-                    ) THEN 0
-                    ELSE -valor
-                END
+            WHEN tipo IN ('liquidacao', 'retencao') THEN -valor
             ELSE 0
         END
-    ";
+        ";
 
         $query->addSelect([
             'transacoes.*',

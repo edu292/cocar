@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\DB;
  * @property-read int|null $caronas_count
  * @property-read Collection<int, PedidoCarona> $pedidosCarona
  * @property-read int|null $pedidos_carona_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto query()
@@ -42,25 +43,32 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereOrigem($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereRota($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereStatus($value)
+ *
  * @property int $user_id
  * @property string|null $created_at
  * @property string|null $updated_at
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereUserId($value)
+ *
  * @property string $endereco_origem
  * @property string $endereco_destino
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereEnderecoDestino($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereEnderecoOrigem($value)
+ *
  * @property mixed $origem_coords
  * @property string $origem_endereco
  * @property mixed $destino_coords
  * @property string $destino_endereco
- * @property-read \App\Models\User $user
+ * @property-read User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereDestinoCoords($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereDestinoEndereco($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereOrigemCoords($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Trajeto whereOrigemEndereco($value)
+ *
  * @mixin \Eloquent
  */
 class Trajeto extends Model
@@ -107,6 +115,11 @@ class Trajeto extends Model
     public function caronas(): HasMany
     {
         return $this->hasMany(Carona::class);
+    }
+
+    public function distanciaPercorridaKM(): string
+    {
+        return bcdiv($this->distancia_percorrida, '1000', 2);
     }
 
     protected static function booted(): void

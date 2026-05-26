@@ -50,13 +50,19 @@ class TrajetoService
             ->update(['status' => StatusCarona::MOTORISTA_A_CAMINHO]);
     }
 
-    public function finalizarTrajeto(Trajeto $trajeto): void
+    public function finalizarTrajeto(int $trajetoID): void
     {
-        DB::transaction(function () use ($trajeto) {
+        DB::transaction(function () use ($trajetoID) {
+            $trajeto = Trajeto::where('id', $trajetoID)
+                ->where('status', StatusTrajeto::EM_ANDAMENTO)
+                ->lockForUpdate()
+                ->firstOrFail();
+
             $trajeto->update([
                 'horario_fim' => now(),
                 'localizacao_motorista' => $trajeto->destino_coords,
                 'status' => StatusTrajeto::CONCLUIDO,
+                'distancia_percorrida' => DB::raw('ST_Length(rota)'),
             ]);
 
             $trajeto->caronas()
@@ -174,11 +180,14 @@ class TrajetoService
         DB::transaction(function () use ($trajeto) {
             $trajeto->update(['status' => StatusTrajeto::CANCELADO]);
 
-            PedidoCarona::whereHas('caronaAtual', function ($query) use ($trajeto) {
-                $query->where('trajeto_id', $trajeto->id);
+            PedidoCarona::whereHas('caronas', function ($query) use ($trajeto) {
+                $query->where('trajeto_id', $trajeto->id)
+                    ->whereIn('status', StatusCarona::naFase(FaseCarona::ATIVA));
             })->update(['status' => StatusPedidoCarona::PROCURANDO_MOTORISTA]);
 
-            $trajeto->caronas()->update(['status' => StatusCarona::CANCELADA_MOTORISTA]);
+            $trajeto->caronas()
+                ->whereIn('status', StatusCarona::naFase(FaseCarona::ATIVA))
+                ->update(['status' => StatusCarona::CANCELADA_MOTORISTA]);
         });
     }
 }

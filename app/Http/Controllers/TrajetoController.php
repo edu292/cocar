@@ -72,11 +72,11 @@ class TrajetoController extends Controller
         return response('')->header('Hx-Refresh', 'true');
     }
 
-    public function finalizar(Request $request, Trajeto $trajeto, TrajetoService $trajetoService): RedirectResponse
+    public function finalizar(Request $request, int $trajetoID, TrajetoService $trajetoService): Response
     {
-        $trajetoService->finalizarTrajeto($trajeto);
+        $trajetoService->finalizarTrajeto($trajetoID);
 
-        return to_route($request->user()->homeUrl());
+        return response('')->header('Hx-Redirect', route($request->user()->homeUrl()));
     }
 
     public function embarcar(Request $request, Trajeto $trajeto, Carona $carona, TrajetoService $service): Response
@@ -98,6 +98,6 @@ class TrajetoController extends Controller
     {
         $service->cancelarTrajeto($trajeto);
 
-        return response('')->header('Hx-Redirect', to_route($request->user()->homeUrl()));
+        return to_route($request->user()->homeUrl());
     }
 }

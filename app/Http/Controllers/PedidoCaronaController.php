@@ -11,7 +11,6 @@ use Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Symfony\Component\HttpFoundation\Response as SymphonyResponse;
 
 class PedidoCaronaController extends Controller
 {
@@ -50,7 +49,7 @@ class PedidoCaronaController extends Controller
         return to_route('pedido-carona.show', ['pedidoCarona' => $pedidoCarona->id]);
     }
 
-    public function show(Request $request, PedidoCarona $pedidoCarona, PagamentoService $pagamentoService): SymphonyResponse
+    public function show(Request $request, PedidoCarona $pedidoCarona, PagamentoService $pagamentoService)
     {
         if (! in_array($pedidoCarona->status()->fase(), [FaseCarona::DESCOBERTA, FaseCarona::ATIVA])) {
             return to_route($request->user()->homeUrl());

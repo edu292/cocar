@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Casts\PointCast;
 use App\Enums\StatusCarona;
 use App\Enums\StatusPedidoCarona;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\DB;
  * @property Carbon|null $updated_at
  * @property-read Carona|null $carona
  * @property-read User $user
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona query()
@@ -30,27 +32,34 @@ use Illuminate\Support\Facades\DB;
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereOrigem($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereUserId($value)
+ *
  * @property string $endereco
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereEndereco($value)
+ *
  * @property string $endereco_origem
  * @property string $endereco_destino
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereEnderecoDestino($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereEnderecoOrigem($value)
+ *
  * @property mixed $origem_coords
  * @property mixed $destino_coords
  * @property string $origem_endereco
  * @property string $destino_endereco
  * @property StatusPedidoCarona $status
- * @property-read \App\Models\Carona|null $caronaAtual
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Carona> $caronas
+ * @property-read Carona|null $caronaAtual
+ * @property-read Collection<int, Carona> $caronas
  * @property-read int|null $caronas_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Transacao> $transacoes
+ * @property-read Collection<int, Transacao> $transacoes
  * @property-read int|null $transacoes_count
+ *
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereDestinoCoords($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereDestinoEndereco($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereOrigemCoords($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereOrigemEndereco($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|PedidoCarona whereStatus($value)
+ *
  * @mixin \Eloquent
  */
 class PedidoCarona extends Model
