@@ -6,7 +6,7 @@
                 @csrf
                 <div class="route-timeline" hx-get="{{ route('pedido-carona.estimativa') }}"
                     hx-trigger="endereco-selected[this.querySelectorAll('[data-coord-input]:not([value=\'\'])').length === this.querySelectorAll('[data-coord-input]').length]"
-                    hx-target="#estimate-container" hx-include="[data-coord-input]" ">
+                    hx-target="#estimate-container" hx-include="[data-coord-input]" >
                     <div class="field search-bar__field">
                         <div class="field__input-wrapper search-bar__input-wrapper">
                             <div class="field__input-icon text-blue">
