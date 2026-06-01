@@ -1,10 +1,7 @@
 <x-layout>
     <x-slot:head>
-        <script src="https://unpkg.com/maplibre-gl@^5.24.0/dist/maplibre-gl.js"></script>
-        <script src="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.9.4/dist/maplibre-gl-geocoder.js"></script>
-        <link href="https://unpkg.com/maplibre-gl@^5.24.0/dist/maplibre-gl.css" rel="stylesheet" />
-        <link rel="stylesheet"
-            href="https://unpkg.com/@maplibre/maplibre-gl-geocoder@1.9.4/dist/maplibre-gl-geocoder.css" />
+        <script src="{{ asset('vendor/maplibre-gl.js') }}"></script>
+        <link rel="stylesheet" href="{{ asset('vendor/maplibre-gl.css') }}">
     </x-slot:head>
     <x-slot:title>
         {{ $title }}

@@ -11,19 +11,10 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png?v=20260330" />
     <meta name="apple-mobile-web-app-title" content="CoCar" />
     <link rel="manifest" href="/favicons/site.webmanifest?v=20260330" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
-        rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js"
-        integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous">
-    </script>
-
     @if (isset($head))
         {{ $head }}
     @endif
-    @vite(['resources/css/app.css'])
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
 <body>
