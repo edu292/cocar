@@ -53,7 +53,7 @@ Isso criará a estrutura do banco e populará o sistema com usuários de teste (
     php artisan migrate:fresh --seed
 6. **Inicie o servidor local:**
     ```bash
-    php artisan serve
+    composer dev
 
 A aplicação estará disponível em http://localhost:8000.
 
